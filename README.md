@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +10,7 @@
 <style>
 body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
 h1,h2 { text-align: center; color: #333; }
-textarea { width: 100%; height: 200px; margin-bottom: 10px; font-family: monospace; }
+textarea { width: 100%; height: 150px; margin-bottom: 10px; font-family: monospace; }
 button, select { padding: 8px 16px; font-size: 14px; cursor: pointer; margin: 5px 0; }
 table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background: #fff; }
 th, td { border: 1px solid #ccc; padding: 5px; text-align: center; }
@@ -99,64 +100,37 @@ let currentScorecardID = null;
 
 // ------------------ Parse Scorecard ------------------
 function parseScorecard(text){
-    const lines = text.split(/\r?\n/);
-    let llfcSide = null;
+    const lines = text.split(/\r?\n/).filter(l=>l.trim());
     let players = {};
-
     lines.forEach(line=>{
         LLFCTeams.forEach(team=>{
-            if(line.includes(team) && line.includes("🆚")){
-                const [left,right] = line.split("🆚").map(t=>t.trim());
-                llfcSide = left.includes(team)?0:1;
+            if(line.includes(team)){
+                const regex = /(.*?)\s*(\d+)\s*🆚\s*(\d+)\s*(.*)/;
+                const match = line.match(regex);
+                if(match){
+                    const leftPlayers = match[1].split(/@|\s{2,}/).map(p=>p.replace(/🔑/g,"").trim()).filter(Boolean);
+                    const rightPlayers = match[4].split(/@|\s{2,}/).map(p=>p.replace(/🔑/g,"").trim()).filter(Boolean);
+                    const llfcSide = match[1].includes(team) ? leftPlayers : rightPlayers;
+                    const llfcGoals = match[1].includes(team) ? parseInt(match[2]) : parseInt(match[3]);
+                    const oppGoals = match[1].includes(team) ? parseInt(match[3]) : parseInt(match[2]);
+                    llfcSide.forEach(p=>{
+                        if(!players[p]){
+                            players[p] = {player:p, matches:1, win:llfcGoals>oppGoals?1:0, draw:llfcGoals===oppGoals?1:0, loss:llfcGoals<oppGoals?1:0, gs:llfcGoals, gc:oppGoals, gd:llfcGoals-oppGoals, motm:line.includes("⚽")?1:0, rating:0, photo:""};
+                        } else {
+                            let obj = players[p];
+                            obj.matches +=1;
+                            obj.win += llfcGoals>oppGoals?1:0;
+                            obj.draw += llfcGoals===oppGoals?1:0;
+                            obj.loss += llfcGoals<oppGoals?1:0;
+                            obj.gs += llfcGoals;
+                            obj.gc += oppGoals;
+                            obj.gd = obj.gs - obj.gc;
+                            obj.motm += line.includes("⚽")?1:0;
+                        }
+                    });
+                }
             }
         });
-    });
-
-    lines.forEach(line=>{
-        if(line.includes("🆚")){
-            const regex = /(.*?)\s*(\d+)\s*🆚\s*(\d+)\s*(.*)/;
-            const match = line.match(regex);
-            if(match){
-                let leftRaw = match[1].trim();
-                let leftGoals = parseInt(match[2]);
-                let rightGoals = parseInt(match[3]);
-                let rightRaw = match[4].trim();
-
-                let leftPlayers = leftRaw.split(/@|\s{2,}/).map(p=>p.replace(/🔑/g,"").trim()).filter(p=>p);
-                let rightPlayers = rightRaw.split(/@|\s{2,}/).map(p=>p.replace(/🔑/g,"").trim()).filter(p=>p);
-
-                let llfcPlayers = (llfcSide===0)? leftPlayers : rightPlayers;
-                let llfcGoals = (llfcSide===0)? leftGoals : rightGoals;
-                let oppGoals = (llfcSide===0)? rightGoals : leftGoals;
-
-                llfcPlayers.forEach(p=>{
-                    if(!players[p]){
-                        players[p] = {
-                            player:p,
-                            matches:1,
-                            win: llfcGoals>oppGoals?1:0,
-                            draw: llfcGoals===oppGoals?1:0,
-                            loss: llfcGoals<oppGoals?1:0,
-                            gs: llfcGoals,
-                            gc: oppGoals,
-                            gd: llfcGoals-oppGoals,
-                            motm: line.includes("⚽")?1:0,
-                            rating:0,
-                            photo:""
-                        };
-                    } else {
-                        players[p].matches +=1;
-                        players[p].win += llfcGoals>oppGoals?1:0;
-                        players[p].draw += llfcGoals===oppGoals?1:0;
-                        players[p].loss += llfcGoals<oppGoals?1:0;
-                        players[p].gs += llfcGoals;
-                        players[p].gc += oppGoals;
-                        players[p].gd = players[p].gs - players[p].gc;
-                        players[p].motm += line.includes("⚽")?1:0;
-                    }
-                });
-            }
-        }
     });
     return Object.values(players);
 }
@@ -166,12 +140,12 @@ function previewScorecard(){
     const text = document.getElementById("scorecardText").value;
     if(!text){ alert("Paste a scorecard!"); return; }
     previewPlayers = parseScorecard(text);
+    if(previewPlayers.length===0){ alert("No LLFC players found!"); return; }
     currentScorecardID = Date.now();
     renderPreviewTable();
 }
 
 function renderPreviewTable(){
-    if(previewPlayers.length===0){ document.getElementById("previewContainer").innerHTML="No LLFC players found."; return;}
     let html = `<table><thead>
     <tr>
     <th>Player Name</th>
@@ -203,7 +177,7 @@ function renderPreviewTable(){
     document.getElementById("previewContainer").innerHTML = html;
 }
 
-// ------------------ Submit Scorecard (Firestore) ------------------
+// ------------------ Submit Scorecard ------------------
 async function submitScorecard(){
     const subDate = document.getElementById("submissionDate").value;
     if(!subDate){ alert("Select submission date!"); return; }
@@ -240,7 +214,7 @@ async function submitScorecard(){
     displayRanking();
 }
 
-// ------------------ Display Archive (Firestore) ------------------
+// ------------------ Display Archive ------------------
 async function displayArchive(){
     const snapshot = await db.collection("scorecards").get();
     const container = document.getElementById("archiveContainer");
@@ -272,7 +246,7 @@ async function deleteArchive(id){
     displayRanking();
 }
 
-// ------------------ Display Rankings (Firestore) ------------------
+// ------------------ Display Rankings ------------------
 async function displayRanking(){
     const type = document.getElementById("rankingType").value;
     const tbody = document.getElementById("rankingTable").querySelector("tbody");
