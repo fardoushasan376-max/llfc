@@ -1,366 +1,330 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-<meta charset="UTF-8">
-<title>LLFC Scorecard & Rankings</title>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>LLFC Scorecard Manager — Fixed</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
 <style>
-body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
-h1,h2 { text-align: center; color: #333; }
-textarea { width: 100%; height: 150px; margin-bottom: 10px; font-family: monospace; }
-button, select { padding: 8px 16px; font-size: 14px; cursor: pointer; margin: 5px 0; }
-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background: #fff; }
-th, td { border: 1px solid #ccc; padding: 5px; text-align: center; }
-th { background: #333; color: #fff; }
-input[type="number"], input[type="text"], input[type="date"] { width: 80px; }
-input[type="file"] { width: 100px; }
-.archive-item { background: #fff; padding: 5px; margin-bottom: 5px; border:1px solid #ccc; }
-.rank-1 { border: 2px solid gold; background: #fff7e6; }
-.rank-2 { border: 2px solid silver; background: #f0f0f0; }
-.rank-3 { border: 2px solid #cd7f32; background: #f9f0e6; }
-.medal { font-size: 18px; margin-right:5px; }
-img.player-photo { width:50px; height:50px; object-fit:cover; border-radius:5px;}
+  body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f4;margin:0;padding:20px}
+  h1,h2{text-align:center}
+  textarea{width:100%;height:160px;font-family:monospace;margin-bottom:8px;padding:8px}
+  button,input,select{padding:8px 12px;margin:6px 4px}
+  table{width:100%;border-collapse:collapse;background:#fff;margin-bottom:12px}
+  th,td{border:1px solid #ddd;padding:6px;text-align:center}
+  th{background:#333;color:#fff}
+  .archive-item{background:#fff;padding:8px;border:1px solid #ccc;margin-bottom:6px}
+  img.player-photo{width:48px;height:48px;object-fit:cover;border-radius:6px}
+  .small{font-size:13px;color:#555}
+  .notice{background:#fffae6;border:1px solid #ffd86b;padding:8px;margin:8px 0}
 </style>
 </head>
 <body>
 
-<h1>LLFC Scorecard Management</h1>
+<h1>LLFC Scorecard Manager — Bugfixed</h1>
 
-<h2>1. Paste Scorecard</h2>
-<textarea id="scorecardText" placeholder="Paste scorecard text here..."></textarea><br>
+<h2>1) স্কোরকার্ড পেস্ট করুন</h2>
+<textarea id="scorecardText" placeholder="স্কোরকার্ড এখানে পেস্ট করুন (ম্যাচ হেডার + প্লেয়ার লাইনের সাথে)।"></textarea>
+<br>
 <button onclick="previewScorecard()">Preview Scorecard</button>
+<span class="small"> (হেডার ধরে LLFC side detect করবে; 🔑 ছেঁকে দেখে সিদ্ধান্ত নেবে না)</span>
 
-<h2>2. Preview Table (Editable)</h2>
-<div id="previewContainer"></div>
-<label>Submission Date: <input type="date" id="submissionDate"></label><br>
+<h2>2) Preview</h2>
+<div id="previewContainer" class="notice">Preview এখানে দেখাবে।</div>
+
+<label>Submission date: <input type="date" id="submissionDate"></label>
+<label>Password: <input type="text" id="submitPassword" placeholder="Fardous"></label>
 <button onclick="submitScorecard()">Submit Scorecard</button>
 
-<h2>3. Scorecard Archive</h2>
+<h2>3) Archive</h2>
 <div id="archiveContainer"></div>
 
-<h2>4. Rankings (All LLFC Players)</h2>
-<label>Filter: 
-<select id="rankingType" onchange="displayRanking()">
-<option value="overall">Overall</option>
-<option value="weekly">Weekly</option>
-<option value="monthly">Monthly</option>
-</select>
+<h2>4) Rankings</h2>
+<label>Filter:
+  <select id="rankingType" onchange="displayRanking()">
+    <option value="overall">Overall</option>
+    <option value="monthly">Monthly</option>
+    <option value="weekly">Weekly</option>
+  </select>
 </label>
 <table id="rankingTable">
-<thead>
-<tr>
-<th>Photo</th>
-<th>Player Name</th>
-<th>Matches</th>
-<th>Win</th>
-<th>Draw</th>
-<th>Loss</th>
-<th>GS</th>
-<th>GC</th>
-<th>GD</th>
-<th>MOTM</th>
-<th>Avg Rating</th>
-<th>Upload Photo</th>
-</tr>
-</thead>
-<tbody></tbody>
+  <thead>
+    <tr><th>Photo</th><th>Player</th><th>Matches</th><th>W</th><th>D</th><th>L</th><th>GS</th><th>GC</th><th>GD</th><th>MOTM</th><th>Rating</th><th>Upload</th></tr>
+  </thead>
+  <tbody></tbody>
 </table>
 
-<h2>5. Download Rankings Card</h2>
-<label>Range:
-<select id="downloadRange">
-<option value="1-10">1-10</option>
-<option value="11-20">11-20</option>
-<option value="21-30">21-30</option>
-</select>
-</label>
-<button onclick="downloadRankingCard()">Download as Card</button>
-<div id="rankingCard" style="padding:10px; background:#fff;"></div>
+<h2>5) Download</h2>
+<select id="downloadRange"><option value="1-10">1-10</option><option value="11-20">11-20</option></select>
+<button onclick="downloadRankingCard()">Download Card</button>
+<div id="rankingCard" style="padding:10px;background:#fff;margin-top:8px"></div>
 
 <script>
-// ------------------ Firebase Setup ------------------
+/* ---------- Firebase config ---------- */
 const firebaseConfig = {
-  apiKey: "AIzaSyCsZrHcpJgGoTHeW0Ex4Hv20KLctDopPq4",
-  authDomain: "llfc-4d2df.firebaseapp.com",
-  projectId: "llfc-4d2df",
-  storageBucket: "llfc-4d2df.firebasestorage.app",
-  messagingSenderId: "697058785471",
-  appId: "1:697058785471:web:e7df63d4e9caadec762e0a"
+  apiKey:"AIzaSyCsZrHcpJgGoTHeW0Ex4Hv20KLctDopPq4",
+  authDomain:"llfc-4d2df.firebaseapp.com",
+  projectId:"llfc-4d2df",
+  storageBucket:"llfc-4d2df.firebasestorage.app",
+  messagingSenderId:"697058785471",
+  appId:"1:697058785471:web:e7df63d4e9caadec762e0a"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// ------------------ Variables ------------------
-const LLFCTeams = ["DREADLORDS OF LLFC","Luminous Legends EFootball Club"];
-let previewPlayers = [];
-let currentScorecardID = null;
+/* ---------- Config: known LLFC team names ---------- */
+const LLFCTeams = [
+  "DREADLORDS OF LLFC",
+  "Luminous Legends EFootball Club",
+  "Luminous Legends",
+  "LLFC",
+  "Luminous Legends EFootball"
+];
 
-// ------------------ Parse Scorecard ------------------
+/* ---------- Helpers ---------- */
+function getLastNumber(str){ const m=str.match(/(\d+)(?!.*\d)/); return m?parseInt(m[1],10):0; }
+function getFirstNumber(str){ const m=str.match(/(\d+)/); return m?parseInt(m[1],10):0; }
+function uidFor(name){ return name.replace(/\s+/g,'_').replace(/[^\w\-]/g,'').toLowerCase() + '_' + Date.now(); }
+function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function containsAnyIgnoreCase(haystack, needles){ const l = String(haystack||'').toLowerCase(); return needles.some(n => l.includes(String(n||'').toLowerCase())); }
+
+/* ---------- Extract & parse functions ---------- */
+function extractPlayersFromSide(sideRaw, goalPos){
+  if(!sideRaw || !sideRaw.trim()) return [];
+  const original = sideRaw;
+  if(goalPos === 'start') sideRaw = sideRaw.replace(/^\s*\d+\s*/,'');
+  else if(goalPos === 'end') sideRaw = sideRaw.replace(/\s*\d+\s*$/,'');
+  let separators = [];
+  if(/@/.test(original)) separators.push('@');
+  if(/\s{2,}/.test(original)) separators.push('doubleSpace');
+  if(/[|,\/]/.test(original)) separators.push(/[|,\/]/);
+  if(separators.length === 0){ if(/\s\/\s/.test(original)) separators.push(/\s\/\s/); else if(/\s-\s/.test(original)) separators.push(/\s-\s/);}
+  let cleaned = sideRaw.replace(/[🔑⚽🟣🟡🔴•★✔✖]/g,' ').replace(/[,:;�"“”‘’{}<>]/g,' ').replace(/\s+/g,' ').trim();
+  let parts = [];
+  if(separators.length > 0){
+    let sep = separators[0];
+    if(sep === '@') parts = cleaned.split('@').map(p=>p.trim()).filter(Boolean);
+    else if(sep==='doubleSpace') parts = original.split(/\s{2,}/).map(p=>p.replace(/[🔑⚽]/g,'').trim()).filter(Boolean);
+    else if(sep instanceof RegExp) parts = cleaned.split(sep).map(p=>p.trim()).filter(Boolean);
+    else parts = cleaned.split(' ').map(p=>p.trim()).filter(Boolean);
+  } else if(cleaned) parts = [cleaned];
+  parts = parts.map(p => p.replace(/\d+/g,'').replace(/^[\W_]+|[\W_]+$/g,'').replace(/\s+/g,' ').trim()).filter(Boolean);
+  return parts;
+}
+
 function parseScorecard(text){
-    const lines = text.split(/\r?\n/).filter(l=>l.trim());
-    let players = {};
-    lines.forEach(line=>{
-        LLFCTeams.forEach(team=>{
-            if(line.includes(team)){
-                const regex = /(.*?)\s*(\d+)\s*🆚\s*(\d+)\s*(.*)/;
-                const match = line.match(regex);
-                if(match){
-                    const leftPlayers = match[1].split(/@|\s{2,}/).map(p=>p.replace(/🔑/g,"").trim()).filter(Boolean);
-                    const rightPlayers = match[4].split(/@|\s{2,}/).map(p=>p.replace(/🔑/g,"").trim()).filter(Boolean);
-                    const llfcSide = match[1].includes(team) ? leftPlayers : rightPlayers;
-                    const llfcGoals = match[1].includes(team) ? parseInt(match[2]) : parseInt(match[3]);
-                    const oppGoals = match[1].includes(team) ? parseInt(match[3]) : parseInt(match[2]);
-                    llfcSide.forEach(p=>{
-                        if(!players[p]){
-                            players[p] = {player:p, matches:1, win:llfcGoals>oppGoals?1:0, draw:llfcGoals===oppGoals?1:0, loss:llfcGoals<oppGoals?1:0, gs:llfcGoals, gc:oppGoals, gd:llfcGoals-oppGoals, motm:line.includes("⚽")?1:0, rating:0, photo:""};
-                        } else {
-                            let obj = players[p];
-                            obj.matches +=1;
-                            obj.win += llfcGoals>oppGoals?1:0;
-                            obj.draw += llfcGoals===oppGoals?1:0;
-                            obj.loss += llfcGoals<oppGoals?1:0;
-                            obj.gs += llfcGoals;
-                            obj.gc += oppGoals;
-                            obj.gd = obj.gs - obj.gc;
-                            obj.motm += line.includes("⚽")?1:0;
-                        }
-                    });
-                }
-            }
-        });
+  const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  const players = {}; let currentLeftTeam=null; let currentRightTeam=null;
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i], ll=line.toLowerCase();
+    if(ll.includes('deadline')||ll.includes('referee')||ll.includes('referees')||ll.includes('official')||ll.includes('points')||ll.includes('room settings')) continue;
+    if(!line.includes('🆚')) continue;
+    const parts=line.split('🆚'); if(parts.length<2) continue;
+    let leftRaw=parts[0].trim(), rightRaw=parts.slice(1).join('🆚').trim();
+    const leftHasTeamName=containsAnyIgnoreCase(leftRaw,LLFCTeams);
+    const rightHasTeamName=containsAnyIgnoreCase(rightRaw,LLFCTeams);
+    if(leftHasTeamName || rightHasTeamName){ currentLeftTeam=leftRaw.replace(/[\r\n]+/g,' ').trim(); currentRightTeam=rightRaw.replace(/[\r\n]+/g,' ').trim(); continue; }
+    let leftIsLLFC=null;
+    if(currentLeftTeam || currentRightTeam){
+      if(containsAnyIgnoreCase(currentLeftTeam,LLFCTeams)) leftIsLLFC=true;
+      else if(containsAnyIgnoreCase(currentRightTeam,LLFCTeams)) leftIsLLFC=false;
+    }
+    if(leftIsLLFC===null){
+      if(containsAnyIgnoreCase(leftRaw,LLFCTeams)) leftIsLLFC=true;
+      else if(containsAnyIgnoreCase(rightRaw,LLFCTeams)) leftIsLLFC=false;
+      else continue;
+    }
+    const llfcSideRaw = leftIsLLFC?leftRaw:rightRaw;
+    const oppSideRaw = leftIsLLFC?rightRaw:leftRaw;
+    const llfcGoals = leftIsLLFC?getLastNumber(leftRaw):getFirstNumber(rightRaw);
+    const oppGoals = leftIsLLFC?getFirstNumber(rightRaw):getLastNumber(leftRaw);
+    const playerNames=extractPlayersFromSide(llfcSideRaw,leftIsLLFC?'end':'start');
+    if(playerNames.length===0){ const cleaned=llfcSideRaw.replace(/[🔑⚽@]/g,' ').replace(/\d+/g,' ').replace(/\s+/g,' ').trim(); if(cleaned) playerNames.push(cleaned); }
+    let teamNameForPlayer=currentLeftTeam||currentRightTeam||'LLFC';
+    playerNames.forEach(name=>{
+      const cleanName=name.trim(); if(!cleanName) return;
+      if(!players[cleanName]) players[cleanName]={id:uidFor(cleanName),player:cleanName,team:teamNameForPlayer,matches:1,win:llfcGoals>oppGoals?1:0,draw:llfcGoals===oppGoals?1:0,loss:llfcGoals<oppGoals?1:0,gs:llfcGoals,gc:oppGoals,gd:llfcGoals-oppGoals,motm:line.includes('⚽')?1:0,rating:0,photo:''};
+      else { const o=players[cleanName]; o.matches+=1; o.win+=llfcGoals>oppGoals?1:0; o.draw+=llfcGoals===oppGoals?1:0; o.loss+=llfcGoals<oppGoals?1:0; o.gs+=llfcGoals; o.gc+=oppGoals; o.gd=o.gs-o.gc; o.motm+=line.includes('⚽')?1:0; }
     });
-    return Object.values(players);
+  }
+  return Object.values(players);
 }
 
-// ------------------ Preview Table ------------------
-function previewScorecard(){
-    const text = document.getElementById("scorecardText").value;
-    if(!text){ alert("Paste a scorecard!"); return; }
-    previewPlayers = parseScorecard(text);
-    if(previewPlayers.length===0){ alert("No LLFC players found!"); return; }
-    currentScorecardID = Date.now();
-    renderPreviewTable();
-}
+/* ---------- preview / rendering / rating ---------- */
+let previewPlayers=[],currentScorecardID=null;
+function calcRating(p){return (p.win*7)+(p.draw*5)+(p.loss*-5)+((p.gd||0)*0.3)+(p.motm||0)*1;}
 
 function renderPreviewTable(){
-    let html = `<table><thead>
-    <tr>
-    <th>Player Name</th>
-    <th>Matches</th>
-    <th>Win</th>
-    <th>Draw</th>
-    <th>Loss</th>
-    <th>GS</th>
-    <th>GC</th>
-    <th>GD</th>
-    <th>MOTM</th>
-    <th>Rating</th>
-    </tr></thead><tbody>`;
-    previewPlayers.forEach(p=>{
-        html += `<tr>
-            <td contenteditable="true">${p.player}</td>
-            <td><input type="number" value="${p.matches}"></td>
-            <td><input type="number" value="${p.win}"></td>
-            <td><input type="number" value="${p.draw}"></td>
-            <td><input type="number" value="${p.loss}"></td>
-            <td><input type="number" value="${p.gs}"></td>
-            <td><input type="number" value="${p.gc}"></td>
-            <td><input type="number" value="${p.gd}"></td>
-            <td><input type="number" value="${p.motm}"></td>
-            <td><input type="number" value="${p.rating.toFixed(2)}"></td>
-        </tr>`;
+  if(!previewPlayers || previewPlayers.length===0){ document.getElementById('previewContainer').innerHTML='<div class="small">Preview খালি — প্রথমে scorecard পেস্ট করে Preview চাপুন।</div>'; return; }
+  let html='<table><thead><tr><th>Player</th><th>Matches</th><th>W</th><th>D</th><th>L</th><th>GS</th><th>GC</th><th>GD</th><th>MOTM</th><th>Rating</th></tr></thead><tbody>';
+  previewPlayers.forEach((p,idx)=>{
+    p.rating=p.rating||calcRating(p);
+    html+=`<tr>
+      <td style="text-align:left">${escapeHtml(p.player)}</td>
+      <td><input data-idx="${idx}" data-field="matches" type="number" value="${p.matches}"></td>
+      <td><input data-idx="${idx}" data-field="win" type="number" value="${p.win}"></td>
+      <td><input data-idx="${idx}" data-field="draw" type="number" value="${p.draw}"></td>
+      <td><input data-idx="${idx}" data-field="loss" type="number" value="${p.loss}"></td>
+      <td><input data-idx="${idx}" data-field="gs" type="number" value="${p.gs}"></td>
+      <td><input data-idx="${idx}" data-field="gc" type="number" value="${p.gc}"></td>
+      <td><input data-idx="${idx}" data-field="gd" type="number" value="${p.gd}"></td>
+      <td><input data-idx="${idx}" data-field="motm" type="number" value="${p.motm}"></td>
+      <td><input type="number" value="${(p.rating||0).toFixed(2)}" readonly></td>
+    </tr>`;
+  });
+  html+='</tbody></table>';
+  document.getElementById('previewContainer').innerHTML=html;
+  document.querySelectorAll('#previewContainer input[type="number"]').forEach(inp=>{
+    inp.addEventListener('input',(e)=>{
+      const idx=parseInt(e.target.getAttribute('data-idx')),field=e.target.getAttribute('data-field');
+      if(Number.isInteger(idx) && field){
+        const val=parseInt(e.target.value)||0;
+        previewPlayers[idx][field]=val;
+        previewPlayers[idx].gd=(previewPlayers[idx].gs||0)-(previewPlayers[idx].gc||0);
+        previewPlayers[idx].rating=calcRating(previewPlayers[idx]);
+        const row=e.target.closest('tr');
+        if(row){ const ratingInput=row.querySelector('td:last-child input'); if(ratingInput) ratingInput.value=previewPlayers[idx].rating.toFixed(2); }
+      }
     });
-    html += `</tbody></table>`;
-    document.getElementById("previewContainer").innerHTML = html;
+  });
 }
 
-// ------------------ Submit Scorecard ------------------
-async function submitScorecard(){
-    const subDate = document.getElementById("submissionDate").value;
-    if(!subDate){ alert("Select submission date!"); return; }
-
-    const table = document.querySelector("#previewContainer table tbody");
-    previewPlayers.forEach((p,i)=>{
-        let row = table.rows[i];
-        p.player = row.cells[0].innerText.trim();
-        p.matches = parseInt(row.cells[1].children[0].value)||0;
-        p.win = parseInt(row.cells[2].children[0].value)||0;
-        p.draw = parseInt(row.cells[3].children[0].value)||0;
-        p.loss = parseInt(row.cells[4].children[0].value)||0;
-        p.gs = parseInt(row.cells[5].children[0].value)||0;
-        p.gc = parseInt(row.cells[6].children[0].value)||0;
-        p.gd = parseInt(row.cells[7].children[0].value)||0;
-        p.motm = parseInt(row.cells[8].children[0].value)||0;
-
-        let points = p.win*7 + p.draw*5 + p.loss*-5 + p.gd*0.3 + p.motm*1;
-        p.rating = p.matches ? points / p.matches : 0;
-    });
-
-    await db.collection("scorecards").doc(String(currentScorecardID)).set({
-        id: currentScorecardID,
-        date: subDate,
-        players: previewPlayers
-    });
-
-    alert("✅ Scorecard submitted to Firebase!");
-    previewPlayers = [];
-    currentScorecardID = null;
-    document.getElementById("previewContainer").innerHTML = "";
-    document.getElementById("scorecardText").value = "";
-    displayArchive();
-    displayRanking();
+/* ---------- Preview button ---------- */
+function previewScorecard(){
+  const text=document.getElementById('scorecardText').value||''; if(!text.trim()){ alert('প্রথমে scorecard পেস্ট করুন।'); return; }
+  previewPlayers=parseScorecard(text);
+  if(previewPlayers.length===0){ alert('কোনো LLFC player detect করা যায়নি।'); document.getElementById('previewContainer').innerHTML='<div class="small">No LLFC players found in pasted text.</div>'; return; }
+  previewPlayers.forEach(p=>p.rating=calcRating(p));
+  currentScorecardID=Date.now();
+  renderPreviewTable();
 }
 
-// ------------------ Display Archive ------------------
-async function displayArchive(){
-    const snapshot = await db.collection("scorecards").get();
-    const container = document.getElementById("archiveContainer");
-    container.innerHTML = "";
+/* ---------- Submit ---------- */
+function submitScorecard(){
+  const pw=document.getElementById('submitPassword').value||''; if(pw!=='Fardous'){ alert('Password ভুল।'); return; }
+  const date=document.getElementById('submissionDate').value; if(!date){ alert('Submission date নির্বাচন করুন।'); return; }
+  if(!previewPlayers || previewPlayers.length===0){ alert('প্রথমে preview তৈরি করুন।'); return; }
+  document.querySelectorAll('#previewContainer input[type="number"]').forEach(inp=>{ const idx=parseInt(inp.getAttribute('data-idx')),field=inp.getAttribute('data-field'); if(Number.isInteger(idx)&&field) previewPlayers[idx][field]=parseInt(inp.value)||0; });
+  previewPlayers.forEach(p=>{ p.gd=p.gs-p.gc; p.rating=calcRating(p); });
+  const docId=String(currentScorecardID||Date.now());
+  db.collection('scorecards').doc(docId).set({id:docId,date:date,players:previewPlayers})
+    .then(()=>{ alert('Submitted ✅'); document.getElementById('previewContainer').innerHTML='<div class="small">Submitted — preview cleared.</div>'; document.getElementById('scorecardText').value=''; previewPlayers=[]; currentScorecardID=null; displayArchive(); displayRanking(); })
+    .catch(err=>{ console.error(err); alert('Submit failed: '+err.message); });
+}
+
+/* ---------- Archive ---------- */
+function displayArchive(){
+  const container=document.getElementById('archiveContainer'); container.innerHTML='<div class="small">Loading archive…</div>';
+  db.collection('scorecards').orderBy('id','desc').get().then(snapshot=>{
+    container.innerHTML='';
     snapshot.forEach(doc=>{
-        let data = doc.data();
-        let div = document.createElement("div");
-        div.className = "archive-item";
-        div.innerHTML = `${data.date} 
-        <button onclick="loadArchive(${data.id})">Load</button>
-        <button onclick="deleteArchive(${data.id})">Delete</button>`;
-        container.appendChild(div);
+      const d=doc.data();
+      const el=document.createElement('div'); el.className='archive-item';
+      el.innerHTML=`<strong>${escapeHtml(d.date||'--')}</strong> &nbsp; <button onclick="loadArchive('${d.id}')">Load</button> <button onclick="deleteArchive('${d.id}')">Delete</button>`;
+      container.appendChild(el);
     });
+    if(snapshot.empty) container.innerHTML='<div class="small">No archive yet.</div>';
+  }).catch(err=>{ console.error(err); container.innerHTML='<div class="small">Archive load failed.</div>'; });
 }
 
-async function loadArchive(id){
-    const docSnap = await db.collection("scorecards").doc(String(id)).get();
-    if(!docSnap.exists) return;
-    let item = docSnap.data();
-    previewPlayers = item.players.map(p=>({...p}));
-    currentScorecardID = id;
-    renderPreviewTable();
+function loadArchive(id){
+  db.collection('scorecards').doc(String(id)).get().then(doc=>{
+    if(!doc.exists){ alert('Not found'); return; }
+    previewPlayers=(doc.data().players||[]).map(p=>({...p})); previewPlayers.forEach(p=>p.rating=calcRating(p)); currentScorecardID=id;
+    renderPreviewTable(); alert('Archive loaded to preview.');
+  }).catch(err=>{ console.error(err); alert('Load failed: '+err.message); });
 }
 
-async function deleteArchive(id){
-    if(!confirm("Delete this scorecard?")) return;
-    await db.collection("scorecards").doc(String(id)).delete();
-    displayArchive();
-    displayRanking();
-}
+function deleteArchive(id){ if(!confirm('Delete this?')) return; db.collection('scorecards').doc(String(id)).delete().then(()=>{ displayArchive(); displayRanking(); }); }
 
-// ------------------ Display Rankings ------------------
-async function displayRanking(){
-    const type = document.getElementById("rankingType").value;
-    const tbody = document.getElementById("rankingTable").querySelector("tbody");
-    tbody.innerHTML = "";
-
-    const snapshot = await db.collection("scorecards").get();
-    let stats = {};
-    let now = new Date();
-
+/* ---------- Rankings ---------- */
+function displayRanking(){
+  const type=document.getElementById('rankingType').value;
+  const tbody=document.querySelector('#rankingTable tbody');
+  tbody.innerHTML='<tr><td colspan="12" class="small">Loading…</td></tr>';
+  db.collection('scorecards').get().then(snapshot=>{
+    const stats={}; const now=new Date();
     snapshot.forEach(doc=>{
-        let card = doc.data();
-        let cardDate = new Date(card.date);
-        let include = false;
-        if(type==='overall') include = true;
-        else if(type==='monthly') include = cardDate.getMonth()===now.getMonth() && cardDate.getFullYear()===now.getFullYear();
-        else if(type==='weekly'){
-            const weekStart = new Date(now);
-            weekStart.setDate(now.getDate()-now.getDay());
-            const weekEnd = new Date(weekStart);
-            weekEnd.setDate(weekStart.getDate()+6);
-            include = cardDate >= weekStart && cardDate <= weekEnd;
+      const card=doc.data();if(!card || !card.players) return;
+      const cardDate=new Date(card.date);
+      let include=false;
+      if(type==='overall') include=true;
+      else if(type==='monthly') include=(cardDate.getMonth()===now.getMonth() && cardDate.getFullYear()===now.getFullYear());
+      else if(type==='weekly'){ 
+        const ws=new Date(now); ws.setDate(now.getDate()-now.getDay()); 
+        const we=new Date(ws); we.setDate(ws.getDate()+6); 
+        include=(cardDate>=ws && cardDate<=we); 
+      }
+      if(!include) return;
+      card.players.forEach(p=>{
+        if(!stats[p.player]) stats[p.player]={...p};
+        else{
+          const o=stats[p.player];
+          o.matches+=p.matches; o.win+=p.win; o.draw+=p.draw; o.loss+=p.loss;
+          o.gs+=p.gs; o.gc+=p.gc; o.gd=o.gs-o.gc; o.motm+=p.motm; o.rating+=p.rating;
+          if(p.photo) o.photo=p.photo;
         }
-
-        if(include){
-            card.players.forEach(p=>{
-                if(!stats[p.player]){
-                    stats[p.player] = {...p};
-                } else {
-                    stats[p.player].matches += p.matches;
-                    stats[p.player].win += p.win;
-                    stats[p.player].draw += p.draw;
-                    stats[p.player].loss += p.loss;
-                    stats[p.player].gs += p.gs;
-                    stats[p.player].gc += p.gc;
-                    stats[p.player].gd += p.gd;
-                    stats[p.player].motm += p.motm;
-                }
-                let totalPoints = stats[p.player].win*7 + stats[p.player].draw*5 + stats[p.player].loss*-5 + stats[p.player].gd*0.3 + stats[p.player].motm*1;
-                stats[p.player].rating = stats[p.player].matches ? totalPoints/stats[p.player].matches : 0;
-            });
-        }
+      });
     });
 
-    let playersArr = Object.values(stats);
-    playersArr.sort((a,b)=>b.rating - a.rating);
-
-    playersArr.forEach((p,i)=>{
-        let cls = "";
-        let medal = "";
-        if(i===0){ cls="rank-1"; medal="🥇"; }
-        else if(i===1){ cls="rank-2"; medal="🥈"; }
-        else if(i===2){ cls="rank-3"; medal="🥉"; }
-        tbody.innerHTML += `<tr class="${cls}">
-            <td><img src="${p.photo||''}" class="player-photo"></td>
-            <td>${medal}${p.player}</td>
-            <td>${p.matches}</td>
-            <td>${p.win}</td>
-            <td>${p.draw}</td>
-            <td>${p.loss}</td>
-            <td>${p.gs}</td>
-            <td>${p.gc}</td>
-            <td>${p.gd}</td>
-            <td>${p.motm}</td>
-            <td>${p.rating.toFixed(2)}</td>
-            <td><input type="file" onchange="uploadPhoto(event,'${p.player}')"></td>
-        </tr>`;
+    const arr=Object.values(stats).sort((a,b)=>(b.rating||0)-(a.rating||0));
+    if(arr.length===0){ tbody.innerHTML='<tr><td colspan="12" class="small">No ranking data.</td></tr>'; return; }
+    tbody.innerHTML='';
+    arr.forEach((p,i)=>{
+      const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+      const row=document.createElement('tr');
+      row.innerHTML=`<td><img class="player-photo" src="${p.photo||''}" onerror="this.src='';"></td>
+        <td style="text-align:left">${medal} ${escapeHtml(p.player)}</td>
+        <td>${p.matches}</td><td>${p.win}</td><td>${p.draw}</td><td>${p.loss}</td>
+        <td>${p.gs}</td><td>${p.gc}</td><td>${p.gd}</td><td>${p.motm}</td><td>${(p.rating||0).toFixed(2)}</td>
+        <td><input type="file" onchange="uploadPhoto(event,'${escapeHtml(p.player)}')"></td>`;
+      tbody.appendChild(row);
     });
+  }).catch(err=>{ console.error(err); tbody.innerHTML='<tr><td colspan="12" class="small">Failed to load.</td></tr>'; });
 }
 
-// ------------------ Upload Player Photo ------------------
-async function uploadPhoto(e,player){
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = async function(ev){
-        const snapshot = await db.collection("scorecards").get();
-        snapshot.forEach(async doc=>{
-            let data = doc.data();
-            data.players.forEach(p=>{
-                if(p.player===player){ p.photo = ev.target.result; }
-            });
-            await db.collection("scorecards").doc(doc.id).set(data);
-        });
-        displayRanking();
-    };
-    reader.readAsDataURL(file);
+/* ---------- Photo upload ---------- */
+function uploadPhoto(e, playerName){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    const dataUrl=ev.target.result;
+    db.collection('scorecards').get().then(snapshot=>{
+      snapshot.forEach(doc=>{
+        const d=doc.data(); let updated=false;
+        (d.players||[]).forEach(p=>{ if(p.player===playerName){ p.photo=dataUrl; updated=true; } });
+        if(updated) db.collection('scorecards').doc(doc.id).set(d);
+      });
+      displayRanking();
+      alert('Photo uploaded.');
+    }).catch(err=>{ console.error(err); alert('Upload failed'); });
+  };
+  reader.readAsDataURL(file);
 }
 
-// ------------------ Download Ranking Card ------------------
+/* ---------- Download ---------- */
 function downloadRankingCard(){
-    const type = document.getElementById("rankingType").value;
-    const rangeVal = document.getElementById("downloadRange").value.split("-").map(Number);
-    const tbody = document.getElementById("rankingTable").querySelector("tbody");
-
-    let html = `<table style="border-collapse:collapse;"><thead>${document.querySelector("#rankingTable thead").innerHTML}</thead><tbody>`;
-    for(let i=rangeVal[0]-1;i<rangeVal[1] && i<tbody.rows.length;i++){
-        html += `<tr>${tbody.rows[i].innerHTML}</tr>`;
-    }
-    html += `</tbody></table>`;
-    const div = document.getElementById("rankingCard");
-    div.innerHTML = html;
-
-    html2canvas(div).then(canvas=>{
-        const link = document.createElement("a");
-        link.download = `LLFC_Ranking_${type}_${rangeVal[0]}-${rangeVal[1]}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-    });
+  const range=document.getElementById('downloadRange').value.split('-').map(n=>parseInt(n,10));
+  const tbody=document.querySelector('#rankingTable tbody');
+  if(!tbody || tbody.rows.length===0){ alert('Ranking empty'); return; }
+  let html=`<table style="border-collapse:collapse;border:1px solid #ddd;"><thead>${document.querySelector('#rankingTable thead').innerHTML}</thead><tbody>`;
+  for(let i=range[0]-1;i<range[1] && i<tbody.rows.length;i++) html+='<tr>'+tbody.rows[i].innerHTML+'</tr>';
+  html+='</tbody></table>';
+  const div=document.getElementById('rankingCard'); div.innerHTML=html;
+  html2canvas(div).then(canvas=>{
+    const link=document.createElement('a'); link.download=`LLFC_Ranking_${range[0]}-${range[1]}.png`;
+    link.href=canvas.toDataURL('image/png'); link.click();
+  });
 }
 
-// ------------------ Initialize ------------------
+/* ---------- Init ---------- */
 displayArchive();
 displayRanking();
 </script>
-
 </body>
 </html>
