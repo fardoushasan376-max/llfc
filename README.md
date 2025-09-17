@@ -4,59 +4,174 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>LLFC Scorecard Manager — Fixed</title>
+<title>DREADLORDS DASHBOARD— Fixed</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <style>
-  body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f4;margin:0;padding:20px}
-  h1,h2{text-align:center}
-  textarea{width:100%;height:160px;font-family:monospace;margin-bottom:8px;padding:8px}
-  button,input,select{padding:8px 12px;margin:6px 4px}
-  table{width:100%;border-collapse:collapse;background:#fff;margin-bottom:12px}
-  th,td{border:1px solid #ddd;padding:6px;text-align:center}
-  th{background:#333;color:#fff}
-  .archive-item{background:#fff;padding:8px;border:1px solid #ccc;margin-bottom:6px}
-  img.player-photo{width:48px;height:48px;object-fit:cover;border-radius:6px}
-  .small{font-size:13px;color:#555}
-  .notice{background:#fffae6;border:1px solid #ffd86b;padding:8px;margin:8px 0}
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Montserrat:wght@400;600&display=swap');
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: radial-gradient(circle at top, #0A103D 0%, #000 100%);
+    margin: 0;
+    padding: 20px;
+    color: #fff;
+  }
+  h1,h2 {
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    text-shadow: 0 0 12px #1B46A3;
+    letter-spacing: 1px;
+  }
+  textarea {
+    width: 100%;
+    height: 160px;
+    font-family: monospace;
+    margin-bottom: 8px;
+    padding: 10px;
+    border: 1px solid #1B46A3;
+    border-radius: 6px;
+    background: #0A103D;
+    color: #fff;
+  }
+  button, input, select {
+    padding: 10px 16px;
+    margin: 6px 4px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #1B46A3, #8000FF);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  button:hover, input[type="submit"]:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px #1B46A3;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 12px;
+    border: 1px solid #1B46A3;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  th, td {
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px;
+    text-align: center;
+    color: #fff;
+  }
+  th {
+    background: linear-gradient(135deg, #1B46A3, #8000FF);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+  .archive-item {
+    background: rgba(255,255,255,0.05);
+    padding: 8px;
+    border: 1px solid #1B46A3;
+    margin-bottom: 6px;
+    border-radius: 6px;
+  }
+  img.player-photo {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #1B46A3;
+    box-shadow: 0 0 8px #8000FF;
+  }
+  .small { font-size: 13px; color: #bbb; }
+  .notice {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid #1B46A3;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    color: #fff;
+  }
 </style>
 </head>
 <body>
 
-<h1>LLFC Scorecard Manager — Bugfixed</h1>
+<h1>DREADLORDS DASHBOARD</h1>
 
-<h2>1) স্কোরকার্ড পেস্ট করুন</h2>
-<textarea id="scorecardText" placeholder="স্কোরকার্ড এখানে পেস্ট করুন (ম্যাচ হেডার + প্লেয়ার লাইনের সাথে)।"></textarea>
-<br>
-<button onclick="previewScorecard()">Preview Scorecard</button>
-<span class="small"> (হেডার ধরে LLFC side detect করবে; 🔑 ছেঁকে দেখে সিদ্ধান্ত নেবে না)</span>
+<!-- 🔑 ADMIN SECTION -->
+<div id="adminSection" style="display:none">
+  <h2>Admin Section</h2>
 
-<h2>2) Preview</h2>
-<div id="previewContainer" class="notice">Preview এখানে দেখাবে।</div>
+  <h3>1) স্কোরকার্ড পেস্ট করুন</h3>
+  <textarea id="scorecardText" placeholder="স্কোরকার্ড এখানে পেস্ট করুন"></textarea>
+  <br>
+  <button onclick="previewScorecard()">Preview Scorecard</button>
 
-<label>Submission date: <input type="date" id="submissionDate"></label>
-<label>Password: <input type="text" id="submitPassword" placeholder="Fardous"></label>
-<button onclick="submitScorecard()">Submit Scorecard</button>
+  <h3>2) Preview</h3>
+  <div id="previewContainer" class="notice">Preview এখানে দেখাবে।</div>
 
-<h2>3) Archive</h2>
-<div id="archiveContainer"></div>
+  <label>Submission date: <input type="date" id="submissionDate"></label>
+  <label>Password: <input type="text" id="submitPassword" placeholder="Fardous"></label>
+  <button onclick="submitScorecard()">Submit Scorecard</button>
 
-<h2>4) Rankings</h2>
-<label>Filter:
-  <select id="rankingType" onchange="displayRanking()">
-    <option value="overall">Overall</option>
-    <option value="monthly">Monthly</option>
-    <option value="weekly">Weekly</option>
+  <h3>3) Archive</h3>
+  <div id="archiveContainer"></div>
+</div>
+
+<!-- 👥 VIEWER SECTION -->
+<div id="viewerSection">
+  <h2>Player Rankings & Statistics</h2>
+  <label>Filter:
+    <select id="rankingType" onchange="displayRanking()">
+      <option value="overall">Overall</option>
+      <option value="monthly">Monthly</option>
+      <option value="weekly">Weekly</option>
+    </select>
+  </label>
+  <table id="rankingTable">
+    <thead>
+      <tr>
+        <th>Photo</th><th>Player</th><th>Matches</th>
+        <th>W</th><th>D</th><th>L</th>
+    <th>WIN RATIO </th><th>GS</th><th>Gc</th><th>GD</th>
+        <th>MOTM</th><th>Rating</th><th>Upload</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Download Rankings</h2>
+  <select id="downloadRange">
+    <option value="1-10">1-10</option>
+    <option value="11-20">11-20</option>
   </select>
-</label>
-<table id="rankingTable">
-  <thead>
-    <tr><th>Photo</th><th>Player</th><th>Matches</th><th>W</th><th>D</th><th>L</th><th>GS</th><th>GC</th><th>GD</th><th>MOTM</th><th>Rating</th><th>Upload</th></tr>
-  </thead>
-  <tbody></tbody>
+  <button onclick="downloadRankingCard()">Download Card</button>
+  <div id="rankingCard" style="padding:10px;background:#fff;margin-top:8px"></div>
+</div>
+
+<!-- 🔑 ADMIN LOGIN BUTTON -->
+<div style="margin-top:20px;text-align:center">
+  <button onclick="toggleAdmin()">🔑 Admin Login</button>
+</div>
+
+<script>
+function toggleAdmin(){
+  const pw = prompt("Enter admin password:");
+  if(pw === "Fardous"){
+    document.getElementById('adminSection').style.display="block";
+    alert("Welcome Admin ✅");
+  } else {
+    alert("Wrong password!");
+  }
+}
+</script>
+</body>
 </table>
 
 <h2>5) Download</h2>
@@ -160,12 +275,18 @@ let previewPlayers=[],currentScorecardID=null;
 function calcRating(p){return (p.win*7)+(p.draw*5)+(p.loss*-5)+((p.gd||0)*0.3)+(p.motm||0)*1;}
 
 function renderPreviewTable(){
-  if(!previewPlayers || previewPlayers.length===0){ document.getElementById('previewContainer').innerHTML='<div class="small">Preview খালি — প্রথমে scorecard পেস্ট করে Preview চাপুন।</div>'; return; }
+  if(!previewPlayers || previewPlayers.length===0){
+    document.getElementById('previewContainer').innerHTML='<div class="small">Preview খালি — প্রথমে scorecard পেস্ট করে Preview চাপুন।</div>';
+    return;
+  }
   let html='<table><thead><tr><th>Player</th><th>Matches</th><th>W</th><th>D</th><th>L</th><th>GS</th><th>GC</th><th>GD</th><th>MOTM</th><th>Rating</th></tr></thead><tbody>';
+  
   previewPlayers.forEach((p,idx)=>{
     p.rating=p.rating||calcRating(p);
     html+=`<tr>
-      <td style="text-align:left">${escapeHtml(p.player)}</td>
+      <td style="text-align:left">
+        <input type="text" data-idx="${idx}" data-field="player" value="${escapeHtml(p.player)}">
+      </td>
       <td><input data-idx="${idx}" data-field="matches" type="number" value="${p.matches}"></td>
       <td><input data-idx="${idx}" data-field="win" type="number" value="${p.win}"></td>
       <td><input data-idx="${idx}" data-field="draw" type="number" value="${p.draw}"></td>
@@ -179,21 +300,24 @@ function renderPreviewTable(){
   });
   html+='</tbody></table>';
   document.getElementById('previewContainer').innerHTML=html;
-  document.querySelectorAll('#previewContainer input[type="number"]').forEach(inp=>{
+
+  // add event listeners for all inputs
+  document.querySelectorAll('#previewContainer input').forEach(inp=>{
     inp.addEventListener('input',(e)=>{
-      const idx=parseInt(e.target.getAttribute('data-idx')),field=e.target.getAttribute('data-field');
+      const idx=parseInt(e.target.getAttribute('data-idx')), field=e.target.getAttribute('data-field');
       if(Number.isInteger(idx) && field){
-        const val=parseInt(e.target.value)||0;
+        const val=field==='player'?e.target.value:(parseInt(e.target.value)||0);
         previewPlayers[idx][field]=val;
-        previewPlayers[idx].gd=(previewPlayers[idx].gs||0)-(previewPlayers[idx].gc||0);
-        previewPlayers[idx].rating=calcRating(previewPlayers[idx]);
-        const row=e.target.closest('tr');
-        if(row){ const ratingInput=row.querySelector('td:last-child input'); if(ratingInput) ratingInput.value=previewPlayers[idx].rating.toFixed(2); }
+        if(['gs','gc','matches','win','draw','loss','motm'].includes(field)){
+          previewPlayers[idx].gd=(previewPlayers[idx].gs||0)-(previewPlayers[idx].gc||0);
+          previewPlayers[idx].rating=calcRating(previewPlayers[idx]);
+          const row=e.target.closest('tr');
+          if(row){ const ratingInput=row.querySelector('td:last-child input'); if(ratingInput) ratingInput.value=previewPlayers[idx].rating.toFixed(2); }
+        }
       }
     });
   });
 }
-
 /* ---------- Preview button ---------- */
 function previewScorecard(){
   const text=document.getElementById('scorecardText').value||''; if(!text.trim()){ alert('প্রথমে scorecard পেস্ট করুন।'); return; }
@@ -278,7 +402,14 @@ function displayRanking(){
     arr.forEach((p,i)=>{
       const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
       const row=document.createElement('tr');
-      row.innerHTML=`<td><img class="player-photo" src="${p.photo||''}" onerror="this.src='';"></td>
+      const winPerc = p.matches > 0 ? ((p.win / p.matches) * 100).toFixed(2) : '0.00';
+row.innerHTML=`<td><img class="player-photo" src="${p.photo||''}" onerror="this.src='';"></td>
+  <td style="text-align:left">${medal} ${escapeHtml(p.player)}</td>
+  <td>${p.matches}</td><td>${p.win}</td><td>${p.draw}</td><td>${p.loss}</td>
+  <td>${winPerc}%</td>
+  <td>${p.gs}</td><td>${p.gc}</td><td>${p.gd}</td>
+  <td>${p.motm}</td><td>${(p.rating||0).toFixed(2)}</td>
+  <td><input type="file" onchange="uploadPhoto(event,'${escapeHtml(p.player)}')"></td>`;`<td><img class="player-photo" src="${p.photo||''}" onerror="this.src='';"></td>
         <td style="text-align:left">${medal} ${escapeHtml(p.player)}</td>
         <td>${p.matches}</td><td>${p.win}</td><td>${p.draw}</td><td>${p.loss}</td>
         <td>${p.gs}</td><td>${p.gc}</td><td>${p.gd}</td><td>${p.motm}</td><td>${(p.rating||0).toFixed(2)}</td>
