@@ -73,6 +73,14 @@
     font-family: 'Orbitron', sans-serif;
     font-size: 14px;
     letter-spacing: 0.5px;
+    #rankingTable tbody tr {
+  background: rgba(27,70,163,0.2); /* light blue with some transparency */
+  transition: background 0.2s;
+}
+
+#rankingTable tbody tr:hover {
+  background: rgba(27,70,163,0.5); /* darker blue on hover */
+}
   }
   .archive-item {
     background: rgba(255,255,255,0.05);
