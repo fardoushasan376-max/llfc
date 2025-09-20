@@ -107,41 +107,52 @@
   background: #0A103D !important;   /* dark cells */
   color: #fff !important;           /* white text */
   border: 1px solid #1B46A3 !important;
-}
-/* UCL THEME for Top Performance Table */
-#performanceTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  font-size: 14px;
-  border-radius: 10px;
+<style>
+/* Top Performance tables — UCL Theme */
+#topPerformanceContainer table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  background: #0A103D !important; /* solid dark background */
+  margin-bottom: 16px;
+  border: 1px solid #1B46A3 !important;
+  border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  color: #fff !important;
 }
 
-#performanceTable th {
-  background: #1e2a78 !important; /* UCL Deep Blue */
-  color: #ffffff !important;      /* White text */
-  padding: 10px;
-  text-align: center;
-  font-weight: 600;
+#topPerformanceContainer th, 
+#topPerformanceContainer td {
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  padding: 6px !important;
+  text-align: center !important;
+  color: #fff !important;        /* white text */
+  background: #0a1128 !important; /* dark navy for cells */
 }
 
-#performanceTable td {
-  padding: 8px 10px;
-  text-align: center;
-  background: #0a1128 !important; /* Dark navy row background */
-  color: #e6e6e6 !important;      /* Light grey text */
+#topPerformanceContainer th {
+  background: linear-gradient(135deg, #1B46A3, #8000FF) !important; /* UCL blue-purple */
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 13px !important;
+  color: #ffffff !important;
+  text-align: center !important;
 }
 
-#performanceTable tr:nth-child(even) td {
-  background: #16225a !important; /* Slightly lighter navy for even rows */
+#topPerformanceContainer tr:nth-child(even) td {
+  background: #16225a !important; /* slightly lighter navy for even rows */
 }
 
-#performanceTable tr:hover td {
-  background: #243b7a !important; /* Hover effect */
+#topPerformanceContainer tr:hover td {
+  background: #243b7a !important; /* hover effect */
   color: #ffffff !important;
 }
+
+#topPerformanceContainer h3 {
+  font-family: 'Orbitron', sans-serif !important;
+  color: #fff !important;
+  text-shadow: 0 0 8px #1B46A3;
+  margin-bottom: 6px;
+}
+</style>  ; /* Hov
 </style>
 </head>
 <body>
