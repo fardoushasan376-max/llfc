@@ -11,38 +11,6 @@
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <style>
-  <style>
-/* UCL Style for all tables */
-table {
-  background: #fff; /* সাদা ব্যাকগ্রাউন্ড */
-  color: #222;
-  border-collapse: collapse;
-  border: 1px solid #ddd;
-  width: 100%;
-  font-family: 'Montserrat', 'Segoe UI', sans-serif;
-}
-
-table th {
-  background: #1B46A3; /* UCL navy */
-  color: #FFD700;      /* UCL golden */
-  font-weight: 600;
-  padding: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-table td {
-  border: 1px solid #ddd;
-  padding: 6px;
-  text-align: center;
-  font-size: 14px;
-  color: #333;
-}
-
-table tr:nth-child(even) td {
-  background: #f9f9f9;
-}
-</style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Montserrat:wght@400;600&display=swap');
 
   body {
@@ -139,6 +107,40 @@ table tr:nth-child(even) td {
   background: #0A103D !important;   /* dark cells */
   color: #fff !important;           /* white text */
   border: 1px solid #1B46A3 !important;
+}
+/* UCL THEME for Top Performance Table */
+#performanceTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 14px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+#performanceTable th {
+  background: #1e2a78 !important; /* UCL Deep Blue */
+  color: #ffffff !important;      /* White text */
+  padding: 10px;
+  text-align: center;
+  font-weight: 600;
+}
+
+#performanceTable td {
+  padding: 8px 10px;
+  text-align: center;
+  background: #0a1128 !important; /* Dark navy row background */
+  color: #e6e6e6 !important;      /* Light grey text */
+}
+
+#performanceTable tr:nth-child(even) td {
+  background: #16225a !important; /* Slightly lighter navy for even rows */
+}
+
+#performanceTable tr:hover td {
+  background: #243b7a !important; /* Hover effect */
+  color: #ffffff !important;
 }
 </style>
 </head>
