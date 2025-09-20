@@ -11,6 +11,38 @@
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <style>
+  <style>
+/* UCL Style for all tables */
+table {
+  background: #fff; /* সাদা ব্যাকগ্রাউন্ড */
+  color: #222;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  width: 100%;
+  font-family: 'Montserrat', 'Segoe UI', sans-serif;
+}
+
+table th {
+  background: #1B46A3; /* UCL navy */
+  color: #FFD700;      /* UCL golden */
+  font-weight: 600;
+  padding: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+table td {
+  border: 1px solid #ddd;
+  padding: 6px;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+
+table tr:nth-child(even) td {
+  background: #f9f9f9;
+}
+</style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Montserrat:wght@400;600&display=swap');
 
   body {
