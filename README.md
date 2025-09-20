@@ -107,52 +107,48 @@
   background: #0A103D !important;   /* dark cells */
   color: #fff !important;           /* white text */
   border: 1px solid #1B46A3 !important;
-<style>
-/* Top Performance tables — UCL Theme */
-#topPerformanceContainer table {
-  width: 100% !important;
-  border-collapse: collapse !important;
-  background: #0A103D !important; /* solid dark background */
-  margin-bottom: 16px;
-  border: 1px solid #1B46A3 !important;
-  border-radius: 6px;
+}
+/* UCL THEME for Top Performance Table */
+#performanceTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 14px;
+  border-radius: 10px;
   overflow: hidden;
-  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
-#topPerformanceContainer th, 
+#performanceTable th {
+  background: #1e2a78 !important; /* UCL Deep Blue */
+  color: #ffffff !important;      /* White text */
+  padding: 10px;
+  text-align: center;
+  font-weight: 600;
+}
+
+#performanceTable td {
+  padding: 8px 10px;
+  text-align: center;
+  background: #0a1128 !important; /* Dark navy row background */
+  color: #e6e6e6 !important;      /* Light grey text */
+}
+
+#performanceTable tr:nth-child(even) td {
+  background: #16225a !important; /* Slightly lighter navy for even rows */
+}
+
+#performanceTable tr:hover td {
+  background: #243b7a !important; /* Hover effect */
+  color: #ffffff !important;
+}
+#topPerformanceContainer table,
+#topPerformanceContainer th,
 #topPerformanceContainer td {
-  border: 1px solid rgba(255,255,255,0.1) !important;
-  padding: 6px !important;
-  text-align: center !important;
-  color: #fff !important;        /* white text */
-  background: #0a1128 !important; /* dark navy for cells */
-}
-
-#topPerformanceContainer th {
-  background: linear-gradient(135deg, #1B46A3, #8000FF) !important; /* UCL blue-purple */
-  font-family: 'Orbitron', sans-serif !important;
-  font-size: 13px !important;
-  color: #ffffff !important;
-  text-align: center !important;
-}
-
-#topPerformanceContainer tr:nth-child(even) td {
-  background: #16225a !important; /* slightly lighter navy for even rows */
-}
-
-#topPerformanceContainer tr:hover td {
-  background: #243b7a !important; /* hover effect */
-  color: #ffffff !important;
-}
-
-#topPerformanceContainer h3 {
-  font-family: 'Orbitron', sans-serif !important;
+  background: #0A103D !important;
   color: #fff !important;
-  text-shadow: 0 0 8px #1B46A3;
-  margin-bottom: 6px;
+  border: 1px solid #1B46A3 !important;
 }
-</style>  ; /* Hov
 </style>
 </head>
 <body>
@@ -229,116 +225,31 @@
 
 <style>
 /* Top Performance tables */
-  function displayTopPerformance(){
-  const type = document.getElementById('topPerformanceType').value;
-  const container = document.getElementById('topPerformanceContainer');
-  container.innerHTML = 'Loading…';
-  
-  db.collection('scorecards').get().then(snapshot => {
-    const stats = {};
-    const now = new Date();
-
-    snapshot.forEach(doc => {
-      const card = doc.data();
-      if (!card || !card.players) return;
-      const cardDate = new Date(card.date);
-      let include = false;
-      if (type === 'overall') include = true;
-      else if (type === 'monthly') include = (cardDate.getMonth() === now.getMonth() && cardDate.getFullYear() === now.getFullYear());
-      else if (type === 'weekly') { 
-        const ws = new Date(now); ws.setDate(now.getDate() - now.getDay());
-        const we = new Date(ws); we.setDate(ws.getDate() + 6);
-        include = (cardDate >= ws && cardDate <= we);
-      }
-      if (!include) return;
-
-      card.players.forEach(p => {
-        if (!stats[p.player]) stats[p.player] = { ...p };
-        else {
-          const o = stats[p.player];
-          o.matches += p.matches;
-          o.win += p.win;
-          o.draw += p.draw;
-          o.loss += p.loss;
-          o.gs += p.gs;
-          o.gc += p.gc;
-          o.gd = o.gs - o.gc;
-          o.motm += p.motm;
-          o.rating += p.rating;
-          if (p.photo) o.photo = p.photo;
-          o.maxGoals = Math.max(o.maxGoals || 0, p.gs);
-          if (p.gs >= 7) o.sevenPlusMatches = (o.sevenPlusMatches || 0) + 1;
-        }
-      });
-    });
-
-    const players = Object.values(stats);
-
-    // Create table function with UCL theme
-    const createTable = (title, headers, rows) => {
-      let html = `<h3>${title}</h3><table style="width:100%;border-collapse:collapse;background:#0A103D;color:#fff;border:1px solid #1B46A3;border-radius:6px;"><thead><tr>`;
-      headers.forEach(h => {
-        html += `<th style="background:linear-gradient(135deg,#1B46A3,#8000FF);color:#fff;font-family:Orbitron,sans-serif;font-size:13px;padding:6px;border:1px solid rgba(255,255,255,0.1);text-align:center;">${h}</th>`;
-      });
-      html += '</tr></thead><tbody>';
-      rows.forEach((r, ri) => {
-        html += '<tr>';
-        r.forEach(c => {
-          let bg = (ri % 2 === 0) ? '#0a1128' : '#16225a'; // alternate row colors
-          html += `<td style="background:${bg};color:#e6e6e6;padding:6px;border:1px solid rgba(255,255,255,0.1);text-align:center;">${c}</td>`;
-        });
-        html += '</tr>';
-      });
-      html += '</tbody></table>';
-      return html;
-    };
-
-    let html = '';
-
-    // Most MOTM
-    const motmTop = players.sort((a, b) => b.motm - a.motm).slice(0, 10)
-      .map(p => [`<img class="player-photo" src="${p.photo || ''}" onerror="this.src='';">`, escapeHtml(p.player), p.motm]);
-    html += createTable('Most MOTM', ['Photo', 'Player', 'MOTM'], motmTop);
-
-    // Top Scorer
-    const scorerTop = players.sort((a, b) => b.gs - a.gs).slice(0, 10)
-      .map(p => [`<img class="player-photo" src="${p.photo || ''}" onerror="this.src='';">`, escapeHtml(p.player), p.gs]);
-    html += createTable('Top Scorer', ['Photo', 'Player', 'Goals'], scorerTop);
-
-    // Most Wins
-    const winTop = players.sort((a, b) => b.win - a.win).slice(0, 10)
-      .map(p => [`<img class="player-photo" src="${p.photo || ''}" onerror="this.src='';">`, escapeHtml(p.player), p.win]);
-    html += createTable('Most Wins', ['Photo', 'Player', 'Wins'], winTop);
-
-    // 7+ Goals
-    const sevenPlus = players.filter(p => p.sevenPlusMatches > 0)
-      .sort((a, b) => b.sevenPlusMatches - a.sevenPlusMatches)
-      .slice(0, 10)
-      .map(p => [`<img class="player-photo" src="${p.photo || ''}" onerror="this.src='';">`, escapeHtml(p.player), p.sevenPlusMatches]);
-    html += createTable('7+ Goals in a Single Match', ['Photo', 'Player', 'Times'], sevenPlus);
-
-    // Highest Win Percentage
-    const winPercTop = players.filter(p => p.matches > 0)
-      .sort((a, b) => ((b.win / b.matches) * 100) - ((a.win / a.matches) * 100))
-      .slice(0, 10)
-      .map(p => [`<img class="player-photo" src="${p.photo || ''}" onerror="this.src='';">`, escapeHtml(p.player), ((p.win / p.matches) * 100).toFixed(2) + '%']);
-    html += createTable('Highest Win Percentage', ['Photo', 'Player', 'Win %'], winPercTop);
-
-    // Average Rating
-    const ratingTop = players.sort((a, b) => b.rating - a.rating).slice(0, 10)
-      .map(p => [`<img class="player-photo" src="${p.photo || ''}" onerror="this.src='';">`, escapeHtml(p.player), (p.rating || 0).toFixed(2)]);
-    html += createTable('Average Rating', ['Photo', 'Player', 'Rating'], ratingTop);
-
-    container.innerHTML = html;
-
-  }).catch(err => {
-    console.error(err);
-    container.innerHTML = 'Failed to load top performance.';
-  });
+#topPerformanceContainer table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.05);
+  margin-bottom: 16px;
+  border: 1px solid #1B46A3;
+  border-radius: 6px;
+  overflow: hidden;
 }
-
-// Initialize Top Performance
-displayTopPerformance();
+#topPerformanceContainer th, #topPerformanceContainer td {
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 6px;
+  text-align: center;
+  color: #fff;
+}
+#topPerformanceContainer th {
+  background: linear-gradient(135deg, #1B46A3, #8000FF);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+}
+#topPerformanceContainer h3 {
+  font-family: 'Orbitron', sans-serif;
+  color: #fff;
+  text-shadow: 0 0 8px #1B46A3;
+  margin-bottom: 6px;
 }
 </style>
 
