@@ -134,7 +134,7 @@
   <div id="archiveContainer"></div>
 </div>
 
-<!-- 👥 VIEWER SECTION -->
+<!-- 👥 VIEWER SECTION + TOP PERFORMANCE -->
 <div id="viewerSection">
   <h2>Player Rankings & Statistics</h2>
   <label>Filter:
@@ -149,7 +149,7 @@
       <tr>
         <th>Photo</th><th>Player</th><th>Matches</th>
         <th>W</th><th>D</th><th>L</th>
-    <th>WIN RATIO </th><th>GS</th><th>Gc</th><th>GD</th>
+        <th>WIN RATIO </th><th>GS</th><th>Gc</th><th>GD</th>
         <th>MOTM</th><th>Rating</th><th>Upload</th>
       </tr>
     </thead>
@@ -163,7 +163,132 @@
   </select>
   <button onclick="downloadRankingCard()">Download Card</button>
   <div id="rankingCard" style="padding:10px;background:#fff;margin-top:8px"></div>
+
+  <!-- 🔥 TOP PERFORMANCE SECTION -->
+  <h2>Top Performance</h2>
+  <label>View: 
+    <select id="topPerformanceType" onchange="displayTopPerformance()">
+      <option value="weekly">Weekly</option>
+      <option value="monthly">Monthly</option>
+      <option value="overall">Overall</option>
+    </select>
+  </label>
+
+  <div id="topPerformanceContainer" style="margin-top:12px;"></div>
 </div>
+
+<!-- 🔑 ADMIN LOGIN BUTTON -->
+<div style="margin-top:20px;text-align:center">
+  <button onclick="toggleAdmin()">🔑 Admin Login</button>
+</div>
+
+<style>
+/* Top Performance tables */
+#topPerformanceContainer table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.05);
+  margin-bottom: 16px;
+  border: 1px solid #1B46A3;
+  border-radius: 6px;
+  overflow: hidden;
+}
+#topPerformanceContainer th, #topPerformanceContainer td {
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 6px;
+  text-align: center;
+  color: #fff;
+}
+#topPerformanceContainer th {
+  background: linear-gradient(135deg, #1B46A3, #8000FF);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+}
+#topPerformanceContainer h3 {
+  font-family: 'Orbitron', sans-serif;
+  color: #fff;
+  text-shadow: 0 0 8px #1B46A3;
+  margin-bottom: 6px;
+}
+</style>
+
+<script>
+function displayTopPerformance(){
+  const type=document.getElementById('topPerformanceType').value;
+  const container=document.getElementById('topPerformanceContainer');
+  container.innerHTML='Loading…';
+  
+  db.collection('scorecards').get().then(snapshot=>{
+    const stats={}; const now=new Date();
+    snapshot.forEach(doc=>{
+      const card=doc.data(); if(!card || !card.players) return;
+      const cardDate=new Date(card.date);
+      let include=false;
+      if(type==='overall') include=true;
+      else if(type==='monthly') include=(cardDate.getMonth()===now.getMonth() && cardDate.getFullYear()===now.getFullYear());
+      else if(type==='weekly'){ 
+        const ws=new Date(now); ws.setDate(now.getDate()-now.getDay()); 
+        const we=new Date(ws); we.setDate(ws.getDate()+6); 
+        include=(cardDate>=ws && cardDate<=we); 
+      }
+      if(!include) return;
+      card.players.forEach(p=>{
+        if(!stats[p.player]) stats[p.player]={...p};
+        else{
+          const o=stats[p.player];
+          o.matches+=p.matches; o.win+=p.win; o.draw+=p.draw; o.loss+=p.loss;
+          o.gs+=p.gs; o.gc+=p.gc; o.gd=o.gs-o.gc; o.motm+=p.motm; o.rating+=p.rating;
+          if(p.photo) o.photo=p.photo;
+          o.maxGoals = Math.max(o.maxGoals||0, p.gs);
+          if(p.gs>=7) o.sevenPlusMatches=(o.sevenPlusMatches||0)+1;
+        }
+      });
+    });
+
+    const players=Object.values(stats);
+    const createTable=(title, headers, rows)=>{
+      let html=`<h3>${title}</h3><table><thead><tr>`;
+      headers.forEach(h=>html+=`<th>${h}</th>`); html+='</tr></thead><tbody>';
+      rows.forEach(r=>{ html+='<tr>'; r.forEach(c=>html+=`<td>${c}</td>`); html+='</tr>'; });
+      html+='</tbody></table>'; return html;
+    };
+
+    let html='';
+
+    const motmTop=players.sort((a,b)=>b.motm-a.motm).slice(0,10)
+      .map(p=>[`<img class="player-photo" src="${p.photo||''}" onerror="this.src='';">`, escapeHtml(p.player), p.motm]);
+    html+=createTable('Most MOTM', ['Photo','Player','MOTM'], motmTop);
+
+    const scorerTop=players.sort((a,b)=>b.gs-a.gs).slice(0,10)
+      .map(p=>[`<img class="player-photo" src="${p.photo||''}" onerror="this.src='';">`, escapeHtml(p.player), p.gs]);
+    html+=createTable('Top Scorer', ['Photo','Player','Goals'], scorerTop);
+
+    const winTop=players.sort((a,b)=>b.win-a.win).slice(0,10)
+      .map(p=>[`<img class="player-photo" src="${p.photo||''}" onerror="this.src='';">`, escapeHtml(p.player), p.win]);
+    html+=createTable('Most Wins', ['Photo','Player','Wins'], winTop);
+
+    const sevenPlus=players.filter(p=>p.sevenPlusMatches>0)
+      .sort((a,b)=>b.sevenPlusMatches-a.sevenPlusMatches)
+      .slice(0,10)
+      .map(p=>[`<img class="player-photo" src="${p.photo||''}" onerror="this.src='';">`, escapeHtml(p.player), p.sevenPlusMatches]);
+    html+=createTable('7+ Goals in a Single Match', ['Photo','Player','Times'], sevenPlus);
+
+    const winPercTop=players.filter(p=>p.matches>0).sort((a,b)=>((b.win/b.matches)*100)-((a.win/a.matches)*100)).slice(0,10)
+      .map(p=>[`<img class="player-photo" src="${p.photo||''}" onerror="this.src='';">`, escapeHtml(p.player), ((p.win/p.matches)*100).toFixed(2)+'%']);
+    html+=createTable('Highest Win Percentage', ['Photo','Player','Win %'], winPercTop);
+
+    const ratingTop=players.sort((a,b)=>b.rating-a.rating).slice(0,10)
+      .map(p=>[`<img class="player-photo" src="${p.photo||''}" onerror="this.src='';">`, escapeHtml(p.player), (p.rating||0).toFixed(2)]);
+    html+=createTable('Average Rating', ['Photo','Player','Rating'], ratingTop);
+
+    container.innerHTML=html;
+
+  }).catch(err=>{ console.error(err); container.innerHTML='Failed to load top performance.'; });
+}
+
+// Initialize Top Performance
+displayTopPerformance();
+</script>
 
 <!-- 🔑 ADMIN LOGIN BUTTON -->
 <div style="margin-top:20px;text-align:center">
