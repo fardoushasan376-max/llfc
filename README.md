@@ -318,9 +318,21 @@ function displayTopPerformance(){
       .map(p=>[`<img class="player-photo" src="${p.photo||''}" onerror="this.src='';">`, escapeHtml(p.player), ((p.win/p.matches)*100).toFixed(2)+'%']);
     html+=createTable('Highest Win Percentage', ['Photo','Player','Win %'], winPercTop);
 
-    const ratingTop=players.sort((a,b)=>b.rating-a.rating).slice(0,10)
-      .map(p=>[`<img class="player-photo" src="${p.photo||''}" onerror="this.src='';">`, escapeHtml(p.player), (p.rating||0).toFixed(2)]);
-    html+=createTable('Average Rating', ['Photo','Player','Rating'], ratingTop);
+    const avgRatingTop = players
+  .filter(p => p.matches >= 10 && p.rating !== undefined) // at least 10 matches & rating exists
+  .sort((a, b) => b.rating - a.rating) // highest rating first
+  .slice(0, 10)
+  .map(p => [
+    `<img class="player-photo" src="${p.photo || ''}" onerror="this.src='';">`,
+    escapeHtml(p.player),
+    p.rating.toFixed(2) // rating shown with 2 decimal
+  ]);
+
+html += createTable(
+  ['Photo', 'Player', 'Average Rating'],
+  avgRatingTop,
+  'Top 10 Players by Average Rating'
+);
 
     container.innerHTML=html;
 
