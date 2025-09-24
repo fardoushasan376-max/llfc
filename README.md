@@ -157,16 +157,118 @@
     text-align: center;
     color: #fff;
   }
-  #topPerformanceContainer th {
-    background: linear-gradient(135deg, #1B46A3, #8000FF);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 13px;
-  }
   #topPerformanceContainer h3 {
     font-family: 'Orbitron', sans-serif;
     color: #fff;
     text-shadow: 0 0 8px #1B46A3;
     margin-bottom: 6px;
+    font-size: 24px;
+  }
+  /* UCL Style for Hall of Fame */
+  .hof-card {
+    display: flex;
+    align-items: center;
+    margin: 12px 0;
+    padding: 15px;
+    border: 2px solid #FFD700;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(27, 70, 163, 0.3), rgba(128, 0, 255, 0.3));
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  }
+  .hof-card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #FFD700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+    margin-right: 15px;
+  }
+  .hof-card .title {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background: #FFD700;
+    color: #000;
+    border: 2px solid #FFFFFF;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  }
+  .hof-card .period {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background: #FF4500;
+    color: #FFF;
+    border: 2px solid #FFFFFF;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .hof-card .player-name {
+    font-size: 24px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    color: #FFD700;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.7);
+  }
+  .hof-card .stats {
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
+    color: #FFF;
+  }
+  .record-card {
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid #FFD700;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(27, 70, 163, 0.2), rgba(128, 0, 255, 0.2));
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    text-align: center;
+    width: 220px;
+  }
+  .record-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid #FFD700;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+  }
+  .record-card .title {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background: #FFD700;
+    color: #000;
+    border: 2px solid #FFFFFF;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .record-card .player-name {
+    font-size: 22px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    color: #FFD700;
+    margin-top: 10px;
+  }
+  .record-card .stat {
+    font-size: 18px;
+    font-family: 'Montserrat', sans-serif;
+    color: #FFF;
   }
 </style>
 </head>
@@ -193,9 +295,29 @@
   <div id="archiveContainer"></div>
 </div>
 
-<!-- 👥 VIEWER SECTION + TOP PERFORMANCE -->
+<!-- 👥 VIEWER SECTION -->
 <div id="viewerSection">
-  <h2>Player Rankings & Statistics</h2>
+  <!-- HALL OF FAME SECTION -->
+  <h2 style="font-size:28px;">Hall of Fame</h2>
+  <div id="hofAdmin" style="display:none">
+    <h3 style="font-size:24px;">Set Player of the Week / Month</h3>
+    <label>Period Type:
+      <select id="hofType">
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+      </select>
+    </label>
+    <label>Player:
+      <select id="hofPlayer"></select>
+    </label>
+    <label>Start Date: <input type="date" id="hofStartDate"></label>
+    <label>End Date: <input type="date" id="hofEndDate"></label>
+    <button onclick="setHallOfFame()">Set</button>
+  </div>
+  <div id="hofContainer" style="margin-top:12px;"></div>
+
+  <!-- PLAYER RANKINGS & STATISTICS -->
+  <h2 style="font-size:28px;">Player Rankings & Statistics</h2>
   <label>Filter:
     <select id="rankingType" onchange="displayRanking()">
       <option value="overall">Overall</option>
@@ -206,7 +328,7 @@
   <table id="rankingTable">
     <thead>
       <tr>
-        <th>Photo</th><th>Player</th><th>Team</th><th>Matches</th>
+        <th>Photo</th><th>Player</th><th>Matches</th>
         <th>W</th><th>D</th><th>L</th>
         <th>WIN RATIO</th><th>GS</th><th>GC</th><th>GD</th>
         <th>MOTM</th><th>Rating</th><th>Upload</th>
@@ -215,7 +337,7 @@
     <tbody></tbody>
   </table>
 
-  <h2>Download Rankings</h2>
+  <h2 style="font-size:28px;">Download Rankings</h2>
   <select id="downloadRange">
     <option value="1-10">1-10</option>
     <option value="11-20">11-20</option>
@@ -224,7 +346,7 @@
   <div id="rankingCard" style="padding:10px;background:#fff;margin-top:8px"></div>
 
   <!-- 🔥 TOP PERFORMANCE SECTION -->
-  <h2>Top Performance</h2>
+  <h2 style="font-size:28px;">Top Performance</h2>
   <label>View:
     <select id="topPerformanceType" onchange="displayTopPerformance()">
       <option value="weekly">Weekly</option>
@@ -238,26 +360,6 @@
 <!-- 🔑 ADMIN LOGIN BUTTON -->
 <div style="margin-top:20px;text-align:center">
   <button onclick="toggleAdmin()">Admin Login</button>
-</div>
-
-<!-- HALL OF FAME SECTION -->
-<h2>Hall of Fame</h2>
-<div id="hofContainer" style="margin-top:12px;"></div>
-
-<div id="hofAdmin" style="display:none">
-  <h3>Set Player of the Week / Month</h3>
-  <label>Period Type:
-    <select id="hofType">
-      <option value="weekly">Weekly</option>
-      <option value="monthly">Monthly</option>
-    </select>
-  </label>
-  <label>Player:
-    <select id="hofPlayer"></select>
-  </label>
-  <label>Start Date: <input type="date" id="hofStartDate"></label>
-  <label>End Date: <input type="date" id="hofEndDate"></label>
-  <button onclick="setHallOfFame()">Set</button>
 </div>
 
 <script>
@@ -335,7 +437,6 @@ function parseScorecard(text) {
     const leftHasTeamName = containsAnyIgnoreCase(leftRaw, LLFCTeams);
     const rightHasTeamName = containsAnyIgnoreCase(rightRaw, LLFCTeams);
     
-    // Prioritize team name detection
     if (leftHasTeamName && !rightHasTeamName) {
       currentLeftTeam = leftRaw.replace(/[\r\n]+/g, ' ').trim();
       currentRightTeam = rightRaw.replace(/[\r\n]+/g, ' ').trim();
@@ -345,7 +446,6 @@ function parseScorecard(text) {
       currentRightTeam = rightRaw.replace(/[\r\n]+/g, ' ').trim();
       continue;
     } else if (leftHasTeamName && rightHasTeamName) {
-      // If both sides have team names, prioritize LLFC
       if (containsAnyIgnoreCase(leftRaw, LLFCTeams)) {
         currentLeftTeam = leftRaw;
         currentRightTeam = rightRaw;
@@ -376,7 +476,6 @@ function parseScorecard(text) {
       const cleaned = llfcSideRaw.replace(/[🔑⚽@]/g, ' ').replace(/\d+/g, ' ').replace(/\s+/g, ' ').trim();
       if (cleaned) playerNames.push(cleaned);
     }
-    let teamNameForPlayer = (leftIsLLFC ? currentLeftTeam : currentRightTeam) || 'LLFC';
     playerNames.forEach(name => {
       const cleanName = name.trim();
       if (!cleanName) return;
@@ -384,7 +483,6 @@ function parseScorecard(text) {
         players[cleanName] = {
           id: uidFor(cleanName),
           player: cleanName,
-          team: teamNameForPlayer,
           matches: 1,
           win: llfcGoals > oppGoals ? 1 : 0,
           draw: llfcGoals === oppGoals ? 1 : 0,
@@ -406,7 +504,6 @@ function parseScorecard(text) {
         o.gc += oppGoals;
         o.gd = o.gs - o.gc;
         o.motm += line.includes('⚽') ? 1 : 0;
-        o.team = teamNameForPlayer;
       }
     });
   }
@@ -423,15 +520,12 @@ function renderPreviewTable() {
     container.innerHTML = '<div class="small">Preview is empty - paste scorecard and click Preview.</div>';
     return;
   }
-  let html = '<table><thead><tr><th>Player</th><th>Team</th><th>Matches</th><th>W</th><th>D</th><th>L</th><th>GS</th><th>GC</th><th>GD</th><th>MOTM</th><th>Rating</th></tr></thead><tbody>';
+  let html = '<table><thead><tr><th>Player</th><th>Matches</th><th>W</th><th>D</th><th>L</th><th>GS</th><th>GC</th><th>GD</th><th>MOTM</th><th>Rating</th></tr></thead><tbody>';
   previewPlayers.forEach((p, idx) => {
     p.rating = p.rating || calcRating(p);
     html += `<tr>
       <td style="text-align:left">
         <input type="text" data-idx="${idx}" data-field="player" value="${escapeHtml(p.player)}">
-      </td>
-      <td style="text-align:left">
-        <input type="text" data-idx="${idx}" data-field="team" value="${escapeHtml(p.team)}">
       </td>
       <td><input data-idx="${idx}" data-field="matches" type="number" min="0" value="${p.matches}"></td>
       <td><input data-idx="${idx}" data-field="win" type="number" min="0" value="${p.win}"></td>
@@ -451,7 +545,7 @@ function renderPreviewTable() {
     inp.addEventListener('input', (e) => {
       const idx = parseInt(e.target.getAttribute('data-idx')), field = e.target.getAttribute('data-field');
       if (!Number.isInteger(idx) || !field) return;
-      const val = field === 'player' || field === 'team' ? e.target.value : Math.max(0, parseInt(e.target.value) || 0);
+      const val = field === 'player' ? e.target.value : Math.max(0, parseInt(e.target.value) || 0);
       previewPlayers[idx][field] = val;
       if (['gs', 'gc', 'matches', 'win', 'draw', 'loss', 'motm'].includes(field)) {
         previewPlayers[idx].gd = (previewPlayers[idx].gs || 0) - (previewPlayers[idx].gc || 0);
@@ -504,12 +598,13 @@ async function submitScorecard() {
     document.querySelectorAll('#previewContainer input').forEach(inp => {
       const idx = parseInt(inp.getAttribute('data-idx')), field = inp.getAttribute('data-field');
       if (Number.isInteger(idx) && field) {
-        previewPlayers[idx][field] = field === 'player' || field === 'team' ? inp.value : Math.max(0, parseInt(inp.value) || 0);
+        previewPlayers[idx][field] = field === 'player' ? inp.value : Math.max(0, parseInt(inp.value) || 0);
       }
     });
     previewPlayers.forEach(p => {
       p.gd = p.gs - p.gc;
       p.rating = calcRating(p);
+      delete p.team; // Ensure team field is removed
     });
     const docId = String(currentScorecardID || Date.now());
     await db.collection('scorecards').doc(docId).set({ id: docId, date, players: previewPlayers });
@@ -557,7 +652,10 @@ async function loadArchive(id) {
       return;
     }
     previewPlayers = (doc.data().players || []).map(p => ({ ...p }));
-    previewPlayers.forEach(p => p.rating = calcRating(p));
+    previewPlayers.forEach(p => {
+      p.rating = calcRating(p);
+      delete p.team; // Ensure team field is removed
+    });
     currentScorecardID = id;
     renderPreviewTable();
     alert('Archive loaded to preview.');
@@ -583,7 +681,7 @@ async function deleteArchive(id) {
 async function displayRanking() {
   const type = document.getElementById('rankingType').value;
   const tbody = document.querySelector('#rankingTable tbody');
-  tbody.innerHTML = `<tr><td colspan="14" class="small">Loading...</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="12" class="small">Loading...</td></tr>`;
   try {
     const stats = {};
     const now = new Date();
@@ -602,19 +700,18 @@ async function displayRanking() {
       }
       if (!include) return;
       card.players.forEach(p => {
-        if (!stats[p.player]) stats[p.player] = { ...p };
+        if (!stats[p.player]) stats[p.player] = { ...p, team: undefined };
         else {
           const o = stats[p.player];
           o.matches += p.matches; o.win += p.win; o.draw += p.draw; o.loss += p.loss;
           o.gs += p.gs; o.gc += p.gc; o.gd = o.gs - o.gc; o.motm += p.motm; o.rating += p.rating;
           if (p.photo) o.photo = p.photo;
-          o.team = p.team;
         }
       });
     });
     const arr = Object.values(stats).sort((a, b) => (b.rating || 0) - (a.rating || 0));
     if (arr.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="14" class="small">No ranking data available.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="12" class="small">No ranking data available.</td></tr>';
       return;
     }
     tbody.innerHTML = '';
@@ -625,7 +722,6 @@ async function displayRanking() {
       row.innerHTML = `
         <td><img class="player-photo" src="${escapeHtml(p.photo || DEFAULT_PHOTO)}" onerror="this.src='${DEFAULT_PHOTO}';"></td>
         <td style="text-align:left">${medal} ${escapeHtml(p.player)}</td>
-        <td>${escapeHtml(p.team)}</td>
         <td>${p.matches}</td><td>${p.win}</td><td>${p.draw}</td><td>${p.loss}</td>
         <td>${winPerc}%</td>
         <td>${p.gs}</td><td>${p.gc}</td><td>${p.gd}</td>
@@ -636,7 +732,7 @@ async function displayRanking() {
     });
   } catch (err) {
     console.error('Ranking load error:', err);
-    tbody.innerHTML = `<tr><td colspan="14" class="small">Failed to load rankings: ${err.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="12" class="small">Failed to load rankings: ${err.message}</td></tr>`;
   }
 }
 
@@ -720,7 +816,7 @@ async function displayTopPerformance() {
       }
       if (!include) return;
       card.players.forEach(p => {
-        if (!stats[p.player]) stats[p.player] = { ...p, maxGoals: p.gs, sevenPlusMatches: p.gs >= 7 ? 1 : 0 };
+        if (!stats[p.player]) stats[p.player] = { ...p, maxGoals: p.gs, sevenPlusMatches: p.gs >= 7 ? 1 : 0, team: undefined };
         else {
           const o = stats[p.player];
           o.matches += p.matches; o.win += p.win; o.draw += p.draw; o.loss += p.loss;
@@ -1009,7 +1105,7 @@ async function displayHallOfFame() {
   try {
     console.log('Fetching Hall of Fame data...');
     const hofSnapshot = await db.collection('hallOfFame').orderBy('timestamp', 'desc').get();
-    let html = '<h3>Player of the Week / Month</h3>';
+    let html = '<h3 style="font-size:26px;">Player of the Week / Month</h3>';
     if (hofSnapshot.empty) {
       console.warn('No Hall of Fame entries found.');
       html += '<div class="small">No Player of the Week/Month entries yet. Add one using the form above.</div>';
@@ -1019,19 +1115,15 @@ async function displayHallOfFame() {
         const d = doc.data();
         const title = `Player of the ${d.type.charAt(0).toUpperCase() + d.type.slice(1)}`;
         html += `
-          <div style="display:flex;align-items:center;margin:8px 0;padding:10px;border:1px solid #1B46A3;border-radius:6px;">
-            <div style="position:relative; margin-right:12px;">
-              <img src="${escapeHtml(d.photo || DEFAULT_PHOTO)}" style="width:60px;height:60px;border-radius:50%;border:2px solid #1B46A3;" onerror="this.src='${DEFAULT_PHOTO}';">
-              <div style="position:absolute; top:-15px; left:0; right:0; text-align:center; background:white; color:black; border:1px solid white; border-radius:5px; padding:2px; font-size:12px; white-space:nowrap;">
-                ${escapeHtml(title)}
-              </div>
-              <div style="position:absolute; bottom:-15px; left:0; right:0; text-align:center; background:red; color:white; border:1px solid red; border-radius:5px; padding:2px; font-size:10px; white-space:nowrap;">
-                ${escapeHtml(d.period)}
-              </div>
+          <div class="hof-card">
+            <div style="position:relative; margin-right:20px;">
+              <img src="${escapeHtml(d.photo || DEFAULT_PHOTO)}" onerror="this.src='${DEFAULT_PHOTO}';">
+              <div class="title">${escapeHtml(title)}</div>
+              <div class="period">${escapeHtml(d.period)}</div>
             </div>
             <div>
-              <strong>${escapeHtml(d.player)}</strong><br>
-              Matches: ${d.stats.matches || 0}, Wins: ${d.stats.win || 0}, Goals: ${d.stats.gs || 0}, MOTM: ${d.stats.motm || 0}
+              <div class="player-name">${escapeHtml(d.player)}</div>
+              <div class="stats">Matches: ${d.stats.matches || 0}, Wins: ${d.stats.win || 0}, Goals: ${d.stats.gs || 0}, MOTM: ${d.stats.motm || 0}</div>
               ${isAdmin ? `<br><button onclick="editHOF('${d.id}')">Edit</button> <button onclick="deleteHOF('${d.id}')">Delete</button>` : ''}
             </div>
           </div>`;
@@ -1044,7 +1136,7 @@ async function displayHallOfFame() {
     const scorecardSnapshot = await db.collection('scorecards').get();
     if (scorecardSnapshot.empty) {
       console.warn('No scorecards found for record holders.');
-      html += '<h3>Record Holders</h3><div class="small">No scorecard data available for record holders.</div>';
+      html += '<h3 style="font-size:26px;">Record Holders</h3><div class="small">No scorecard data available for record holders.</div>';
     } else {
       scorecardSnapshot.forEach(doc => {
         (doc.data().players || []).forEach(p => {
@@ -1060,7 +1152,7 @@ async function displayHallOfFame() {
       const arr = Object.values(stats);
       if (arr.length === 0) {
         console.warn('No players found in scorecards for record holders.');
-        html += '<h3>Record Holders</h3><div class="small">No player data available.</div>';
+        html += '<h3 style="font-size:26px;">Record Holders</h3><div class="small">No player data available.</div>';
       } else {
         const mostWins = arr.sort((a, b) => (b.win || 0) - (a.win || 0))[0];
         const topScorer = arr.sort((a, b) => (b.gs || 0) - (a.gs || 0))[0];
@@ -1073,19 +1165,17 @@ async function displayHallOfFame() {
           { p: mostMatches, title: 'Most Matches', stat: 'matches', label: 'Matches' }
         ];
         html += `
-          <h3>Record Holders</h3>
-          <div style="display:flex;flex-wrap:wrap;gap:10px;">`;
+          <h3 style="font-size:26px;">Record Holders</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:15px;justify-content:center;">`;
         records.filter(r => r.p).forEach(r => {
           html += `
-            <div style="margin:6px;padding:6px;border:1px solid #1B46A3;border-radius:8px;text-align:center;width:140px;">
+            <div class="record-card">
               <div style="position:relative;">
-                <img src="${escapeHtml(r.p.photo)}" style="width:60px;height:60px;border-radius:50%;" onerror="this.src='${DEFAULT_PHOTO}';">
-                <div style="position:absolute; top:-15px; left:0; right:0; text-align:center; background:white; color:black; border:1px solid white; border-radius:5px; padding:2px; font-size:12px; white-space:nowrap;">
-                  ${escapeHtml(r.title)}
-                </div>
+                <img src="${escapeHtml(r.p.photo)}" onerror="this.src='${DEFAULT_PHOTO}';">
+                <div class="title">${escapeHtml(r.title)}</div>
               </div>
-              <div>${escapeHtml(r.p.player)}</div>
-              <div>${r.label}: ${r.p[r.stat]}</div>
+              <div class="player-name">${escapeHtml(r.p.player)}</div>
+              <div class="stat">${r.label}: ${r.p[r.stat]}</div>
             </div>`;
         });
         html += `</div>`;
