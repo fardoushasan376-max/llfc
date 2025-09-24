@@ -185,7 +185,7 @@
   }
   .hof-card .title {
     position: absolute;
-    top: -20px;
+    top: -30px;
     left: 0;
     right: 0;
     text-align: center;
@@ -198,6 +198,7 @@
     font-size: 20px;
     font-weight: 800;
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    z-index: 10;
   }
   .hof-card .period {
     position: absolute;
@@ -245,7 +246,7 @@
   }
   .record-card .title {
     position: absolute;
-    top: -20px;
+    top: -30px;
     left: 0;
     right: 0;
     text-align: center;
@@ -257,6 +258,7 @@
     font-family: 'Orbitron', sans-serif;
     font-size: 18px;
     font-weight: 800;
+    z-index: 10;
   }
   .record-card .player-name {
     font-size: 22px;
@@ -300,11 +302,11 @@
   <!-- HALL OF FAME SECTION -->
   <h2 style="font-size:28px;">Hall of Fame</h2>
   <div id="hofAdmin" style="display:none">
-    <h3 style="font-size:24px;">Set Player of the Week / Month</h3>
+    <h3 style="font-size:24px;">Set POTW / POTM</h3>
     <label>Period Type:
       <select id="hofType">
-        <option value="weekly">Weekly</option>
-        <option value="monthly">Monthly</option>
+        <option value="weekly">POTW</option>
+        <option value="monthly">POTM</option>
       </select>
     </label>
     <label>Player:
@@ -492,7 +494,8 @@ function parseScorecard(text) {
           gd: llfcGoals - oppGoals,
           motm: line.includes('⚽') ? 1 : 0,
           rating: 0,
-          photo: ''
+          photo: '',
+          maxGoals: llfcGoals
         };
       } else {
         const o = players[cleanName];
@@ -504,6 +507,7 @@ function parseScorecard(text) {
         o.gc += oppGoals;
         o.gd = o.gs - o.gc;
         o.motm += line.includes('⚽') ? 1 : 0;
+        o.maxGoals = Math.max(o.maxGoals || 0, llfcGoals);
       }
     });
   }
@@ -700,12 +704,13 @@ async function displayRanking() {
       }
       if (!include) return;
       card.players.forEach(p => {
-        if (!stats[p.player]) stats[p.player] = { ...p, team: undefined };
+        if (!stats[p.player]) stats[p.player] = { ...p, team: undefined, maxGoals: p.gs };
         else {
           const o = stats[p.player];
           o.matches += p.matches; o.win += p.win; o.draw += p.draw; o.loss += p.loss;
           o.gs += p.gs; o.gc += p.gc; o.gd = o.gs - o.gc; o.motm += p.motm; o.rating += p.rating;
           if (p.photo) o.photo = p.photo;
+          o.maxGoals = Math.max(o.maxGoals || 0, p.gs);
         }
       });
     });
@@ -1105,15 +1110,15 @@ async function displayHallOfFame() {
   try {
     console.log('Fetching Hall of Fame data...');
     const hofSnapshot = await db.collection('hallOfFame').orderBy('timestamp', 'desc').get();
-    let html = '<h3 style="font-size:26px;">Player of the Week / Month</h3>';
+    let html = '<h3 style="font-size:26px;">POTW / POTM</h3>';
     if (hofSnapshot.empty) {
       console.warn('No Hall of Fame entries found.');
-      html += '<div class="small">No Player of the Week/Month entries yet. Add one using the form above.</div>';
+      html += '<div class="small">No POTW/POTM entries yet. Add one using the form above.</div>';
     } else {
       console.log(`Found ${hofSnapshot.size} HOF entries`);
       hofSnapshot.forEach(doc => {
         const d = doc.data();
-        const title = `Player of the ${d.type.charAt(0).toUpperCase() + d.type.slice(1)}`;
+        const title = d.type === 'weekly' ? 'POTW' : 'POTM';
         html += `
           <div class="hof-card">
             <div style="position:relative; margin-right:20px;">
@@ -1134,20 +1139,28 @@ async function displayHallOfFame() {
     console.log('Fetching scorecards for record holders...');
     const stats = {};
     const scorecardSnapshot = await db.collection('scorecards').get();
+    const hofSnapshotForPOTW = await db.collection('hallOfFame').where('type', '==', 'weekly').get();
     if (scorecardSnapshot.empty) {
       console.warn('No scorecards found for record holders.');
       html += '<h3 style="font-size:26px;">Record Holders</h3><div class="small">No scorecard data available for record holders.</div>';
     } else {
       scorecardSnapshot.forEach(doc => {
         (doc.data().players || []).forEach(p => {
-          if (!stats[p.player]) stats[p.player] = { matches: 0, win: 0, gs: 0, motm: 0, photo: p.photo || DEFAULT_PHOTO };
+          if (!stats[p.player]) stats[p.player] = { matches: 0, win: 0, gs: 0, motm: 0, photo: p.photo || DEFAULT_PHOTO, maxGoals: p.gs };
           const o = stats[p.player];
           o.matches += p.matches || 0;
           o.win += p.win || 0;
           o.gs += p.gs || 0;
           o.motm += p.motm || 0;
+          o.maxGoals = Math.max(o.maxGoals || 0, p.gs);
           if (p.photo) o.photo = p.photo;
         });
+      });
+      // Count POTW awards
+      hofSnapshotForPOTW.forEach(doc => {
+        const d = doc.data();
+        if (!stats[d.player]) stats[d.player] = { matches: 0, win: 0, gs: 0, motm: 0, photo: DEFAULT_PHOTO, maxGoals: 0, potwCount: 0 };
+        stats[d.player].potwCount = (stats[d.player].potwCount || 0) + 1;
       });
       const arr = Object.values(stats);
       if (arr.length === 0) {
@@ -1158,11 +1171,19 @@ async function displayHallOfFame() {
         const topScorer = arr.sort((a, b) => (b.gs || 0) - (a.gs || 0))[0];
         const mostMOTM = arr.sort((a, b) => (b.motm || 0) - (a.motm || 0))[0];
         const mostMatches = arr.sort((a, b) => (b.matches || 0) - (a.matches || 0))[0];
+        const highestWinRatio = arr
+          .filter(p => p.matches >= 10)
+          .sort((a, b) => ((b.win / b.matches) * 100) - ((a.win / a.matches) * 100))[0];
+        const mostGoalsSingleGame = arr.sort((a, b) => (b.maxGoals || 0) - (a.maxGoals || 0))[0];
+        const mostPOTW = arr.sort((a, b) => (b.potwCount || 0) - (a.potwCount || 0))[0];
         const records = [
           { p: mostWins, title: 'Most Wins', stat: 'win', label: 'Wins' },
           { p: topScorer, title: 'Top Scorer', stat: 'gs', label: 'Goals' },
           { p: mostMOTM, title: 'Most MOTM', stat: 'motm', label: 'MOTM' },
-          { p: mostMatches, title: 'Most Matches', stat: 'matches', label: 'Matches' }
+          { p: mostMatches, title: 'Most Matches', stat: 'matches', label: 'Matches' },
+          { p: highestWinRatio, title: 'Highest Win Ratio (Min 10 Matches)', stat: 'winRatio', label: 'Win %', value: highestWinRatio ? ((highestWinRatio.win / highestWinRatio.matches) * 100).toFixed(2) + '%' : 'N/A' },
+          { p: mostGoalsSingleGame, title: 'Most Goals in a Single Game', stat: 'maxGoals', label: 'Goals' },
+          { p: mostPOTW, title: 'Most POTW', stat: 'potwCount', label: 'POTW' }
         ];
         html += `
           <h3 style="font-size:26px;">Record Holders</h3>
@@ -1175,7 +1196,7 @@ async function displayHallOfFame() {
                 <div class="title">${escapeHtml(r.title)}</div>
               </div>
               <div class="player-name">${escapeHtml(r.p.player)}</div>
-              <div class="stat">${r.label}: ${r.p[r.stat]}</div>
+              <div class="stat">${r.label}: ${r.value || r.p[r.stat]}</div>
             </div>`;
         });
         html += `</div>`;
