@@ -783,7 +783,7 @@ async function addMatchday() {
   }
 
   if (Object.keys(teamLogoMap).length >= 48 && !teamLogoMap[team1]) {
-    showError("Maximum 32 teams allowed. Add team via 'Add Team' first.");
+    showError("Maximum 42 teams allowed. Add team via 'Add Team' first.");
     return;
   }
 
@@ -1511,7 +1511,7 @@ async function addTeam() {
       showError("Please enter a team name.");
       return;
     }
-    if (Object.keys(teamLogoMap).length >= 32) {
+    if (Object.keys(teamLogoMap).length >= 42) {
       showError("Maximum 48 teams allowed.");
       return;
     }
