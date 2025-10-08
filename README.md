@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -405,7 +406,9 @@ td input {
       <input type="text" id="team1Manual" placeholder="Or enter Team 1 manually">
       <select id="team2Select"></select>
       <input type="text" id="team2Manual" placeholder="Or enter Team 2 manually">
-      <input type="number" id="groupNumber" min="1" max="16" placeholder="Group Number (1-16)">
+      <select id="groupSelect">
+        <option value="">Select Group</option>
+      </select>
       <button onclick="addMatchday()">Add Matchday</button>
       <h3>Saved Matchdays</h3>
       <div id="matchdayList"></div>
@@ -489,6 +492,10 @@ td input {
     <h3>Select Official</h3>
     <select id="officialSelect" onchange="displayInvitation()"></select>
     <div id="invitationDisplay"></div>
+    <hr>
+    <h3>Overall Invitation by Date</h3>
+    <input type="date" id="overallDate" onchange="displayOverallInvitation()">
+    <div id="overallInvitationDisplay"></div>
   </div>
 </section>
 
@@ -583,7 +590,6 @@ function showError(message, timeout = 3000) {
 
 async function saveToFirestore(collection, id, data) {
   try {
-    // Sanitize data to remove undefined values
     const sanitizedData = {};
     for (const [key, value] of Object.entries(data)) {
       if (value !== undefined) {
@@ -691,7 +697,7 @@ async function ensureImagesLoaded(element) {
         img.src = defaultLogo;
         resolve();
       };
-      img.src = img.src; // Trigger reload if needed
+      img.src = img.src;
     });
   });
   await Promise.all(promises);
@@ -757,14 +763,22 @@ function updateTeamSelect() {
   });
 }
 
+function updateGroupSelect() {
+  const groupSelect = document.getElementById("groupSelect");
+  groupSelect.innerHTML = '<option value="">Select Group</option>';
+  groups.forEach(group => {
+    groupSelect.innerHTML += `<option value="${group.name}">${group.name}</option>`;
+  });
+}
+
 async function addMatchday() {
   const date = document.getElementById("matchdayDate").value;
   let team1 = document.getElementById("team1Select").value || document.getElementById("team1Manual").value.trim();
   let team2 = document.getElementById("team2Select").value || document.getElementById("team2Manual").value.trim();
-  const groupNumber = document.getElementById("groupNumber").value;
+  const groupName = document.getElementById("groupSelect").value;
 
-  if (!date || !team1 || !team2 || !groupNumber) {
-    showError("Please fill in all fields (date, teams, group number).");
+  if (!date || !team1 || !team2 || !groupName) {
+    showError("Please fill in all fields (date, teams, group).");
     return;
   }
 
@@ -773,7 +787,7 @@ async function addMatchday() {
     return;
   }
 
-  const matchday = { date, team1, team2, groupNumber: parseInt(groupNumber) };
+  const matchday = { date, team1, team2, groupName };
   const id = Date.now().toString();
   if (await saveToFirestore('matchdays', id, matchday)) {
     matchdays.push({ id, ...matchday });
@@ -783,7 +797,7 @@ async function addMatchday() {
     document.getElementById("team1Manual").value = "";
     document.getElementById("team2Select").value = "";
     document.getElementById("team2Manual").value = "";
-    document.getElementById("groupNumber").value = "";
+    document.getElementById("groupSelect").value = "";
     showSuccess("Matchday added!");
   }
 }
@@ -794,7 +808,7 @@ function updateMatchdayList() {
   matchdays.forEach((m, index) => {
     list.innerHTML += `
       <div class="admin-matchday">
-        ${m.date}: ${m.team1} vs ${m.team2} (Group ${m.groupNumber})
+        ${m.date}: ${m.team1} vs ${m.team2} (Group ${m.groupName})
         <button class="delete-btn" onclick="deleteMatchday(${index})">Delete</button>
       </div>
     `;
@@ -832,6 +846,7 @@ async function addGroup() {
   if (await saveToFirestore('groups', id, group)) {
     groups.push({ id, ...group });
     updateGroupList();
+    updateGroupSelect();
     document.getElementById("groupName").value = "";
     document.getElementById("groupLink").value = "";
     document.getElementById("official1").value = "";
@@ -859,6 +874,7 @@ async function deleteGroup(index) {
   if (await deleteFromFirestore('groups', group.id)) {
     groups.splice(index, 1);
     updateGroupList();
+    updateGroupSelect();
     showSuccess("Group deleted!");
   }
 }
@@ -900,8 +916,7 @@ function formatDate(dateStr) {
 }
 
 function generateInvitationText(matchday, group) {
-  const groupNumber = group.name.match(/\d+/)?.[0] || group.name;
-  return `🔔 LLFC CLUB WORLD CUP Group ${groupNumber}\n\nDate: ${formatDate(matchday.date)}\n\n🔴 ${matchday.team1}\n🔵 ${matchday.team2}\n\n📌 PLEASE JOIN YOUR MATCHDAY GROUP\n${group.link}\n\n✅ Squad Submit Link\n${squadSubmitLink}\n⚠️ PLEASE SUBMIT YOUR SQUAD BEFORE 5:00 PM\n🏅 Officials: ${group.officials.join(", ")}`;
+  return `🔔 LLFC CLUB WORLD CUP Group ${group.name}\n\nDate: ${formatDate(matchday.date)}\n\n🔴 ${matchday.team1}\n🔵 ${matchday.team2}\n\n📌 PLEASE JOIN YOUR MATCHDAY GROUP\n${group.link}\n\n✅ Squad Submit Link\n${squadSubmitLink}\n⚠️ PLEASE SUBMIT YOUR SQUAD BEFORE 5:00 PM\n🏅 Officials: ${group.officials.join(", ")}`;
 }
 
 function displayInvitation() {
@@ -912,18 +927,54 @@ function displayInvitation() {
 
   const officialGroups = groups.filter(g => g.officials.includes(official));
   officialGroups.forEach(group => {
-    const groupMatchdays = matchdays.filter(m => m.groupNumber === parseInt(group.name.match(/\d+/)?.[0]) || m.groupNumber);
+    const groupMatchdays = matchdays.filter(m => m.groupName === group.name);
     groupMatchdays.forEach(matchday => {
       const text = generateInvitationText(matchday, group);
-      display.innerHTML += `
-        <div>
-          <h3>Group ${group.name} - ${matchday.date}</h3>
-          <div class="invitation-text">${text}</div>
-          <button onclick="copyText(\`${text.replace(/`/g, "\\`")}\`)">Copy Text</button>
-        </div>
+      const div = document.createElement("div");
+      div.innerHTML = `
+        <h3>Group ${group.name} - ${matchday.date}</h3>
+        <div class="invitation-text"></div>
+        <button onclick="copyText(\`${text.replace(/`/g, "\\`")}\`)">Copy Text</button>
       `;
+      div.querySelector(".invitation-text").textContent = text;
+      display.appendChild(div);
     });
   });
+}
+
+function displayOverallInvitation() {
+  const selectedDate = document.getElementById("overallDate").value;
+  const display = document.getElementById("overallInvitationDisplay");
+  display.innerHTML = "";
+  if (!selectedDate) return;
+
+  const dateMatchdays = matchdays.filter(m => m.date === selectedDate);
+  if (dateMatchdays.length === 0) {
+    display.innerHTML = "<p>No matchdays on this date.</p>";
+    return;
+  }
+
+  let combinedText = "";
+  dateMatchdays.forEach(matchday => {
+    const group = groups.find(g => g.name === matchday.groupName);
+    if (group) {
+      const text = generateInvitationText(matchday, group);
+      combinedText += text + "\n\n---\n\n";
+    }
+  });
+
+  if (combinedText) {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <h3>All Matchdays on ${formatDate(selectedDate)}</h3>
+      <div class="invitation-text"></div>
+      <button onclick="copyText(\`${combinedText.replace(/`/g, "\\`")}\`)">Copy All Text</button>
+    `;
+    div.querySelector(".invitation-text").textContent = combinedText;
+    display.appendChild(div);
+  } else {
+    display.innerHTML = "<p>No groups found for matchdays on this date.</p>";
+  }
 }
 
 function copyText(text) {
@@ -955,7 +1006,7 @@ function levenshteinDistance(a, b) {
 function isSimilarName(name1, name2) {
   const maxLen = Math.max(name1.length, name2.length);
   const distance = levenshteinDistance(name1.toLowerCase(), name2.toLowerCase());
-  return distance / maxLen <= 0.2; // 80% similarity
+  return distance / maxLen <= 0.2;
 }
 
 async function updatePlayerRankings(team1, team2, matches, motmPlayer, archiveId) {
@@ -1008,7 +1059,6 @@ async function updatePlayerRankings(team1, team2, matches, motmPlayer, archiveId
     }
   }
 
-  // Recalculate stats
   for (const player of Object.keys(playerRankings)) {
     const data = playerRankings[player];
     data.matchesPlayed = data.matches.length || 0;
@@ -1022,7 +1072,6 @@ async function updatePlayerRankings(team1, team2, matches, motmPlayer, archiveId
     await saveToFirestore('playerRankings', player, data);
   }
 
-  // Remove players with no matches
   for (const player of Object.keys(playerRankings)) {
     if (playerRankings[player].matchesPlayed === 0) {
       await deleteFromFirestore('playerRankings', player);
@@ -1256,6 +1305,7 @@ async function initializeData() {
     updateTeamList();
     updateMatchdayList();
     updateGroupList();
+    updateGroupSelect();
     updateSquadLinkDisplay();
     updateArchiveList();
     updateRankingTable();
