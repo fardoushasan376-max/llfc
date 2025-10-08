@@ -1,11 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Llfc Dashboard</title>
 <style>
-/* Same CSS as previous version */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Montserrat:wght@500;700&display=swap');
 
 body {
@@ -267,7 +265,7 @@ button:hover {
   background: #cc0000;
 }
 
-.admin-panel, .invitation-panel {
+.admin-panel, .invitation-panel, .viewer-panel {
   background: #2a4066;
   padding: 20px;
   border-radius: 15px;
@@ -365,6 +363,7 @@ td input {
   <div class="tab-btn active" onclick="openTab('scorecardTab', this)">Scorecard</div>
   <div class="tab-btn" onclick="openTab('adminTab', this)">Admin</div>
   <div class="tab-btn" onclick="openTab('invitationTab', this)">Invitation</div>
+  <div class="tab-btn" onclick="openTab('viewerTab', this)">Viewer</div>
 </div>
 
 <!-- Scorecard -->
@@ -493,6 +492,30 @@ td input {
   </div>
 </section>
 
+<!-- Viewer -->
+<section id="viewerTab">
+  <h2>Player Rankings</h2>
+  <div class="viewer-panel">
+    <table id="viewerRankingTable">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Team</th>
+          <th>Matches Played</th>
+          <th>Wins</th>
+          <th>Draws</th>
+          <th>Losses</th>
+          <th>Win %</th>
+          <th>GD</th>
+          <th>MOTM</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody id="viewerRankingBody"></tbody>
+    </table>
+  </div>
+</section>
+
 <!-- Success and Error Message Overlays -->
 <div id="successMessage" class="success-message" style="display: none;"></div>
 <div id="errorMessage" class="error-message" style="display: none;"></div>
@@ -560,9 +583,18 @@ function showError(message, timeout = 3000) {
 
 async function saveToFirestore(collection, id, data) {
   try {
-    await db.collection(collection).doc(id).set(data);
+    // Sanitize data to remove undefined values
+    const sanitizedData = {};
+    for (const [key, value] of Object.entries(data)) {
+      if (value !== undefined) {
+        sanitizedData[key] = value;
+      }
+    }
+    await db.collection(collection).doc(id).set(sanitizedData);
+    console.log(`Saved to ${collection}/${id}:`, sanitizedData);
     return true;
   } catch (e) {
+    console.error(`Firestore save error for ${collection}/${id}:`, e.message, data);
     showError('Firestore save error: ' + e.message);
     return false;
   }
@@ -571,8 +603,10 @@ async function saveToFirestore(collection, id, data) {
 async function getFromFirestore(collection, id) {
   try {
     const doc = await db.collection(collection).doc(id).get();
+    console.log(`Retrieved from ${collection}/${id}:`, doc.exists ? doc.data() : null);
     return doc.exists ? doc.data() : null;
   } catch (e) {
+    console.error(`Firestore retrieve error for ${collection}/${id}:`, e.message);
     showError('Firestore retrieve error: ' + e.message);
     return null;
   }
@@ -581,8 +615,10 @@ async function getFromFirestore(collection, id) {
 async function deleteFromFirestore(collection, id) {
   try {
     await db.collection(collection).doc(id).delete();
+    console.log(`Deleted from ${collection}/${id}`);
     return true;
   } catch (e) {
+    console.error(`Firestore delete error for ${collection}/${id}:`, e.message);
     showError('Firestore delete error: ' + e.message);
     return false;
   }
@@ -591,8 +627,11 @@ async function deleteFromFirestore(collection, id) {
 async function getAllFromFirestore(collection) {
   try {
     const snapshot = await db.collection(collection).get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    console.log(`Retrieved all from ${collection}:`, data);
+    return data;
   } catch (e) {
+    console.error(`Firestore retrieve all error for ${collection}:`, e.message);
     showError('Firestore retrieve all error: ' + e.message);
     return [];
   }
@@ -601,8 +640,15 @@ async function getAllFromFirestore(collection) {
 function validateImageUrl(url) {
   return new Promise((resolve) => {
     const img = new Image();
-    img.onload = () => resolve(true);
-    img.onerror = () => resolve(false);
+    img.crossOrigin = "Anonymous";
+    img.onload = () => {
+      console.log(`Image loaded successfully: ${url}`);
+      resolve(true);
+    };
+    img.onerror = () => {
+      console.error(`Image failed to load: ${url}`);
+      resolve(false);
+    };
     img.src = url;
   });
 }
@@ -618,10 +664,38 @@ async function uploadToFirebase(file, path) {
     const storageRef = storage.ref(path);
     await storageRef.put(file);
     const url = await storageRef.getDownloadURL();
+    console.log(`Uploaded image to Firebase: ${url}`);
     return url;
   } catch (e) {
+    console.error("Firebase upload error:", e.message);
     throw new Error("Failed to upload to Firebase: " + e.message);
   }
+}
+
+async function ensureImagesLoaded(element) {
+  const images = element.querySelectorAll('img');
+  const promises = Array.from(images).map(img => {
+    return new Promise((resolve) => {
+      if (img.complete && img.naturalHeight !== 0) {
+        console.log(`Image already loaded: ${img.src}`);
+        resolve();
+        return;
+      }
+      img.crossOrigin = "Anonymous";
+      img.onload = () => {
+        console.log(`Image loaded: ${img.src}`);
+        resolve();
+      };
+      img.onerror = () => {
+        console.warn(`Image failed to load, using default: ${img.src}`);
+        img.src = defaultLogo;
+        resolve();
+      };
+      img.src = img.src; // Trigger reload if needed
+    });
+  });
+  await Promise.all(promises);
+  console.log("All images ensured loaded");
 }
 
 async function clearStorage() {
@@ -652,6 +726,7 @@ async function clearStorage() {
       updateSquadLinkDisplay();
       updateArchiveList();
       updateRankingTable();
+      updateViewerRankingTable();
       updateMergeSelects();
       document.getElementById("tournamentLogo").src = tournamentLogo;
       showSuccess("All storage cleared!");
@@ -884,42 +959,66 @@ function isSimilarName(name1, name2) {
 }
 
 async function updatePlayerRankings(team1, team2, matches, motmPlayer, archiveId) {
-  matches.forEach(match => {
+  if (!team1 || !team2 || !matches || !archiveId) {
+    console.error("Invalid input for updatePlayerRankings:", { team1, team2, matches, motmPlayer, archiveId });
+    showError("Invalid match data. Please check scorecard input.");
+    return;
+  }
+
+  for (const match of matches) {
     const [p1Raw, s1, s2, p2Raw] = match;
-    const p1 = cleanName(p1Raw), p2 = cleanName(p2Raw);
-    const team1Exact = team1, team2Exact = team2;
+    const p1 = cleanName(p1Raw) || "Unknown Player 1";
+    const p2 = cleanName(p2Raw) || "Unknown Player 2";
+    const team1Exact = team1 || "Unknown Team 1";
+    const team2Exact = team2 || "Unknown Team 2";
+    const score1 = parseInt(s1) || 0;
+    const score2 = parseInt(s2) || 0;
 
-    [ { player: p1, team: team1Exact, score: parseInt(s1), oppScore: parseInt(s2), isMotm: p1Raw.includes("👑") },
-      { player: p2, team: team2Exact, score: parseInt(s2), oppScore: parseInt(s1), isMotm: p2Raw.includes("👑") } ]
-      .forEach(async ({ player, team, score, oppScore, isMotm }) => {
-        let matchedPlayer = player;
-        const existingPlayers = Object.keys(playerRankings);
-        const match = existingPlayers.find(p => 
-          playerRankings[p].team.toLowerCase() === team.toLowerCase() && 
-          isSimilarName(p, player)
-        );
-        if (match) matchedPlayer = match;
+    for (const { player, team, score, oppScore, isMotm } of [
+      { player: p1, team: team1Exact, score: score1, oppScore: score2, isMotm: p1Raw.includes("👑") },
+      { player: p2, team: team2Exact, score: score2, oppScore: score1, isMotm: p2Raw.includes("👑") }
+    ]) {
+      let matchedPlayer = player;
+      const existingPlayers = Object.keys(playerRankings);
+      const match = existingPlayers.find(p => 
+        playerRankings[p].team.toLowerCase() === team.toLowerCase() && 
+        isSimilarName(p, player)
+      );
+      if (match) matchedPlayer = match;
 
-        if (!playerRankings[matchedPlayer]) {
-          playerRankings[matchedPlayer] = { team, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, gd: 0, motm: 0, score: 0, winPercentage: 0, matches: [] };
-        }
-        const outcome = score > oppScore ? 'win' : score === oppScore ? 'draw' : 'loss';
-        playerRankings[matchedPlayer].matches.push({ id: archiveId, outcome, score, oppScore });
-        if (isMotm) playerRankings[matchedPlayer].motm += 1;
-        await saveToFirestore('playerRankings', matchedPlayer, playerRankings[matchedPlayer]);
-      });
-  });
+      if (!playerRankings[matchedPlayer]) {
+        playerRankings[matchedPlayer] = {
+          team: team || "Unknown",
+          matchesPlayed: 0,
+          wins: 0,
+          draws: 0,
+          losses: 0,
+          gd: 0,
+          motm: 0,
+          score: 0,
+          winPercentage: 0,
+          matches: []
+        };
+      }
+      const outcome = score > oppScore ? 'win' : score === oppScore ? 'draw' : 'loss';
+      playerRankings[matchedPlayer].matches.push({ id: archiveId, outcome, score, oppScore });
+      if (isMotm) playerRankings[matchedPlayer].motm += 1;
+      console.log(`Updating ranking for ${matchedPlayer}:`, playerRankings[matchedPlayer]);
+      await saveToFirestore('playerRankings', matchedPlayer, playerRankings[matchedPlayer]);
+    }
+  }
 
   // Recalculate stats
   for (const player of Object.keys(playerRankings)) {
     const data = playerRankings[player];
-    data.matchesPlayed = data.matches.length;
-    data.wins = data.matches.filter(m => m.outcome === 'win').length;
-    data.draws = data.matches.filter(m => m.outcome === 'draw').length;
-    data.losses = data.matches.filter(m => m.outcome === 'loss').length;
-    data.gd = data.matches.reduce((sum, m) => sum + (m.score - m.oppScore), 0);
+    data.matchesPlayed = data.matches.length || 0;
+    data.wins = data.matches.filter(m => m.outcome === 'win').length || 0;
+    data.draws = data.matches.filter(m => m.outcome === 'draw').length || 0;
+    data.losses = data.matches.filter(m => m.outcome === 'loss').length || 0;
+    data.gd = data.matches.reduce((sum, m) => sum + (m.score - m.oppScore), 0) || 0;
     data.winPercentage = data.matchesPlayed > 0 ? ((data.wins / data.matchesPlayed) * 100).toFixed(2) : 0;
     data.score = (data.wins * 10) + (data.draws * 5) + (data.losses * -7) + (data.gd * 1) + (data.motm * 5);
+    console.log(`Recalculated stats for ${player}:`, data);
     await saveToFirestore('playerRankings', player, data);
   }
 
@@ -932,6 +1031,7 @@ async function updatePlayerRankings(team1, team2, matches, motmPlayer, archiveId
   }
 
   updateRankingTable();
+  updateViewerRankingTable();
   updateMergeSelects();
 }
 
@@ -967,12 +1067,35 @@ function updateRankingTable() {
     });
 }
 
+function updateViewerRankingTable() {
+  const tbody = document.getElementById("viewerRankingBody");
+  tbody.innerHTML = "";
+  Object.keys(playerRankings).sort((a, b) => playerRankings[b].score - playerRankings[a].score)
+    .forEach(player => {
+      const data = playerRankings[player];
+      tbody.innerHTML += `
+        <tr>
+          <td>${player}</td>
+          <td>${data.team}</td>
+          <td>${data.matchesPlayed}</td>
+          <td>${data.wins}</td>
+          <td>${data.draws}</td>
+          <td>${data.losses}</td>
+          <td>${data.winPercentage}%</td>
+          <td>${data.gd}</td>
+          <td>${data.motm}</td>
+          <td>${data.score}</td>
+        </tr>
+      `;
+    });
+}
+
 async function editRanking(player, field, value) {
   if (field === 'player') {
     const data = playerRankings[player];
     await deleteFromFirestore('playerRankings', player);
-    playerRankings[value] = data;
-    await saveToFirestore('playerRankings', value, data);
+    playerRankings[value] = { ...data, team: data.team || "Unknown" };
+    await saveToFirestore('playerRankings', value, playerRankings[value]);
     delete playerRankings[player];
   } else {
     playerRankings[player][field] = field === 'team' ? value : parseInt(value) || 0;
@@ -987,6 +1110,7 @@ async function editRanking(player, field, value) {
     await saveToFirestore('playerRankings', player, playerRankings[player]);
   }
   updateRankingTable();
+  updateViewerRankingTable();
   updateMergeSelects();
 }
 
@@ -994,6 +1118,7 @@ async function deleteRanking(player) {
   if (await deleteFromFirestore('playerRankings', player)) {
     delete playerRankings[player];
     updateRankingTable();
+    updateViewerRankingTable();
     updateMergeSelects();
     showSuccess("Player ranking deleted!");
   }
@@ -1034,34 +1159,44 @@ async function saveToArchive(team1, team2, team1Points, team2Points, matches, mo
   const archive = {
     id: Date.now().toString(),
     timestamp: new Date().toISOString(),
-    team1,
-    team2,
-    team1Points,
-    team2Points,
-    matches,
-    motmPlayer,
-    inputText: document.getElementById("pasteText").value
+    team1: team1 || "Unknown Team 1",
+    team2: team2 || "Unknown Team 2",
+    team1Points: parseInt(team1Points) || 0,
+    team2Points: parseInt(team2Points) || 0,
+    matches: matches || [],
+    motmPlayer: motmPlayer || "",
+    inputText: document.getElementById("pasteText").value || ""
   };
-  if (await saveToFirestore('archives', archive.id, archive)) {
-    archives.push(archive);
-    updateArchiveList();
-    showSuccess("Scorecard archived!");
+  try {
+    if (await saveToFirestore('archives', archive.id, archive)) {
+      archives.push(archive);
+      updateArchiveList();
+      showSuccess("Scorecard archived!");
+      console.log("Archive saved:", archive);
+    }
+  } catch (e) {
+    console.error("Archive save failed:", e);
+    showError("Failed to archive scorecard: " + e.message);
   }
 }
 
 function updateArchiveList() {
   const list = document.getElementById("archiveList");
-  list.innerHTML = "";
+  list.innerHTML = archives.length ? "" : "<p>No archives available.</p>";
   archives.forEach((archive, index) => {
+    const timestamp = new Date(archive.timestamp).toLocaleString('en-GB', { 
+      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' 
+    });
     list.innerHTML += `
       <div class="admin-archive">
-        ${archive.timestamp}: ${archive.team1} vs ${archive.team2} (${archive.team1Points}-${archive.team2Points})
+        ${timestamp}: ${archive.team1} vs ${archive.team2} (${archive.team1Points}-${archive.team2Points})
         <button onclick="loadArchive(${index})">Load</button>
         <button onclick="editArchive(${index})">Edit</button>
         <button class="delete-btn" onclick="deleteArchive(${index})">Delete</button>
       </div>
     `;
   });
+  console.log("Updated archive list with", archives.length, "archives");
 }
 
 function loadArchive(index) {
@@ -1111,7 +1246,7 @@ async function initializeData() {
     matchdays = matchdaysData;
     groups = groupsData;
     archives = archivesData;
-    playerRankings = rankingsData.reduce((acc, r) => ({ ...acc, [r.id]: r }), {});
+    playerRankings = rankingsData.reduce((acc, r) => ({ ...acc, [r.id]: { ...r, matches: r.matches || [] } }), {});
     squadSubmitLink = configSquad ? configSquad.link : "";
     tournamentLogo = configLogo ? configLogo.url : defaultLogo;
 
@@ -1124,10 +1259,13 @@ async function initializeData() {
     updateSquadLinkDisplay();
     updateArchiveList();
     updateRankingTable();
+    updateViewerRankingTable();
     updateMergeSelects();
     updateTeamSelect();
     updateOfficialSelect();
+    console.log("Data initialized:", { playerPhotoMap, teamLogoMap, matchdays, groups, archives, playerRankings, squadSubmitLink, tournamentLogo });
   } catch (e) {
+    console.error("Failed to initialize data:", e);
     showError("Failed to load data from Firestore: " + e.message);
   }
 }
@@ -1142,12 +1280,12 @@ function openTab(tabId, btn) {
 }
 
 function cleanName(name) {
-  return name.replace(/[@()⭐⛔🔑🔥👑!*\-_]/g, '').trim();
+  return name ? name.replace(/[@()⭐⛔🔑🔥👑!*\-_]/g, '').trim() : "Unknown";
 }
 
 function getTeamLogo(teamName) {
   const teamMapKeys = Object.keys(teamLogoMap);
-  const matchedKey = teamMapKeys.find(key => key.toLowerCase() === teamName.toLowerCase());
+  const matchedKey = teamMapKeys.find(key => key.toLowerCase() === (teamName || "").toLowerCase());
   return teamLogoMap[matchedKey] || defaultLogo;
 }
 
@@ -1156,8 +1294,8 @@ async function generateScorecard() {
   const lines = text.split("\n");
 
   let teamLine = lines.find(l => l.includes("⚔️"));
-  let team1 = teamLine ? cleanName(teamLine.split("⚔️")[0]).trim() : "Team 1";
-  let team2 = teamLine ? cleanName(teamLine.split("⚔️")[1]).trim() : "Team 2";
+  let team1 = teamLine ? cleanName(teamLine.split("⚔️")[0]) : "Team 1";
+  let team2 = teamLine ? cleanName(teamLine.split("⚔️")[1]) : "Team 2";
 
   const matchesContainer = document.getElementById("matches");
   matchesContainer.innerHTML = "";
@@ -1171,7 +1309,7 @@ async function generateScorecard() {
       if (m) {
         let p1Raw = m[1].trim(), p2Raw = m[4].trim();
         let p1 = cleanName(p1Raw), p2 = cleanName(p2Raw);
-        let s1 = parseInt(m[2]), s2 = parseInt(m[3]);
+        let s1 = parseInt(m[2]) || 0, s2 = parseInt(m[3]) || 0;
 
         if (p1Raw.includes("👑")) motmPlayer = p1;
         if (p2Raw.includes("👑")) motmPlayer = p2;
@@ -1368,14 +1506,29 @@ function updateTeamList() {
   updateTeamSelect();
 }
 
-function downloadScorecard() {
+async function downloadScorecard() {
   const card = document.getElementById("scorecard");
-  html2canvas(card, {scale: 2}).then(canvas => {
-    const link = document.createElement("a");
-    link.download = "scorecard.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-  });
+  try {
+    await ensureImagesLoaded(card);
+    html2canvas(card, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: null
+    }).then(canvas => {
+      const link = document.createElement("a");
+      link.download = "scorecard.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      showSuccess("Scorecard downloaded!");
+    }).catch(err => {
+      console.error("html2canvas error:", err);
+      showError("Failed to download scorecard. Check console for details.");
+    });
+  } catch (e) {
+    console.error("Image loading error:", e);
+    showError("Image loading failed: " + e.message);
+  }
 }
 </script>
 </body>
