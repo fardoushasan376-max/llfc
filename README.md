@@ -1,1233 +1,1307 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>DREADLORDS DASHBOARD</title>
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-
+<meta charset="UTF-8">
+<title>Llfc Dashboard</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Montserrat:wght@400;600&display=swap');
+/* Same CSS as previous version */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Montserrat:wght@500;700&display=swap');
 
-  body {
-    font-family: 'Montserrat', sans-serif;
-    background: radial-gradient(circle at top, #0A103D 0%, #000 100%);
-    margin: 0;
-    padding: 20px;
-    color: #fff;
-  }
-  h1, h2, h3 {
-    text-align: center;
-    font-family: 'Orbitron', sans-serif;
-    color: #fff;
-    text-shadow: 0 0 12px #1B46A3;
-    letter-spacing: 1px;
-  }
-  textarea {
-    width: 100%;
-    height: 160px;
-    font-family: monospace;
-    margin-bottom: 8px;
-    padding: 10px;
-    border: 1px solid #1B46A3;
-    border-radius: 6px;
-    background: #0A103D;
-    color: #fff;
-  }
-  button, input, select {
-    padding: 10px 16px;
-    margin: 6px 4px;
-    border: none;
-    border-radius: 6px;
-    background: linear-gradient(135deg, #1B46A3, #8000FF);
-    color: #fff;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-  }
-  button:hover, input[type="submit"]:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 12px #1B46A3;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: rgba(255,255,255,0.05);
-    margin-bottom: 12px;
-    border: 1px solid #1B46A3;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  th, td {
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 8px;
-    text-align: center;
-    color: #fff;
-  }
-  th {
-    background: linear-gradient(135deg, #1B46A3, #8000FF);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 14px;
-    letter-spacing: 0.5px;
-  }
-  .archive-item {
-    background: rgba(255,255,255,0.05);
-    padding: 8px;
-    border: 1px solid #1B46A3;
-    margin-bottom: 6px;
-    border-radius: 6px;
-  }
-  img.player-photo {
-    width: 48px;
-    height: 48px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid #1B46A3;
-    box-shadow: 0 0 8px #8000FF;
-  }
-  .small { font-size: 13px; color: #bbb; }
-  .notice {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid #1B46A3;
-    padding: 10px;
-    margin: 8px 0;
-    border-radius: 6px;
-    color: #fff;
-  }
-  #rankingTable {
-    background: #0A103D !important;
-    color: #fff !important;
-  }
-  #rankingTable th, #rankingTable td {
-    background: #0A103D !important;
-    color: #fff !important;
-    border: 1px solid #1B46A3 !important;
-  }
-  #performanceTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-    font-size: 14px;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  #performanceTable th {
-    background: #1e2a78 !important;
-    color: #ffffff !important;
-    padding: 10px;
-    text-align: center;
-    font-weight: 600;
-  }
-  #performanceTable td {
-    padding: 8px 10px;
-    text-align: center;
-    background: #0a1128 !important;
-    color: #e6e6e6 !important;
-  }
-  #performanceTable tr:nth-child(even) td {
-    background: #16225a !important;
-  }
-  #performanceTable tr:hover td {
-    background: #243b7a !important;
-    color: #ffffff !important;
-  }
-  #topPerformanceContainer table, #topPerformanceContainer th, #topPerformanceContainer td {
-    background: #0A103D !important;
-    color: #fff !important;
-    border: 1px solid #1B46A3 !important;
-  }
-  #topPerformanceContainer table {
-    width: 100%;
-    border-collapse: collapse;
-    background: rgba(255,255,255,0.05);
-    margin-bottom: 16px;
-    border: 1px solid #1B46A3;
-    border-radius: 6px;
-    overflow: hidden;
-  }
-  #topPerformanceContainer th, #topPerformanceContainer td {
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 6px;
-    text-align: center;
-    color: #fff;
-  }
-  #topPerformanceContainer h3 {
-    font-family: 'Orbitron', sans-serif;
-    color: #fff;
-    text-shadow: 0 0 8px #1B46A3;
-    margin-bottom: 6px;
-    font-size: 24px;
-  }
-  /* UCL Style for Hall of Fame */
-  .hof-card {
-    display: flex;
-    align-items: center;
-    margin: 12px 0;
-    padding: 15px;
-    border: 2px solid #FFD700;
-    border-radius: 10px;
-    background: linear-gradient(135deg, rgba(27, 70, 163, 0.3), rgba(128, 0, 255, 0.3));
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-  }
-  .hof-card img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    border: 3px solid #FFD700;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
-    margin-right: 15px;
-  }
-  .hof-card .title {
-    position: absolute;
-    top: -30px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    background: #FFD700;
-    color: #000;
-    border: 2px solid #FFFFFF;
-    border-radius: 8px;
-    padding: 4px 8px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 20px;
-    font-weight: 800;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    z-index: 10;
-  }
-  .hof-card .period {
-    position: absolute;
-    bottom: -20px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    background: #FF4500;
-    color: #FFF;
-    border: 2px solid #FFFFFF;
-    border-radius: 8px;
-    padding: 4px 8px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-  }
-  .hof-card .player-name {
-    font-size: 24px;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 800;
-    color: #FFD700;
-    text-shadow: 0 0 5px rgba(255, 215, 0, 0.7);
-  }
-  .hof-card .stats {
-    font-size: 20px;
-    font-family: 'Montserrat', sans-serif;
-    color: #FFF;
-  }
-  .record-card {
-    margin: 10px;
-    padding: 10px;
-    border: 2px solid #FFD700;
-    border-radius: 10px;
-    background: linear-gradient(135deg, rgba(27, 70, 163, 0.2), rgba(128, 0, 255, 0.2));
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-    text-align: center;
-    width: 220px;
-  }
-  .record-card img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 3px solid #FFD700;
-    box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
-  }
-  .record-card .title {
-    position: absolute;
-    top: -30px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    background: #FFD700;
-    color: #000;
-    border: 2px solid #FFFFFF;
-    border-radius: 8px;
-    padding: 4px 8px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 18px;
-    font-weight: 800;
-    z-index: 10;
-  }
-  .record-card .player-name {
-    font-size: 22px;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 800;
-    color: #FFD700;
-    margin-top: 10px;
-  }
-  .record-card .stat {
-    font-size: 18px;
-    font-family: 'Montserrat', sans-serif;
-    color: #FFF;
-  }
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: #1e2a44;
+  background-image: linear-gradient(45deg, #1e2a44 25%, #2a4066 25%, #2a4066 50%, #1e2a44 50%, #1e2a44 75%, #2a4066 75%, #2a4066);
+  background-size: 20px 20px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+h1, h2, h3 {
+  font-family: 'Orbitron', sans-serif;
+  color: #ffd700;
+}
+
+.tabs {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  padding: 12px 25px;
+  background: #2a4066;
+  border: 2px solid #00ffff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #fff;
+  transition: .3s;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.tab-btn.active {
+  background: #00ffff;
+  color: #1e2a44;
+  box-shadow: 0 0 15px #00ffff;
+}
+
+section {
+  display: none;
+  width: 1080px;
+}
+
+section.active {
+  display: block;
+}
+
+.scorecard {
+  width: 1080px;
+  max-width: 100%;
+  background: #2a4066;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  border: 2px solid #00ffff;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.tournament-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #00ffff;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+  object-fit: cover;
+}
+
+.title {
+  font-size: 48px;
+  font-family: 'Orbitron', sans-serif;
+  color: #00ffff;
+  text-shadow: 0 0 10px #00ffff;
+  border: 3px solid #ffffff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: #1e2a44;
+}
+
+.date {
+  font-size: 20px;
+  font-family: 'Orbitron', sans-serif;
+  color: #ffd700;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.teams {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.team-panel {
+  flex: 1;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 800;
+  padding: 15px;
+  border-radius: 10px;
+  border: 3px solid #ffd700;
+  font-family: 'Orbitron', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #ffd700;
+  background: #3a5088;
+  text-shadow: 0 0 8px #ffd700;
+}
+
+.team-score {
+  width: 80px;
+  height: 50px;
+  background: #fff;
+  color: #1e2a44;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  border: 3px solid #00ffff;
+}
+
+.team-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #00ffff;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+#team1panel, #team2panel {
+  color: #ffd700;
+  text-shadow: 0 0 8px #ffd700;
+}
+
+.matches {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.match-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.player-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border: 2px solid #00ffff;
+  border-radius: 5px;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+.player-left, .player-right {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff;
+  font-style: italic;
+  text-align: center;
+  width: 100%;
+}
+
+.score-box {
+  width: 100px;
+  height: 40px;
+  background: #fff;
+  color: #1e2a44;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
+  margin: 0 15px;
+  border: 3px solid #00ffff;
+}
+
+.results-summary {
+  margin-top: 20px;
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 22px;
+}
+
+#winner {
+  color: #ffd700;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+#motmScorecard {
+  color: #00ffff;
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+textarea {
+  width: 100%;
+  height: 200px;
+  margin: 20px 0;
+  padding: 12px;
+  background: #2a4066;
+  border: 1px solid #00ffff;
+  color: #fff;
+  border-radius: 10px;
+}
+
+button {
+  padding: 12px 25px;
+  font-size: 16px;
+  margin: 8px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #00ffff;
+  color: #1e2a44;
+  font-weight: 700;
+  font-family: 'Orbitron', sans-serif;
+}
+
+button:hover {
+  background: #00cccc;
+}
+
+.delete-btn {
+  background: #ff0000;
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background: #cc0000;
+}
+
+.admin-panel, .invitation-panel {
+  background: #2a4066;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.admin-panel input, .admin-panel button, .invitation-panel input, .invitation-panel button, .invitation-panel select {
+  margin: 8px 0;
+}
+
+.admin-player, .admin-team, .admin-group, .admin-matchday, .admin-archive {
+  margin: 5px 0;
+  padding: 5px;
+  background: #1e2a44;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.url-input, select, input[type="date"], input[type="text"], input[type="password"], input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  background: #1e2a44;
+  border: 1px solid #00ffff;
+  color: #fff;
+  border-radius: 5px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.invitation-text, .archive-text {
+  background: #1e2a44;
+  padding: 15px;
+  border: 1px solid #00ffff;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  font-family: 'Montserrat', sans-serif;
+  margin-top: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  padding: 8px;
+  border: 1px solid #00ffff;
+  text-align: left;
+  font-family: 'Montserrat', sans-serif;
+}
+
+th {
+  background: #3a5088;
+  color: #ffd700;
+}
+
+td input {
+  width: 100%;
+  background: #1e2a44;
+  border: none;
+  color: #fff;
+}
+
+.success-message, .error-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.success-message {
+  background: #1e2a44;
+  color: #ffd700;
+  border: 1px solid #ffd700;
+}
+
+.error-message {
+  background: #1e2a44;
+  color: #ff3333;
+  border: 1px solid #ff3333;
+}
 </style>
 </head>
-
 <body>
-<h1>DREADLORDS DASHBOARD</h1>
 
-<!-- 🔑 ADMIN SECTION -->
-<div id="adminSection" style="display:none">
-  <h2>Admin Section</h2>
-  <h3>1) Paste Scorecard</h3>
-  <textarea id="scorecardText" placeholder="Paste scorecard here"></textarea>
-  <br>
-  <button onclick="previewScorecard()">Preview Scorecard</button>
-
-  <h3>2) Preview</h3>
-  <div id="previewContainer" class="notice">Preview will be shown here.</div>
-
-  <label>Submission date: <input type="date" id="submissionDate"></label>
-  <label>Password: <input type="text" id="submitPassword" placeholder="Enter admin password"></label>
-  <button onclick="submitScorecard()">Submit Scorecard</button>
-
-  <h3>3) Archive</h3>
-  <div id="archiveContainer"></div>
+<h1>Llfc Dashboard</h1>
+<div class="tabs">
+  <div class="tab-btn active" onclick="openTab('scorecardTab', this)">Scorecard</div>
+  <div class="tab-btn" onclick="openTab('adminTab', this)">Admin</div>
+  <div class="tab-btn" onclick="openTab('invitationTab', this)">Invitation</div>
 </div>
 
-<!-- 👥 VIEWER SECTION -->
-<div id="viewerSection">
-  <!-- HALL OF FAME SECTION -->
-  <h2 style="font-size:28px;">Hall of Fame</h2>
-  <div id="hofAdmin" style="display:none">
-    <h3 style="font-size:24px;">Set POTW / POTM</h3>
-    <label>Period Type:
-      <select id="hofType">
-        <option value="weekly">POTW</option>
-        <option value="monthly">POTM</option>
-      </select>
-    </label>
-    <label>Player:
-      <select id="hofPlayer"></select>
-    </label>
-    <label>Start Date: <input type="date" id="hofStartDate"></label>
-    <label>End Date: <input type="date" id="hofEndDate"></label>
-    <button onclick="setHallOfFame()">Set</button>
+<!-- Scorecard -->
+<section id="scorecardTab" class="active">
+  <div class="scorecard" id="scorecard">
+    <div class="title-container">
+      <img src="https://i.ibb.co/QmTqf2K/default-logo.png" class="tournament-logo" id="tournamentLogo">
+      <div class="title" id="tournamentName">LLFC World Cup 2025</div>
+    </div>
+    <div class="date" id="tournamentDate">08 October 2025</div>
+    <div class="teams">
+      <div class="team-panel" id="team1panel">Team 1</div>
+      <div class="team-score" id="team1score">0</div>
+      <div class="team-score" id="team2score">0</div>
+      <div class="team-panel" id="team2panel">Team 2</div>
+    </div>
+    <div class="matches" id="matches"></div>
+    <div class="results-summary">
+      <div id="winner">Winner: -</div>
+      <div id="motmScorecard">Man of the Match: -</div>
+    </div>
   </div>
-  <div id="hofContainer" style="margin-top:12px;"></div>
+  <textarea id="pasteText" placeholder="Paste matches here"></textarea><br>
+  <button onclick="generateScorecard()">Generate & Archive Scorecard</button>
+  <button onclick="downloadScorecard()">Download Scorecard</button>
+</section>
 
-  <!-- PLAYER RANKINGS & STATISTICS -->
-  <h2 style="font-size:28px;">Player Rankings & Statistics</h2>
-  <label>Filter:
-    <select id="rankingType" onchange="displayRanking()">
-      <option value="overall">Overall</option>
-      <option value="monthly">Monthly</option>
-      <option value="weekly">Weekly</option>
-    </select>
-  </label>
-  <table id="rankingTable">
-    <thead>
-      <tr>
-        <th>Photo</th><th>Player</th><th>Matches</th>
-        <th>W</th><th>D</th><th>L</th>
-        <th>WIN RATIO</th><th>GS</th><th>GC</th><th>GD</th>
-        <th>MOTM</th><th>Rating</th><th>Upload</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+<!-- Admin -->
+<section id="adminTab">
+  <h2>Admin Section</h2>
+  <div class="admin-panel">
+    <h3>Matchday Invitation Setup (Password Protected)</h3>
+    <input type="password" id="adminPassword" placeholder="Enter Password (Fardous)">
+    <button onclick="unlockMatchdaySetup()">Unlock</button>
+    <div id="matchdaySetup" style="display: none;">
+      <h3>Add Matchday</h3>
+      <input type="date" id="matchdayDate">
+      <select id="team1Select"></select>
+      <input type="text" id="team1Manual" placeholder="Or enter Team 1 manually">
+      <select id="team2Select"></select>
+      <input type="text" id="team2Manual" placeholder="Or enter Team 2 manually">
+      <input type="number" id="groupNumber" min="1" max="16" placeholder="Group Number (1-16)">
+      <button onclick="addMatchday()">Add Matchday</button>
+      <h3>Saved Matchdays</h3>
+      <div id="matchdayList"></div>
+      <hr>
+      <h3>Add Group</h3>
+      <input type="text" id="groupName" placeholder="Group Name">
+      <input type="text" id="groupLink" placeholder="Group Link (e.g., https://m.me/j/...)">
+      <input type="text" id="official1" placeholder="Official 1 Name">
+      <input type="text" id="official2" placeholder="Official 2 Name">
+      <button onclick="addGroup()">Add Group</button>
+      <h3>Saved Groups</h3>
+      <div id="groupList"></div>
+      <hr>
+      <h3>Squad Submit Link</h3>
+      <input type="text" id="squadSubmitLink" placeholder="Squad Submit Link (e.g., https://forms.gle/...)">
+      <button onclick="saveSquadLink()">Save Squad Link</button>
+      <h3>Current Squad Submit Link</h3>
+      <div id="squadLinkDisplay"></div>
+      <hr>
+      <h3>Scorecard Archive</h3>
+      <div id="archiveList"></div>
+      <hr>
+      <h3>Player Rankings</h3>
+      <table id="rankingTable">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Team</th>
+            <th>Matches Played</th>
+            <th>Wins</th>
+            <th>Draws</th>
+            <th>Losses</th>
+            <th>Win %</th>
+            <th>GD</th>
+            <th>MOTM</th>
+            <th>Score</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="rankingBody"></tbody>
+      </table>
+      <h3>Merge Players</h3>
+      <select id="mergePlayer1"></select>
+      <select id="mergePlayer2"></select>
+      <button onclick="mergePlayers()">Merge Players</button>
+    </div>
+    <hr>
+    <h3>Add Tournament Logo</h3>
+    <input type="file" id="tournamentLogoInput" accept="image/*">
+    <input type="text" id="tournamentLogoUrl" class="url-input" placeholder="Tournament Logo URL">
+    <button onclick="addTournamentLogo()">Add Tournament Logo</button>
+    <button class="delete-btn" onclick="deleteTournamentLogo()">Delete Tournament Logo</button>
+    <h3>Current Tournament Logo</h3>
+    <div id="tournamentLogoDisplay"></div>
+    <hr>
+    <h3>Add Player</h3>
+    <input type="text" id="playerNameInput" placeholder="Player Name">
+    <input type="file" id="playerPhotoInput" accept="image/*">
+    <input type="text" id="playerPhotoUrl" class="url-input" placeholder="Player Photo URL">
+    <button onclick="addPlayer()">Add Player</button>
+    <h3>Saved Players</h3>
+    <div id="playerList"></div>
+    <hr>
+    <h3>Add Team</h3>
+    <input type="text" id="teamNameInput" placeholder="Team Name">
+    <input type="file" id="teamLogoInput" accept="image/*">
+    <input type="text" id="teamLogoUrl" class="url-input" placeholder="Team Logo URL">
+    <button onclick="addTeam()">Add Team</button>
+    <h3>Saved Teams</h3>
+    <div id="teamList"></div>
+    <hr>
+    <h3>Storage Management</h3>
+    <button class="delete-btn" onclick="clearStorage()">Clear All Storage</button>
+  </div>
+</section>
 
-  <h2 style="font-size:28px;">Download Rankings</h2>
-  <select id="downloadRange">
-    <option value="1-10">1-10</option>
-    <option value="11-20">11-20</option>
-  </select>
-  <button onclick="downloadRankingCard()">Download Card</button>
-  <div id="rankingCard" style="padding:10px;background:#fff;margin-top:8px"></div>
+<!-- Invitation -->
+<section id="invitationTab">
+  <h2>Matchday Invitation</h2>
+  <div class="invitation-panel">
+    <h3>Select Official</h3>
+    <select id="officialSelect" onchange="displayInvitation()"></select>
+    <div id="invitationDisplay"></div>
+  </div>
+</section>
 
-  <!-- 🔥 TOP PERFORMANCE SECTION -->
-  <h2 style="font-size:28px;">Top Performance</h2>
-  <label>View:
-    <select id="topPerformanceType" onchange="displayTopPerformance()">
-      <option value="weekly">Weekly</option>
-      <option value="monthly">Monthly</option>
-      <option value="overall">Overall</option>
-    </select>
-  </label>
-  <div id="topPerformanceContainer" style="margin-top:12px;"></div>
-</div>
+<!-- Success and Error Message Overlays -->
+<div id="successMessage" class="success-message" style="display: none;"></div>
+<div id="errorMessage" class="error-message" style="display: none;"></div>
 
-<!-- 🔑 ADMIN LOGIN BUTTON -->
-<div style="margin-top:20px;text-align:center">
-  <button onclick="toggleAdmin()">Admin Login</button>
-</div>
-
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
+<!-- html2canvas for download -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-/* ---------- Firebase Config ---------- */
+// Your Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCsZrHcpJgGoTHeW0Ex4Hv20KLctDopPq4",
   authDomain: "llfc-4d2df.firebaseapp.com",
   projectId: "llfc-4d2df",
   storageBucket: "llfc-4d2df.firebasestorage.app",
   messagingSenderId: "697058785471",
-  appId: "1:697058785471:web:e7df63d4e9caadec762e0a"
+  appId: "1:697058785471:web:7481cae8fe6b682d762e0a"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const storage = firebase.storage();
 
-/* ---------- Config: Known LLFC Team Names ---------- */
-const LLFCTeams = [
-  "DREADLORDS OF LLFC",
-  "Luminous Legends EFootball Club",
-  "Luminous Legends",
-  "LLFC",
-  "Luminous Legends EFootball"
-];
-
-/* ---------- Helpers ---------- */
-const getLastNumber = (str) => { const m = str.match(/(\d+)(?!.*\d)/); return m ? parseInt(m[1], 10) : 0; };
-const getFirstNumber = (str) => { const m = str.match(/(\d+)/); return m ? parseInt(m[1], 10) : 0; };
-const uidFor = (name) => name.replace(/\s+/g, '_').replace(/[^\w\-]/g, '').toLowerCase() + '_' + Date.now();
-const escapeHtml = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-const containsAnyIgnoreCase = (haystack, needles) => {
-  const l = String(haystack || '').toLowerCase();
-  return needles.some(n => l.includes(String(n || '').toLowerCase()));
-};
-const DEFAULT_PHOTO = 'https://via.placeholder.com/60?text=No+Photo';
-let isAdmin = false;
-
-/* ---------- Extract & Parse Functions ---------- */
-function extractPlayersFromSide(sideRaw, goalPos) {
-  if (!sideRaw || !sideRaw.trim()) return [];
-  const original = sideRaw;
-  if (goalPos === 'start') sideRaw = sideRaw.replace(/^\s*\d+\s*/, '');
-  else if (goalPos === 'end') sideRaw = sideRaw.replace(/\s*\d+\s*$/, '');
-  let separators = [];
-  if (/@/.test(original)) separators.push('@');
-  if (/\s{2,}/.test(original)) separators.push('doubleSpace');
-  if (/[|,\/]/.test(original)) separators.push(/[|,\/]/);
-  if (separators.length === 0) {
-    if (/\s\/\s/.test(original)) separators.push(/\s\/\s/);
-    else if (/\s-\s/.test(original)) separators.push(/\s-\s/);
+// Initialize Firebase with error handling
+let storage;
+try {
+  if (typeof firebase === 'undefined') {
+    throw new Error("Firebase SDK not loaded");
   }
-  let cleaned = sideRaw.replace(/[🔑⚽🟣🟡🔴•★✔✖]/g, ' ').replace(/[,:;“”‘’{}<>]/g, ' ').replace(/\s+/g, ' ').trim();
-  let parts = [];
-  if (separators.length > 0) {
-    let sep = separators[0];
-    if (sep === '@') parts = cleaned.split('@').map(p => p.trim()).filter(Boolean);
-    else if (sep === 'doubleSpace') parts = original.split(/\s{2,}/).map(p => p.replace(/[🔑⚽]/g, '').trim()).filter(Boolean);
-    else if (sep instanceof RegExp) parts = cleaned.split(sep).map(p => p.trim()).filter(Boolean);
-    else parts = cleaned.split(' ').map(p => p.trim()).filter(Boolean);
-  } else if (cleaned) parts = [cleaned];
-  return parts.map(p => p.replace(/\d+/g, '').replace(/^[\W_]+|[\W_]+$/g, '').replace(/\s+/g, ' ').trim()).filter(Boolean);
+  firebase.initializeApp(firebaseConfig);
+  storage = firebase.storage();
+  console.log("Firebase initialized successfully");
+} catch (e) {
+  console.error("Firebase initialization failed:", e.message);
+  showError("Failed to load Firebase SDK. Check your internet connection or try again later.");
 }
 
-function parseScorecard(text) {
-  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-  const players = {};
-  let currentLeftTeam = null, currentRightTeam = null;
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i], ll = line.toLowerCase();
-    if (ll.includes('deadline') || ll.includes('referee') || ll.includes('referees') || ll.includes('official') || ll.includes('points') || ll.includes('room settings')) continue;
-    if (!line.includes('🆚')) continue;
-    const parts = line.split('🆚');
-    if (parts.length < 2) continue;
-    let leftRaw = parts[0].trim(), rightRaw = parts.slice(1).join('🆚').trim();
-    const leftHasTeamName = containsAnyIgnoreCase(leftRaw, LLFCTeams);
-    const rightHasTeamName = containsAnyIgnoreCase(rightRaw, LLFCTeams);
-    
-    if (leftHasTeamName && !rightHasTeamName) {
-      currentLeftTeam = leftRaw.replace(/[\r\n]+/g, ' ').trim();
-      currentRightTeam = rightRaw.replace(/[\r\n]+/g, ' ').trim();
-      continue;
-    } else if (rightHasTeamName && !leftHasTeamName) {
-      currentLeftTeam = leftRaw.replace(/[\r\n]+/g, ' ').trim();
-      currentRightTeam = rightRaw.replace(/[\r\n]+/g, ' ').trim();
-      continue;
-    } else if (leftHasTeamName && rightHasTeamName) {
-      if (containsAnyIgnoreCase(leftRaw, LLFCTeams)) {
-        currentLeftTeam = leftRaw;
-        currentRightTeam = rightRaw;
-      } else {
-        currentLeftTeam = rightRaw;
-        currentRightTeam = leftRaw;
-      }
-      continue;
-    }
+let playerPhotoMap = JSON.parse(localStorage.getItem("playerPhotoMap") || "{}");
+let teamLogoMap = JSON.parse(localStorage.getItem("teamLogoMap") || "{}");
+let matchdays = JSON.parse(localStorage.getItem("matchdays") || "[]");
+let groups = JSON.parse(localStorage.getItem("groups") || "[]");
+let squadSubmitLink = localStorage.getItem("squadSubmitLink") || "";
+let tournamentLogo = localStorage.getItem("tournamentLogo") || "https://i.ibb.co/QmTqf2K/default-logo.png";
+let archives = JSON.parse(localStorage.getItem("archives") || "[]");
+let playerRankings = JSON.parse(localStorage.getItem("playerRankings") || "{}");
+const defaultAvatar = "https://i.ibb.co/3R3p9rV/default-avatar.png";
+const defaultLogo = "https://i.ibb.co/QmTqf2K/default-logo.png";
 
-    let leftIsLLFC = null;
-    if (currentLeftTeam || currentRightTeam) {
-      if (containsAnyIgnoreCase(currentLeftTeam, LLFCTeams)) leftIsLLFC = true;
-      else if (containsAnyIgnoreCase(currentRightTeam, LLFCTeams)) leftIsLLFC = false;
-    }
-    if (leftIsLLFC === null) {
-      if (containsAnyIgnoreCase(leftRaw, LLFCTeams)) leftIsLLFC = true;
-      else if (containsAnyIgnoreCase(rightRaw, LLFCTeams)) leftIsLLFC = false;
-      else continue;
-    }
+const successDiv = document.getElementById("successMessage");
+const errorDiv = document.getElementById("errorMessage");
 
-    const llfcSideRaw = leftIsLLFC ? leftRaw : rightRaw;
-    const oppSideRaw = leftIsLLFC ? rightRaw : leftRaw;
-    const llfcGoals = leftIsLLFC ? getLastNumber(leftRaw) : getFirstNumber(rightRaw);
-    const oppGoals = leftIsLLFC ? getFirstNumber(rightRaw) : getLastNumber(leftRaw);
-    const playerNames = extractPlayersFromSide(llfcSideRaw, leftIsLLFC ? 'end' : 'start');
-    if (playerNames.length === 0) {
-      const cleaned = llfcSideRaw.replace(/[🔑⚽@]/g, ' ').replace(/\d+/g, ' ').replace(/\s+/g, ' ').trim();
-      if (cleaned) playerNames.push(cleaned);
-    }
-    playerNames.forEach(name => {
-      const cleanName = name.trim();
-      if (!cleanName) return;
-      if (!players[cleanName]) {
-        players[cleanName] = {
-          id: uidFor(cleanName),
-          player: cleanName,
-          matches: 1,
-          win: llfcGoals > oppGoals ? 1 : 0,
-          draw: llfcGoals === oppGoals ? 1 : 0,
-          loss: llfcGoals < oppGoals ? 1 : 0,
-          gs: llfcGoals,
-          gc: oppGoals,
-          gd: llfcGoals - oppGoals,
-          motm: line.includes('⚽') ? 1 : 0,
-          rating: 0,
-          photo: '',
-          maxGoals: llfcGoals
-        };
-      } else {
-        const o = players[cleanName];
-        o.matches += 1;
-        o.win += llfcGoals > oppGoals ? 1 : 0;
-        o.draw += llfcGoals === oppGoals ? 1 : 0;
-        o.loss += llfcGoals < oppGoals ? 1 : 0;
-        o.gs += llfcGoals;
-        o.gc += oppGoals;
-        o.gd = o.gs - o.gc;
-        o.motm += line.includes('⚽') ? 1 : 0;
-        o.maxGoals = Math.max(o.maxGoals || 0, llfcGoals);
-      }
-    });
-  }
-  return Object.values(players);
+function showSuccess(message, timeout = 3000) {
+  successDiv.textContent = message;
+  successDiv.style.display = "block";
+  errorDiv.style.display = "none";
+  setTimeout(() => successDiv.style.display = "none", timeout);
 }
 
-/* ---------- Preview / Rendering / Rating ---------- */
-let previewPlayers = [], currentScorecardID = null;
-const calcRating = (p) => (p.win * 10) + (p.draw * 5) + (p.loss * -5) + ((p.gd || 0) * 1) + ((p.motm || 0) * 1);
+function showError(message, timeout = 3000) {
+  errorDiv.textContent = message;
+  errorDiv.style.display = "block";
+  successDiv.style.display = "none";
+  setTimeout(() => errorDiv.style.display = "none", timeout);
+}
 
-function renderPreviewTable() {
-  const container = document.getElementById('previewContainer');
-  if (!previewPlayers || previewPlayers.length === 0) {
-    container.innerHTML = '<div class="small">Preview is empty - paste scorecard and click Preview.</div>';
-    return;
+function safeSetItem(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch (e) {
+    if (e.name === 'QuotaExceededError') {
+      showError('Storage quota exceeded! Clear storage via "Clear All Storage" button and try again.');
+    } else {
+      showError('Storage error: ' + e.message);
+    }
+    return false;
   }
-  let html = '<table><thead><tr><th>Player</th><th>Matches</th><th>W</th><th>D</th><th>L</th><th>GS</th><th>GC</th><th>GD</th><th>MOTM</th><th>Rating</th></tr></thead><tbody>';
-  previewPlayers.forEach((p, idx) => {
-    p.rating = p.rating || calcRating(p);
-    html += `<tr>
-      <td style="text-align:left">
-        <input type="text" data-idx="${idx}" data-field="player" value="${escapeHtml(p.player)}">
-      </td>
-      <td><input data-idx="${idx}" data-field="matches" type="number" min="0" value="${p.matches}"></td>
-      <td><input data-idx="${idx}" data-field="win" type="number" min="0" value="${p.win}"></td>
-      <td><input data-idx="${idx}" data-field="draw" type="number" min="0" value="${p.draw}"></td>
-      <td><input data-idx="${idx}" data-field="loss" type="number" min="0" value="${p.loss}"></td>
-      <td><input data-idx="${idx}" data-field="gs" type="number" min="0" value="${p.gs}"></td>
-      <td><input data-idx="${idx}" data-field="gc" type="number" min="0" value="${p.gc}"></td>
-      <td><input data-idx="${idx}" data-field="gd" type="number" value="${p.gd}" readonly></td>
-      <td><input data-idx="${idx}" data-field="motm" type="number" min="0" value="${p.motm}"></td>
-      <td><input type="number" value="${(p.rating || 0).toFixed(2)}" readonly></td>
-    </tr>`;
-  });
-  html += '</tbody></table>';
-  container.innerHTML = html;
+}
 
-  document.querySelectorAll('#previewContainer input').forEach(inp => {
-    inp.addEventListener('input', (e) => {
-      const idx = parseInt(e.target.getAttribute('data-idx')), field = e.target.getAttribute('data-field');
-      if (!Number.isInteger(idx) || !field) return;
-      const val = field === 'player' ? e.target.value : Math.max(0, parseInt(e.target.value) || 0);
-      previewPlayers[idx][field] = val;
-      if (['gs', 'gc', 'matches', 'win', 'draw', 'loss', 'motm'].includes(field)) {
-        previewPlayers[idx].gd = (previewPlayers[idx].gs || 0) - (previewPlayers[idx].gc || 0);
-        previewPlayers[idx].rating = calcRating(previewPlayers[idx]);
-        const row = e.target.closest('tr');
-        if (row) {
-          row.querySelector('[data-field="gd"]').value = previewPlayers[idx].gd;
-          row.querySelector('td:last-child input').value = previewPlayers[idx].rating.toFixed(2);
-        }
-      }
-    });
+function validateImageUrl(url) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = url;
   });
 }
 
-/* ---------- Preview Button ---------- */
-function previewScorecard() {
-  const text = document.getElementById('scorecardText').value || '';
-  if (!text.trim()) {
-    alert('Please paste the scorecard first.');
-    return;
+async function uploadToFirebase(file, path) {
+  if (!storage) {
+    throw new Error("Firebase Storage is not initialized. Check Firebase setup.");
   }
-  previewPlayers = parseScorecard(text);
-  if (previewPlayers.length === 0) {
-    alert('No LLFC players detected.');
-    document.getElementById('previewContainer').innerHTML = '<div class="small">No LLFC players found in pasted text.</div>';
-    return;
-  }
-  previewPlayers.forEach(p => p.rating = calcRating(p));
-  currentScorecardID = Date.now();
-  renderPreviewTable();
-}
-
-/* ---------- Submit Scorecard ---------- */
-async function submitScorecard() {
-  const pw = document.getElementById('submitPassword').value || '';
-  if (pw !== 'Fardous') { // Replace with Firebase Authentication in production
-    alert('Incorrect password. Use Firebase Authentication for secure access.');
-    return;
-  }
-  const date = document.getElementById('submissionDate').value;
-  if (!date || isNaN(new Date(date))) {
-    alert('Please select a valid submission date.');
-    return;
-  }
-  if (!previewPlayers || previewPlayers.length === 0) {
-    alert('Please create a preview first.');
-    return;
+  if (!file || !file.type.startsWith('image/')) {
+    throw new Error("Please select a valid image file.");
   }
   try {
-    document.querySelectorAll('#previewContainer input').forEach(inp => {
-      const idx = parseInt(inp.getAttribute('data-idx')), field = inp.getAttribute('data-field');
-      if (Number.isInteger(idx) && field) {
-        previewPlayers[idx][field] = field === 'player' ? inp.value : Math.max(0, parseInt(inp.value) || 0);
-      }
-    });
-    previewPlayers.forEach(p => {
-      p.gd = p.gs - p.gc;
-      p.rating = calcRating(p);
-      delete p.team; // Ensure team field is removed
-    });
-    const docId = String(currentScorecardID || Date.now());
-    await db.collection('scorecards').doc(docId).set({ id: docId, date, players: previewPlayers });
-    alert('Scorecard submitted successfully.');
-    document.getElementById('previewContainer').innerHTML = '<div class="small">Submitted - preview cleared.</div>';
-    document.getElementById('scorecardText').value = '';
-    previewPlayers = [];
-    currentScorecardID = null;
-    await Promise.all([displayArchive(), displayRanking(), displayTopPerformance(), populateHOFPlayers(), displayHallOfFame()]);
-  } catch (err) {
-    console.error('Submit error:', err);
-    alert('Submit failed: ' + err.message);
-  }
-}
-
-/* ---------- Archive ---------- */
-async function displayArchive() {
-  const container = document.getElementById('archiveContainer');
-  container.innerHTML = '<div class="small">Loading archive...</div>';
-  try {
-    const snapshot = await db.collection('scorecards').orderBy('id', 'desc').get();
-    container.innerHTML = '';
-    if (snapshot.empty) {
-      container.innerHTML = '<div class="small">No archive entries yet.</div>';
-      return;
-    }
-    snapshot.forEach(doc => {
-      const d = doc.data();
-      const el = document.createElement('div');
-      el.className = 'archive-item';
-      el.innerHTML = `<strong>${escapeHtml(d.date || '--')}</strong> &nbsp; <button onclick="loadArchive('${d.id}')">Load</button> <button onclick="deleteArchive('${d.id}')">Delete</button>`;
-      container.appendChild(el);
-    });
-  } catch (err) {
-    console.error('Archive load error:', err);
-    container.innerHTML = '<div class="small">Failed to load archive: ' + err.message + '</div>';
-  }
-}
-
-async function loadArchive(id) {
-  try {
-    const doc = await db.collection('scorecards').doc(String(id)).get();
-    if (!doc.exists) {
-      alert('Archive not found.');
-      return;
-    }
-    previewPlayers = (doc.data().players || []).map(p => ({ ...p }));
-    previewPlayers.forEach(p => {
-      p.rating = calcRating(p);
-      delete p.team; // Ensure team field is removed
-    });
-    currentScorecardID = id;
-    renderPreviewTable();
-    alert('Archive loaded to preview.');
-  } catch (err) {
-    console.error('Load archive error:', err);
-    alert('Load failed: ' + err.message);
-  }
-}
-
-async function deleteArchive(id) {
-  if (!confirm('Are you sure you want to delete this archive?')) return;
-  try {
-    await db.collection('scorecards').doc(String(id)).delete();
-    await Promise.all([displayArchive(), displayRanking(), displayTopPerformance(), displayHallOfFame()]);
-    alert('Archive deleted successfully.');
-  } catch (err) {
-    console.error('Delete archive error:', err);
-    alert('Delete failed: ' + err.message);
-  }
-}
-
-/* ---------- Rankings ---------- */
-async function displayRanking() {
-  const type = document.getElementById('rankingType').value;
-  const tbody = document.querySelector('#rankingTable tbody');
-  tbody.innerHTML = `<tr><td colspan="12" class="small">Loading...</td></tr>`;
-  try {
-    const stats = {};
-    const now = new Date();
-    const snapshot = await db.collection('scorecards').get();
-    snapshot.forEach(doc => {
-      const card = doc.data();
-      if (!card || !card.players) return;
-      const cardDate = new Date(card.date);
-      let include = false;
-      if (type === 'overall') include = true;
-      else if (type === 'monthly') include = (cardDate.getMonth() === now.getMonth() && cardDate.getFullYear() === now.getFullYear());
-      else if (type === 'weekly') {
-        const ws = new Date(now); ws.setDate(now.getDate() - now.getDay());
-        const we = new Date(ws); we.setDate(ws.getDate() + 6);
-        include = (cardDate >= ws && cardDate <= we);
-      }
-      if (!include) return;
-      card.players.forEach(p => {
-        if (!stats[p.player]) stats[p.player] = { ...p, team: undefined, maxGoals: p.gs };
-        else {
-          const o = stats[p.player];
-          o.matches += p.matches; o.win += p.win; o.draw += p.draw; o.loss += p.loss;
-          o.gs += p.gs; o.gc += p.gc; o.gd = o.gs - o.gc; o.motm += p.motm; o.rating += p.rating;
-          if (p.photo) o.photo = p.photo;
-          o.maxGoals = Math.max(o.maxGoals || 0, p.gs);
-        }
-      });
-    });
-    const arr = Object.values(stats).sort((a, b) => (b.rating || 0) - (a.rating || 0));
-    if (arr.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="12" class="small">No ranking data available.</td></tr>';
-      return;
-    }
-    tbody.innerHTML = '';
-    arr.forEach((p, i) => {
-      const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
-      const row = document.createElement('tr');
-      const winPerc = p.matches > 0 ? ((p.win / p.matches) * 100).toFixed(2) : '0.00';
-      row.innerHTML = `
-        <td><img class="player-photo" src="${escapeHtml(p.photo || DEFAULT_PHOTO)}" onerror="this.src='${DEFAULT_PHOTO}';"></td>
-        <td style="text-align:left">${medal} ${escapeHtml(p.player)}</td>
-        <td>${p.matches}</td><td>${p.win}</td><td>${p.draw}</td><td>${p.loss}</td>
-        <td>${winPerc}%</td>
-        <td>${p.gs}</td><td>${p.gc}</td><td>${p.gd}</td>
-        <td>${p.motm}</td><td>${(p.rating || 0).toFixed(2)}</td>
-        <td><input type="file" onchange='uploadPhoto(event, ${JSON.stringify(escapeHtml(p.player))})'></td>
-      `;
-      tbody.appendChild(row);
-    });
-  } catch (err) {
-    console.error('Ranking load error:', err);
-    tbody.innerHTML = `<tr><td colspan="12" class="small">Failed to load rankings: ${err.message}</td></tr>`;
-  }
-}
-
-/* ---------- Photo Upload ---------- */
-async function uploadPhoto(e, playerName) {
-  const file = e.target.files[0];
-  if (!file) return;
-  try {
-    const storageRef = storage.ref(`player_photos/${playerName}_${Date.now()}.${file.name.split('.').pop()}`);
+    const storageRef = storage.ref(path);
     await storageRef.put(file);
-    const photoUrl = await storageRef.getDownloadURL();
-    const snapshot = await db.collection('scorecards').get();
-    let updated = false;
-    for (const doc of snapshot.docs) {
-      const d = doc.data();
-      (d.players || []).forEach(p => {
-        if (p.player === playerName) {
-          p.photo = photoUrl;
-          updated = true;
-        }
-      });
-      if (updated) await db.collection('scorecards').doc(doc.id).set(d);
-    }
-    await displayRanking();
-    alert('Photo uploaded successfully.');
-  } catch (err) {
-    console.error('Photo upload error:', err);
-    alert('Photo upload failed: ' + err.message);
+    const url = await storageRef.getDownloadURL();
+    return url;
+  } catch (e) {
+    throw new Error("Failed to upload to Firebase: " + e.message);
   }
 }
 
-/* ---------- Download Rankings ---------- */
-async function downloadRankingCard() {
-  const range = document.getElementById('downloadRange').value.split('-').map(n => parseInt(n, 10));
-  const tbody = document.querySelector('#rankingTable tbody');
-  if (!tbody || tbody.rows.length === 0) {
-    alert('Ranking table is empty.');
-    return;
-  }
-  try {
-    let html = `<table style="border-collapse:collapse;border:1px solid #ddd;"><thead>${document.querySelector('#rankingTable thead').innerHTML}</thead><tbody>`;
-    for (let i = range[0] - 1; i < range[1] && i < tbody.rows.length; i++) {
-      const cloneRow = tbody.rows[i].cloneNode(true);
-      cloneRow.querySelectorAll('input').forEach(inp => inp.remove());
-      html += '<tr>' + cloneRow.innerHTML + '</tr>';
-    }
-    html += '</tbody></table>';
-    const div = document.getElementById('rankingCard');
-    div.innerHTML = html;
-    const canvas = await html2canvas(div);
-    const link = document.createElement('a');
-    link.download = `LLFC_Ranking_${range[0]}-${range[1]}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  } catch (err) {
-    console.error('Download error:', err);
-    alert('Download failed: ' + err.message);
+function clearStorage() {
+  if (confirm('Are you sure you want to clear all saved data (logos, photos, matchdays, groups, archives, rankings)?')) {
+    localStorage.clear();
+    playerPhotoMap = {};
+    teamLogoMap = {};
+    matchdays = [];
+    groups = [];
+    squadSubmitLink = "";
+    archives = [];
+    playerRankings = {};
+    tournamentLogo = defaultLogo;
+    updatePlayerList();
+    updateTeamList();
+    updateMatchdayList();
+    updateGroupList();
+    updateSquadLinkDisplay();
+    updateArchiveList();
+    updateRankingTable();
+    updateMergeSelects();
+    document.getElementById("tournamentLogo").src = tournamentLogo;
+    showSuccess("All storage cleared!");
   }
 }
 
-/* ---------- Top Performance ---------- */
-async function displayTopPerformance() {
-  const type = document.getElementById('topPerformanceType').value;
-  const container = document.getElementById('topPerformanceContainer');
-  container.innerHTML = '<div class="small">Loading...</div>';
-  try {
-    const stats = {};
-    const now = new Date();
-    const snapshot = await db.collection('scorecards').get();
-    snapshot.forEach(doc => {
-      const card = doc.data();
-      if (!card || !card.players) return;
-      const cardDate = new Date(card.date);
-      let include = false;
-      if (type === 'overall') include = true;
-      else if (type === 'monthly') include = (cardDate.getMonth() === now.getMonth() && cardDate.getFullYear() === now.getFullYear());
-      else if (type === 'weekly') {
-        const ws = new Date(now); ws.setDate(now.getDate() - now.getDay());
-        const we = new Date(ws); we.setDate(ws.getDate() + 6);
-        include = (cardDate >= ws && cardDate <= we);
-      }
-      if (!include) return;
-      card.players.forEach(p => {
-        if (!stats[p.player]) stats[p.player] = { ...p, maxGoals: p.gs, sevenPlusMatches: p.gs >= 7 ? 1 : 0, team: undefined };
-        else {
-          const o = stats[p.player];
-          o.matches += p.matches; o.win += p.win; o.draw += p.draw; o.loss += p.loss;
-          o.gs += p.gs; o.gc += p.gc; o.gd = o.gs - o.gc; o.motm += p.motm; o.rating += p.rating;
-          if (p.photo) o.photo = p.photo;
-          o.maxGoals = Math.max(o.maxGoals || 0, p.gs);
-          if (p.gs >= 7) o.sevenPlusMatches = (o.sevenPlusMatches || 0) + 1;
-        }
-      });
-    });
-    const players = Object.values(stats);
-    const createTable = (title, headers, rows) => {
-      let html = `<h3>${escapeHtml(title)}</h3><table><thead><tr>`;
-      headers.forEach(h => html += `<th>${escapeHtml(h)}</th>`);
-      html += '</tr></thead><tbody>';
-      rows.forEach(r => {
-        html += '<tr>';
-        r.forEach(c => html += `<td>${c}</td>`);
-        html += '</tr>';
-      });
-      html += '</tbody></table>';
-      return html;
-    };
-    let html = '';
-    const motmTop = players.sort((a, b) => b.motm - a.motm).slice(0, 10)
-      .map(p => [`<img class="player-photo" src="${escapeHtml(p.photo || DEFAULT_PHOTO)}" onerror="this.src='${DEFAULT_PHOTO}';">`, escapeHtml(p.player), p.motm]);
-    if (motmTop.length) html += createTable('Most MOTM', ['Photo', 'Player', 'MOTM'], motmTop);
-    const scorerTop = players.sort((a, b) => b.gs - a.gs).slice(0, 10)
-      .map(p => [`<img class="player-photo" src="${escapeHtml(p.photo || DEFAULT_PHOTO)}" onerror="this.src='${DEFAULT_PHOTO}';">`, escapeHtml(p.player), p.gs]);
-    if (scorerTop.length) html += createTable('Top Scorer', ['Photo', 'Player', 'Goals'], scorerTop);
-    const winTop = players.sort((a, b) => b.win - a.win).slice(0, 10)
-      .map(p => [`<img class="player-photo" src="${escapeHtml(p.photo || DEFAULT_PHOTO)}" onerror="this.src='${DEFAULT_PHOTO}';">`, escapeHtml(p.player), p.win]);
-    if (winTop.length) html += createTable('Most Wins', ['Photo', 'Player', 'Wins'], winTop);
-    const sevenPlus = players.filter(p => p.sevenPlusMatches > 0)
-      .sort((a, b) => b.sevenPlusMatches - a.sevenPlusMatches)
-      .slice(0, 10)
-      .map(p => [`<img class="player-photo" src="${escapeHtml(p.photo || DEFAULT_PHOTO)}" onerror="this.src='${DEFAULT_PHOTO}';">`, escapeHtml(p.player), p.sevenPlusMatches]);
-    if (sevenPlus.length) html += createTable('7+ Goals in a Single Match', ['Photo', 'Player', 'Times'], sevenPlus);
-    const winPercTop = players.filter(p => p.matches > 0).sort((a, b) => ((b.win / b.matches) * 100) - ((a.win / a.matches) * 100)).slice(0, 10)
-      .map(p => [`<img class="player-photo" src="${escapeHtml(p.photo || DEFAULT_PHOTO)}" onerror="this.src='${DEFAULT_PHOTO}';">`, escapeHtml(p.player), ((p.win / p.matches) * 100).toFixed(2) + '%']);
-    if (winPercTop.length) html += createTable('Highest Win Percentage', ['Photo', 'Player', 'Win %'], winPercTop);
-    const avgRatingTop = players
-      .filter(p => p.matches >= 10 && p.rating !== undefined)
-      .map(p => ({ ...p, avgRating: p.rating / p.matches }))
-      .sort((a, b) => b.avgRating - a.avgRating)
-      .slice(0, 10)
-      .map(p => [`<img class="player-photo" src="${escapeHtml(p.photo || DEFAULT_PHOTO)}" onerror="this.src='${DEFAULT_PHOTO}';">`, escapeHtml(p.player), p.avgRating.toFixed(2)]);
-    if (avgRatingTop.length) html += createTable('Top 10 Players by Average Rating (Min 10 Matches)', ['Photo', 'Player', 'Average Rating'], avgRatingTop);
-    container.innerHTML = html || '<div class="small">No top performance data for the selected range.</div>';
-  } catch (err) {
-    console.error('Top performance error:', err);
-    container.innerHTML = '<div class="small">Failed to load top performance: ' + err.message + '</div>';
-  }
-}
-
-/* ---------- Admin Toggle ---------- */
-function toggleAdmin() {
-  const pw = prompt("Enter admin password:");
-  if (pw === "Fardous") { // Replace with Firebase Authentication in production
-    isAdmin = true;
-    document.getElementById('adminSection').style.display = "block";
-    document.getElementById('hofAdmin').style.display = "block";
-    alert("Welcome Admin!");
-    displayHallOfFame();
+function unlockMatchdaySetup() {
+  const password = document.getElementById("adminPassword").value;
+  if (password === "Fardous") {
+    document.getElementById("matchdaySetup").style.display = "block";
+    showSuccess("Matchday setup unlocked!");
   } else {
-    alert("Incorrect password! Use Firebase Authentication.");
+    showError("Incorrect password!");
   }
 }
 
-/* ---------- Hall of Fame Functions ---------- */
-async function populateHOFPlayers() {
-  const select = document.getElementById('hofPlayer');
-  select.innerHTML = '<option value="">Loading players...</option>';
-  try {
-    console.log('Fetching scorecards for HOF player dropdown...');
-    const players = {};
-    const snapshot = await db.collection('scorecards').get();
-    if (snapshot.empty) {
-      console.warn('No scorecards found for HOF player dropdown.');
-      select.innerHTML = '<option value="">No players available</option>';
-      alert('No players found in scorecards. Add a scorecard first.');
-      return;
+function updateTeamSelect() {
+  const team1Select = document.getElementById("team1Select");
+  const team2Select = document.getElementById("team2Select");
+  team1Select.innerHTML = '<option value="">Select Team 1</option>';
+  team2Select.innerHTML = '<option value="">Select Team 2</option>';
+  Object.keys(teamLogoMap).forEach(team => {
+    team1Select.innerHTML += `<option value="${team}">${team}</option>`;
+    team2Select.innerHTML += `<option value="${team}">${team}</option>`;
+  });
+}
+
+function addMatchday() {
+  const date = document.getElementById("matchdayDate").value;
+  let team1 = document.getElementById("team1Select").value || document.getElementById("team1Manual").value.trim();
+  let team2 = document.getElementById("team2Select").value || document.getElementById("team2Manual").value.trim();
+  const groupNumber = document.getElementById("groupNumber").value;
+
+  if (!date || !team1 || !team2 || !groupNumber) {
+    showError("Please fill in all fields (date, teams, group number).");
+    return;
+  }
+
+  if (Object.keys(teamLogoMap).length >= 32 && !teamLogoMap[team1]) {
+    showError("Maximum 32 teams allowed. Add team via 'Add Team' first.");
+    return;
+  }
+
+  matchdays.push({ date, team1, team2, groupNumber: parseInt(groupNumber) });
+  if (safeSetItem("matchdays", JSON.stringify(matchdays))) {
+    updateMatchdayList();
+    document.getElementById("matchdayDate").value = "";
+    document.getElementById("team1Select").value = "";
+    document.getElementById("team1Manual").value = "";
+    document.getElementById("team2Select").value = "";
+    document.getElementById("team2Manual").value = "";
+    document.getElementById("groupNumber").value = "";
+    showSuccess("Matchday added!");
+  }
+}
+
+function updateMatchdayList() {
+  const list = document.getElementById("matchdayList");
+  list.innerHTML = "";
+  matchdays.forEach((m, index) => {
+    list.innerHTML += `
+      <div class="admin-matchday">
+        ${m.date}: ${m.team1} vs ${m.team2} (Group ${m.groupNumber})
+        <button class="delete-btn" onclick="deleteMatchday(${index})">Delete</button>
+      </div>
+    `;
+  });
+  updateOfficialSelect();
+}
+
+function deleteMatchday(index) {
+  matchdays.splice(index, 1);
+  if (safeSetItem("matchdays", JSON.stringify(matchdays))) {
+    updateMatchdayList();
+    showSuccess("Matchday deleted!");
+  }
+}
+
+function addGroup() {
+  const name = document.getElementById("groupName").value.trim();
+  const link = document.getElementById("groupLink").value.trim();
+  const official1 = document.getElementById("official1").value.trim();
+  const official2 = document.getElementById("official2").value.trim();
+
+  if (!name || !link || !official1 || !official2) {
+    showError("Please fill in all group fields.");
+    return;
+  }
+
+  if (groups.length >= 16) {
+    showError("Maximum 16 groups allowed.");
+    return;
+  }
+
+  groups.push({ name, link, officials: [official1, official2] });
+  if (safeSetItem("groups", JSON.stringify(groups))) {
+    updateGroupList();
+    document.getElementById("groupName").value = "";
+    document.getElementById("groupLink").value = "";
+    document.getElementById("official1").value = "";
+    document.getElementById("official2").value = "";
+    showSuccess("Group added!");
+  }
+}
+
+function updateGroupList() {
+  const list = document.getElementById("groupList");
+  list.innerHTML = "";
+  groups.forEach((g, index) => {
+    list.innerHTML += `
+      <div class="admin-group">
+        ${g.name}: ${g.link} (Officials: ${g.officials.join(", ")})
+        <button class="delete-btn" onclick="deleteGroup(${index})">Delete</button>
+      </div>
+    `;
+  });
+  updateOfficialSelect();
+}
+
+function deleteGroup(index) {
+  groups.splice(index, 1);
+  if (safeSetItem("groups", JSON.stringify(groups))) {
+    updateGroupList();
+    showSuccess("Group deleted!");
+  }
+}
+
+function saveSquadLink() {
+  const link = document.getElementById("squadSubmitLink").value.trim();
+  if (!link) {
+    showError("Please enter a squad submit link.");
+    return;
+  }
+  if (safeSetItem("squadSubmitLink", link)) {
+    squadSubmitLink = link;
+    updateSquadLinkDisplay();
+    document.getElementById("squadSubmitLink").value = "";
+    showSuccess("Squad submit link saved!");
+  }
+}
+
+function updateSquadLinkDisplay() {
+  document.getElementById("squadLinkDisplay").innerHTML = squadSubmitLink ? `<a href="${squadSubmitLink}" target="_blank">${squadSubmitLink}</a>` : "No link set";
+}
+
+function updateOfficialSelect() {
+  const select = document.getElementById("officialSelect");
+  select.innerHTML = '<option value="">Select Official</option>';
+  const officials = new Set();
+  groups.forEach(g => g.officials.forEach(o => officials.add(o)));
+  officials.forEach(o => {
+    select.innerHTML += `<option value="${o}">${o}</option>`;
+  });
+  displayInvitation();
+}
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  const month = date.toLocaleString('default', { month: 'long' }).toUpperCase();
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${day} ${month}`;
+}
+
+function generateInvitationText(matchday, group) {
+  const groupNumber = group.name.match(/\d+/)?.[0] || group.name;
+  return `🔔 LLFC CLUB WORLD CUP Group ${groupNumber}\n\nDate: ${formatDate(matchday.date)}\n\n🔴 ${matchday.team1}\n🔵 ${matchday.team2}\n\n📌 PLEASE JOIN YOUR MATCHDAY GROUP\n${group.link}\n\n✅ Squad Submit Link\n${squadSubmitLink}\n⚠️ PLEASE SUBMIT YOUR SQUAD BEFORE 5:00 PM\n🏅 Officials: ${group.officials.join(", ")}`;
+}
+
+function displayInvitation() {
+  const official = document.getElementById("officialSelect").value;
+  const display = document.getElementById("invitationDisplay");
+  display.innerHTML = "";
+  if (!official) return;
+
+  const officialGroups = groups.filter(g => g.officials.includes(official));
+  officialGroups.forEach(group => {
+    const groupMatchdays = matchdays.filter(m => m.groupNumber === parseInt(group.name.match(/\d+/)?.[0]) || m.groupNumber);
+    groupMatchdays.forEach(matchday => {
+      const text = generateInvitationText(matchday, group);
+      display.innerHTML += `
+        <div>
+          <h3>Group ${group.name} - ${matchday.date}</h3>
+          <div class="invitation-text">${text}</div>
+          <button onclick="copyText(\`${text.replace(/`/g, "\\`")}\`)">Copy Text</button>
+        </div>
+      `;
+    });
+  });
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showSuccess("Invitation text copied!");
+  }).catch(err => {
+    console.error("Clipboard error:", err);
+    showError("Failed to copy text. Try again or check browser permissions.");
+  });
+}
+
+function levenshteinDistance(a, b) {
+  const matrix = Array(b.length + 1).fill().map(() => Array(a.length + 1).fill(0));
+  for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
+  for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
+  for (let j = 1; j <= b.length; j++) {
+    for (let i = 1; i <= a.length; i++) {
+      const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[j][i] = Math.min(
+        matrix[j][i - 1] + 1,
+        matrix[j - 1][i] + 1,
+        matrix[j - 1][i - 1] + indicator
+      );
     }
-    snapshot.forEach(doc => {
-      (doc.data().players || []).forEach(p => {
-        players[p.player] = p;
+  }
+  return matrix[b.length][a.length];
+}
+
+function isSimilarName(name1, name2) {
+  const maxLen = Math.max(name1.length, name2.length);
+  const distance = levenshteinDistance(name1.toLowerCase(), name2.toLowerCase());
+  return distance / maxLen <= 0.2; // 80% similarity
+}
+
+function updatePlayerRankings(team1, team2, matches, motmPlayer, archiveId) {
+  matches.forEach(match => {
+    const [p1Raw, s1, s2, p2Raw] = match;
+    const p1 = cleanName(p1Raw), p2 = cleanName(p2Raw);
+    const team1Exact = team1, team2Exact = team2;
+
+    [ { player: p1, team: team1Exact, score: parseInt(s1), oppScore: parseInt(s2), isMotm: p1Raw.includes("👑") },
+      { player: p2, team: team2Exact, score: parseInt(s2), oppScore: parseInt(s1), isMotm: p2Raw.includes("👑") } ]
+      .forEach(({ player, team, score, oppScore, isMotm }) => {
+        let matchedPlayer = player;
+        const existingPlayers = Object.keys(playerRankings);
+        const match = existingPlayers.find(p => 
+          playerRankings[p].team.toLowerCase() === team.toLowerCase() && 
+          isSimilarName(p, player)
+        );
+        if (match) matchedPlayer = match;
+
+        if (!playerRankings[matchedPlayer]) {
+          playerRankings[matchedPlayer] = { team, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, gd: 0, motm: 0, score: 0, winPercentage: 0, matches: [] };
+        }
+        const outcome = score > oppScore ? 'win' : score === oppScore ? 'draw' : 'loss';
+        playerRankings[matchedPlayer].matches.push({ id: archiveId, outcome, score, oppScore });
+        if (isMotm) playerRankings[matchedPlayer].motm += 1;
       });
-    });
-    const playerCount = Object.keys(players).length;
-    console.log(`HOF player dropdown: Found ${playerCount} players`);
-    if (playerCount === 0) {
-      select.innerHTML = '<option value="">No players available</option>';
-      return;
+  });
+
+  // Recalculate stats
+  Object.keys(playerRankings).forEach(player => {
+    const data = playerRankings[player];
+    data.matchesPlayed = data.matches.length;
+    data.wins = data.matches.filter(m => m.outcome === 'win').length;
+    data.draws = data.matches.filter(m => m.outcome === 'draw').length;
+    data.losses = data.matches.filter(m => m.outcome === 'loss').length;
+    data.gd = data.matches.reduce((sum, m) => sum + (m.score - m.oppScore), 0);
+    data.winPercentage = data.matchesPlayed > 0 ? ((data.wins / data.matchesPlayed) * 100).toFixed(2) : 0;
+    data.score = (data.wins * 10) + (data.draws * 5) + (data.losses * -7) + (data.gd * 1) + (data.motm * 5);
+  });
+
+  // Remove players with no matches
+  Object.keys(playerRankings).forEach(player => {
+    if (playerRankings[player].matchesPlayed === 0) {
+      delete playerRankings[player];
     }
-    select.innerHTML = '<option value="">Select Player</option>';
-    Object.keys(players).sort().forEach(name => {
-      const opt = document.createElement('option');
-      opt.value = name;
-      opt.text = name;
-      select.appendChild(opt);
-    });
-    console.log('HOF player dropdown populated successfully');
-  } catch (err) {
-    console.error('Populate HOF players error:', err);
-    select.innerHTML = '<option value="">Error loading players</option>';
-    alert('Failed to load players for Hall of Fame: ' + err.message);
+  });
+
+  if (safeSetItem("playerRankings", JSON.stringify(playerRankings))) {
+    updateRankingTable();
+    updateMergeSelects();
   }
 }
 
-async function setHallOfFame() {
-  const type = document.getElementById('hofType').value;
-  const player = document.getElementById('hofPlayer').value;
-  const startDateStr = document.getElementById('hofStartDate').value;
-  const endDateStr = document.getElementById('hofEndDate').value;
-  if (!player || !startDateStr || !endDateStr) {
-    alert('Please select a player and both start and end dates.');
+function recalculateRankings() {
+  playerRankings = {};
+  archives.forEach(archive => {
+    updatePlayerRankings(archive.team1, archive.team2, archive.matches, archive.motmPlayer, archive.id);
+  });
+}
+
+function updateRankingTable() {
+  const tbody = document.getElementById("rankingBody");
+  tbody.innerHTML = "";
+  Object.keys(playerRankings).sort((a, b) => playerRankings[b].score - playerRankings[a].score)
+    .forEach((player, index) => {
+      const data = playerRankings[player];
+      tbody.innerHTML += `
+        <tr>
+          <td><input value="${player}" onchange="editRanking(${index}, 'player', this.value)"></td>
+          <td><input value="${data.team}" onchange="editRanking(${index}, 'team', this.value)"></td>
+          <td><input type="number" value="${data.matchesPlayed}" onchange="editRanking(${index}, 'matchesPlayed', this.value)"></td>
+          <td><input type="number" value="${data.wins}" onchange="editRanking(${index}, 'wins', this.value)"></td>
+          <td><input type="number" value="${data.draws}" onchange="editRanking(${index}, 'draws', this.value)"></td>
+          <td><input type="number" value="${data.losses}" onchange="editRanking(${index}, 'losses', this.value)"></td>
+          <td>${data.winPercentage}%</td>
+          <td><input type="number" value="${data.gd}" onchange="editRanking(${index}, 'gd', this.value)"></td>
+          <td><input type="number" value="${data.motm}" onchange="editRanking(${index}, 'motm', this.value)"></td>
+          <td>${data.score}</td>
+          <td><button class="delete-btn" onclick="deleteRanking(${index})">Delete</button></td>
+        </tr>
+      `;
+    });
+}
+
+function editRanking(index, field, value) {
+  const player = Object.keys(playerRankings)[index];
+  if (field === 'player') {
+    const data = playerRankings[player];
+    delete playerRankings[player];
+    playerRankings[value] = data;
+  } else {
+    playerRankings[player][field] = field === 'team' ? value : parseInt(value) || 0;
+    playerRankings[player].winPercentage = playerRankings[player].matchesPlayed > 0 ? 
+      ((playerRankings[player].wins / playerRankings[player].matchesPlayed) * 100).toFixed(2) : 0;
+    playerRankings[player].score = 
+      (playerRankings[player].wins * 10) + 
+      (playerRankings[player].draws * 5) + 
+      (playerRankings[player].losses * -7) + 
+      (playerRankings[player].gd * 1) + 
+      (playerRankings[player].motm * 5);
+  }
+  if (safeSetItem("playerRankings", JSON.stringify(playerRankings))) {
+    updateRankingTable();
+    updateMergeSelects();
+  }
+}
+
+function deleteRanking(index) {
+  const player = Object.keys(playerRankings)[index];
+  delete playerRankings[player];
+  if (safeSetItem("playerRankings", JSON.stringify(playerRankings))) {
+    updateRankingTable();
+    updateMergeSelects();
+    showSuccess("Player ranking deleted!");
+  }
+}
+
+function mergePlayers() {
+  const player1 = document.getElementById("mergePlayer1").value;
+  const player2 = document.getElementById("mergePlayer2").value;
+  if (!player1 || !player2 || player1 === player2) {
+    showError("Please select two different players to merge.");
     return;
   }
-  const startDate = new Date(startDateStr);
-  const endDate = new Date(endDateStr);
-  endDate.setHours(23, 59, 59, 999);
-  if (isNaN(startDate) || isNaN(endDate)) {
-    alert('Invalid date selected.');
+  if (playerRankings[player1].team !== playerRankings[player2].team) {
+    showError("Players must be from the same team to merge.");
     return;
   }
-  if (startDate > endDate) {
-    alert('Start date must be before end date.');
-    return;
+  playerRankings[player1].matches = playerRankings[player1].matches.concat(playerRankings[player2].matches);
+  playerRankings[player1].motm += playerRankings[player2].motm;
+  delete playerRankings[player2];
+  recalculateRankings();
+  showSuccess(`Merged ${player2} into ${player1}!`);
+}
+
+function updateMergeSelects() {
+  const merge1 = document.getElementById("mergePlayer1");
+  const merge2 = document.getElementById("mergePlayer2");
+  merge1.innerHTML = '<option value="">Select Player 1</option>';
+  merge2.innerHTML = '<option value="">Select Player 2</option>';
+  Object.keys(playerRankings).forEach(player => {
+    merge1.innerHTML += `<option value="${player}">${player} (${playerRankings[player].team})</option>`;
+    merge2.innerHTML += `<option value="${player}">${player} (${playerRankings[player].team})</option>`;
+  });
+}
+
+function saveToArchive(team1, team2, team1Points, team2Points, matches, motmPlayer) {
+  const archive = {
+    id: Date.now(),
+    timestamp: new Date().toISOString(),
+    team1,
+    team2,
+    team1Points,
+    team2Points,
+    matches,
+    motmPlayer,
+    inputText: document.getElementById("pasteText").value
+  };
+  archives.push(archive);
+  if (safeSetItem("archives", JSON.stringify(archives))) {
+    updateArchiveList();
+    showSuccess("Scorecard archived!");
   }
-  const options = { month: 'short', day: 'numeric' };
-  const startFmt = startDate.toLocaleDateString('en-US', options);
-  const endFmt = endDate.toLocaleDateString('en-US', options);
-  const period = `${startFmt} - ${endFmt}`;
-  try {
-    console.log(`Setting HOF: type=${type}, player=${player}, period=${period}`);
-    const stats = {};
-    const snapshot = await db.collection('scorecards').get();
-    if (snapshot.empty) {
-      console.warn('No scorecards found for HOF stats.');
-      alert('No scorecard data available to set Hall of Fame.');
-      return;
+}
+
+function updateArchiveList() {
+  const list = document.getElementById("archiveList");
+  list.innerHTML = "";
+  archives.forEach((archive, index) => {
+    list.innerHTML += `
+      <div class="admin-archive">
+        ${archive.timestamp}: ${archive.team1} vs ${archive.team2} (${archive.team1Points}-${archive.team2Points})
+        <button onclick="loadArchive(${index})">Load</button>
+        <button onclick="editArchive(${index})">Edit</button>
+        <button class="delete-btn" onclick="deleteArchive(${index})">Delete</button>
+      </div>
+    `;
+  });
+}
+
+function loadArchive(index) {
+  const archive = archives[index];
+  document.getElementById("pasteText").value = archive.inputText;
+  generateScorecard();
+  showSuccess("Archive loaded!");
+}
+
+function editArchive(index) {
+  const newText = prompt("Edit scorecard text:", archives[index].inputText);
+  if (newText) {
+    archives[index].inputText = newText;
+    if (safeSetItem("archives", JSON.stringify(archives))) {
+      updateArchiveList();
+      recalculateRankings();
+      showSuccess("Archive updated!");
     }
-    snapshot.forEach(doc => {
-      const card = doc.data();
-      if (!card || !card.players) return;
-      const cardDate = new Date(card.date);
-      if (cardDate >= startDate && cardDate <= endDate) {
-        card.players.forEach(p => {
-          if (p.player !== player) return;
-          if (!stats[p.player]) stats[p.player] = { matches: 0, win: 0, gs: 0, motm: 0, photo: p.photo || DEFAULT_PHOTO };
-          const o = stats[p.player];
-          o.matches += p.matches || 0;
-          o.win += p.win || 0;
-          o.gs += p.gs || 0;
-          o.motm += p.motm || 0;
-          if (p.photo) o.photo = p.photo;
-        });
+  }
+}
+
+function deleteArchive(index) {
+  archives.splice(index, 1);
+  if (safeSetItem("archives", JSON.stringify(archives))) {
+    updateArchiveList();
+    recalculateRankings();
+    showSuccess("Archive deleted and rankings updated!");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("tournamentLogo").src = tournamentLogo;
+  updateTournamentLogoDisplay();
+  updatePlayerList();
+  updateTeamList();
+  updateMatchdayList();
+  updateGroupList();
+  updateSquadLinkDisplay();
+  updateArchiveList();
+  updateRankingTable();
+  updateMergeSelects();
+  updateTeamSelect();
+  updateOfficialSelect();
+});
+
+function openTab(tabId, btn) {
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.getElementById(tabId).classList.add("active");
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+function cleanName(name) {
+  return name.replace(/[@()⭐⛔🔑🔥👑!*\-_]/g, '').trim();
+}
+
+function getTeamLogo(teamName) {
+  const teamMapKeys = Object.keys(teamLogoMap);
+  const matchedKey = teamMapKeys.find(key => key.toLowerCase() === teamName.toLowerCase());
+  return teamLogoMap[matchedKey] || defaultLogo;
+}
+
+function generateScorecard() {
+  const text = document.getElementById("pasteText").value;
+  const lines = text.split("\n");
+
+  let teamLine = lines.find(l => l.includes("⚔️"));
+  let team1 = teamLine ? cleanName(teamLine.split("⚔️")[0]).trim() : "Team 1";
+  let team2 = teamLine ? cleanName(teamLine.split("⚔️")[1]).trim() : "Team 2";
+
+  const matchesContainer = document.getElementById("matches");
+  matchesContainer.innerHTML = "";
+
+  let team1Points = 0, team2Points = 0, motmPlayer = "";
+  const matches = [];
+
+  lines.forEach(line => {
+    if (line.includes("🆚")) {
+      let m = line.match(/(.+?)\s*\(?(\d+)\)?\s*🆚\s*\(?(\d+)\)?\s*(.+)/);
+      if (m) {
+        let p1Raw = m[1].trim(), p2Raw = m[4].trim();
+        let p1 = cleanName(p1Raw), p2 = cleanName(p2Raw);
+        let s1 = parseInt(m[2]), s2 = parseInt(m[3]);
+
+        if (p1Raw.includes("👑")) motmPlayer = p1;
+        if (p2Raw.includes("👑")) motmPlayer = p2;
+
+        matches.push([p1Raw, s1, s2, p2Raw]);
+        matchesContainer.innerHTML += `
+          <div class="match-row">
+            <div class="player-container player-left">${p1}</div>
+            <div class="score-box">${s1} - ${s2}</div>
+            <div class="player-container player-right">${p2}</div>
+          </div>
+        `;
+
+        if (s1 > s2) team1Points += 3;
+        else if (s2 > s1) team2Points += 3;
+        else { team1Points++; team2Points++; }
       }
-    });
-    const pStats = stats[player];
-    if (!pStats || pStats.matches === 0) {
-      console.warn(`No stats for player ${player} in the period.`);
-      alert('No stats found for the selected player in the given period.');
+    }
+  });
+
+  let team1LogoSrc = getTeamLogo(team1);
+  let team2LogoSrc = getTeamLogo(team2);
+  let team1Logo = `<img src="${team1LogoSrc}" class="team-logo" onerror="this.src='${defaultLogo}'">`;
+  let team2Logo = `<img src="${team2LogoSrc}" class="team-logo" onerror="this.src='${defaultLogo}'">`;
+
+  document.getElementById("team1panel").innerHTML = `${team1Logo}${team1}`;
+  document.getElementById("team2panel").innerHTML = `${team2Logo}${team2}`;
+  document.getElementById("team1score").innerText = team1Points;
+  document.getElementById("team2score").innerText = team2Points;
+
+  const winner = team1Points > team2Points ? team1 : (team2Points > team1Points ? team2 : "Draw");
+  document.getElementById("winner").innerText = "Winner: " + winner;
+  document.getElementById("motmScorecard").innerText = "Man of the Match: " + (motmPlayer || "-");
+  document.getElementById("tournamentLogo").src = tournamentLogo;
+
+  saveToArchive(team1, team2, team1Points, team2Points, matches, motmPlayer);
+  updatePlayerRankings(team1, team2, matches, motmPlayer, archives[archives.length - 1]?.id);
+}
+
+async function addTournamentLogo() {
+  const fileInput = document.getElementById("tournamentLogoInput");
+  const urlInput = document.getElementById("tournamentLogoUrl");
+  let imageUrl = urlInput.value.trim();
+  const file = fileInput.files[0];
+
+  try {
+    if (file) {
+      imageUrl = await uploadToFirebase(file, `images/tournament-logo.jpg`);
+      urlInput.value = imageUrl;
+    } else if (!imageUrl) {
+      showError("Please select a file or enter a valid image URL.");
       return;
     }
-    const docId = `${type}_${Date.now()}`;
-    console.log(`Saving HOF entry: docId=${docId}`);
-    await db.collection('hallOfFame').doc(docId).set({
-      id: docId,
-      type,
-      player,
-      period,
-      stats: {
-        matches: pStats.matches,
-        win: pStats.win,
-        gs: pStats.gs,
-        motm: pStats.motm
-      },
-      photo: pStats.photo,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    console.log('HOF entry saved successfully');
-    alert('Hall of Fame updated successfully!');
-    await displayHallOfFame();
-  } catch (err) {
-    console.error('Set HOF error:', err);
-    alert('Failed to update Hall of Fame: ' + err.message);
+
+    const isValid = await validateImageUrl(imageUrl);
+    if (!isValid) {
+      showError("Invalid image URL or image failed to load.");
+      return;
+    }
+
+    if (safeSetItem("tournamentLogo", imageUrl)) {
+      tournamentLogo = imageUrl;
+      document.getElementById("tournamentLogo").src = tournamentLogo;
+      updateTournamentLogoDisplay();
+      fileInput.value = '';
+      showSuccess("Tournament logo successfully saved!");
+    }
+  } catch (e) {
+    showError("Upload failed: " + e.message);
   }
 }
 
-async function deleteHOF(id) {
-  if (!isAdmin) return;
-  if (!confirm('Are you sure you want to delete this Hall of Fame entry?')) return;
-  try {
-    await db.collection('hallOfFame').doc(id).delete();
-    await displayHallOfFame();
-    alert('Deleted successfully.');
-  } catch (err) {
-    console.error('Delete HOF error:', err);
-    alert('Delete failed: ' + err.message);
+function deleteTournamentLogo() {
+  if (safeSetItem("tournamentLogo", defaultLogo)) {
+    tournamentLogo = defaultLogo;
+    document.getElementById("tournamentLogo").src = tournamentLogo;
+    updateTournamentLogoDisplay();
+    document.getElementById("tournamentLogoInput").value = '';
+    document.getElementById("tournamentLogoUrl").value = '';
+    showSuccess("Tournament logo reset to default!");
   }
 }
 
-async function editHOF(id) {
-  if (!isAdmin) return;
-  try {
-    const doc = await db.collection('hallOfFame').doc(id).get();
-    if (!doc.exists) {
-      alert('Entry not found.');
-      return;
-    }
-    const d = doc.data();
-    const newType = prompt('Type (weekly/monthly):', d.type);
-    if (!['weekly', 'monthly'].includes(newType)) {
-      alert('Invalid type. Use "weekly" or "monthly".');
-      return;
-    }
-    const newPlayer = prompt('Player:', d.player);
-    if (!newPlayer) return;
-    const newStartDateStr = prompt('Start Date (YYYY-MM-DD):', d.period.split(' - ')[0].split(' ').reverse().join('-'));
-    const newEndDateStr = prompt('End Date (YYYY-MM-DD):', d.period.split(' - ')[1].split(' ').reverse().join('-'));
-    if (!newStartDateStr || !newEndDateStr) return;
-    const newStartDate = new Date(newStartDateStr);
-    const newEndDate = new Date(newEndDateStr);
-    newEndDate.setHours(23, 59, 59, 999);
-    if (isNaN(newStartDate) || isNaN(newEndDate)) {
-      alert('Invalid date selected.');
-      return;
-    }
-    if (newStartDate > newEndDate) {
-      alert('Start date must be before end date.');
-      return;
-    }
-    const options = { month: 'short', day: 'numeric' };
-    const newStartFmt = newStartDate.toLocaleDateString('en-US', options);
-    const newEndFmt = newEndDate.toLocaleDateString('en-US', options);
-    const newPeriod = `${newStartFmt} - ${newEndFmt}`;
-    const stats = {};
-    const snapshot = await db.collection('scorecards').get();
-    snapshot.forEach(doc => {
-      const card = doc.data();
-      if (!card || !card.players) return;
-      const cardDate = new Date(card.date);
-      if (cardDate >= newStartDate && cardDate <= newEndDate) {
-        card.players.forEach(p => {
-          if (p.player !== newPlayer) return;
-          if (!stats[p.player]) stats[p.player] = { matches: 0, win: 0, gs: 0, motm: 0, photo: p.photo || DEFAULT_PHOTO };
-          const o = stats[p.player];
-          o.matches += p.matches || 0;
-          o.win += p.win || 0;
-          o.gs += p.gs || 0;
-          o.motm += p.motm || 0;
-          if (p.photo) o.photo = p.photo;
-        });
-      }
-    });
-    const pStats = stats[newPlayer];
-    if (!pStats || pStats.matches === 0) {
-      alert('No stats found for the player in the new period.');
-      return;
-    }
-    await db.collection('hallOfFame').doc(id).update({
-      type: newType,
-      player: newPlayer,
-      period: newPeriod,
-      stats: {
-        matches: pStats.matches,
-        win: pStats.win,
-        gs: pStats.gs,
-        motm: pStats.motm
-      },
-      photo: pStats.photo,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    alert('Updated successfully.');
-    await displayHallOfFame();
-  } catch (err) {
-    console.error('Edit HOF error:', err);
-    alert('Edit failed: ' + err.message);
-  }
+function updateTournamentLogoDisplay() {
+  const display = document.getElementById("tournamentLogoDisplay");
+  display.innerHTML = `<img src="${tournamentLogo}" class="tournament-logo" onerror="this.src='${defaultLogo}'">`;
 }
 
-async function displayHallOfFame() {
-  const container = document.getElementById('hofContainer');
-  container.innerHTML = '<div class="small">Loading Hall of Fame...</div>';
+async function addPlayer() {
+  const name = document.getElementById("playerNameInput").value.trim();
+  const fileInput = document.getElementById("playerPhotoInput");
+  const urlInput = document.getElementById("playerPhotoUrl");
+  let imageUrl = urlInput.value.trim();
+  const file = fileInput.files[0];
+
   try {
-    console.log('Fetching Hall of Fame data...');
-    const hofSnapshot = await db.collection('hallOfFame').orderBy('timestamp', 'desc').get();
-    let html = '<h3 style="font-size:26px;">POTW / POTM</h3>';
-    if (hofSnapshot.empty) {
-      console.warn('No Hall of Fame entries found.');
-      html += '<div class="small">No POTW/POTM entries yet. Add one using the form above.</div>';
+    if (!name) {
+      showError("Please enter a player name.");
+      return;
+    }
+    if (file) {
+      imageUrl = await uploadToFirebase(file, `images/players/${encodeURIComponent(name)}.jpg`);
+      urlInput.value = imageUrl;
+    } else if (!imageUrl) {
+      showError("Please select a file or enter a valid image URL.");
+      return;
+    }
+
+    const isValid = await validateImageUrl(imageUrl);
+    if (!isValid) {
+      showError("Invalid image URL or image failed to load.");
+      return;
+    }
+
+    playerPhotoMap[name] = imageUrl;
+    if (safeSetItem("playerPhotoMap", JSON.stringify(playerPhotoMap))) {
+      updatePlayerList();
+      document.getElementById("playerNameInput").value = '';
+      document.getElementById("playerPhotoInput").value = '';
+      document.getElementById("playerPhotoUrl").value = '';
+      showSuccess("Player successfully saved!");
     } else {
-      console.log(`Found ${hofSnapshot.size} HOF entries`);
-      hofSnapshot.forEach(doc => {
-        const d = doc.data();
-        const title = d.type === 'weekly' ? 'POTW' : 'POTM';
-        html += `
-          <div class="hof-card">
-            <div style="position:relative; margin-right:20px;">
-              <img src="${escapeHtml(d.photo || DEFAULT_PHOTO)}" onerror="this.src='${DEFAULT_PHOTO}';">
-              <div class="title">${escapeHtml(title)}</div>
-              <div class="period">${escapeHtml(d.period)}</div>
-            </div>
-            <div>
-              <div class="player-name">${escapeHtml(d.player)}</div>
-              <div class="stats">Matches: ${d.stats.matches || 0}, Wins: ${d.stats.win || 0}, Goals: ${d.stats.gs || 0}, MOTM: ${d.stats.motm || 0}</div>
-              ${isAdmin ? `<br><button onclick="editHOF('${d.id}')">Edit</button> <button onclick="deleteHOF('${d.id}')">Delete</button>` : ''}
-            </div>
-          </div>`;
-      });
+      delete playerPhotoMap[name];
     }
-
-    // Record Holders
-    console.log('Fetching scorecards for record holders...');
-    const stats = {};
-    const scorecardSnapshot = await db.collection('scorecards').get();
-    const hofSnapshotForPOTW = await db.collection('hallOfFame').where('type', '==', 'weekly').get();
-    if (scorecardSnapshot.empty) {
-      console.warn('No scorecards found for record holders.');
-      html += '<h3 style="font-size:26px;">Record Holders</h3><div class="small">No scorecard data available for record holders.</div>';
-    } else {
-      scorecardSnapshot.forEach(doc => {
-        (doc.data().players || []).forEach(p => {
-          if (!stats[p.player]) stats[p.player] = { matches: 0, win: 0, gs: 0, motm: 0, photo: p.photo || DEFAULT_PHOTO, maxGoals: p.gs };
-          const o = stats[p.player];
-          o.matches += p.matches || 0;
-          o.win += p.win || 0;
-          o.gs += p.gs || 0;
-          o.motm += p.motm || 0;
-          o.maxGoals = Math.max(o.maxGoals || 0, p.gs);
-          if (p.photo) o.photo = p.photo;
-        });
-      });
-      // Count POTW awards
-      hofSnapshotForPOTW.forEach(doc => {
-        const d = doc.data();
-        if (!stats[d.player]) stats[d.player] = { matches: 0, win: 0, gs: 0, motm: 0, photo: DEFAULT_PHOTO, maxGoals: 0, potwCount: 0 };
-        stats[d.player].potwCount = (stats[d.player].potwCount || 0) + 1;
-      });
-      const arr = Object.values(stats);
-      if (arr.length === 0) {
-        console.warn('No players found in scorecards for record holders.');
-        html += '<h3 style="font-size:26px;">Record Holders</h3><div class="small">No player data available.</div>';
-      } else {
-        const mostWins = arr.sort((a, b) => (b.win || 0) - (a.win || 0))[0];
-        const topScorer = arr.sort((a, b) => (b.gs || 0) - (a.gs || 0))[0];
-        const mostMOTM = arr.sort((a, b) => (b.motm || 0) - (a.motm || 0))[0];
-        const mostMatches = arr.sort((a, b) => (b.matches || 0) - (a.matches || 0))[0];
-        const highestWinRatio = arr
-          .filter(p => p.matches >= 10)
-          .sort((a, b) => ((b.win / b.matches) * 100) - ((a.win / a.matches) * 100))[0];
-        const mostGoalsSingleGame = arr.sort((a, b) => (b.maxGoals || 0) - (a.maxGoals || 0))[0];
-        const mostPOTW = arr.sort((a, b) => (b.potwCount || 0) - (a.potwCount || 0))[0];
-        const records = [
-          { p: mostWins, title: 'Most Wins', stat: 'win', label: 'Wins' },
-          { p: topScorer, title: 'Top Scorer', stat: 'gs', label: 'Goals' },
-          { p: mostMOTM, title: 'Most MOTM', stat: 'motm', label: 'MOTM' },
-          { p: mostMatches, title: 'Most Matches', stat: 'matches', label: 'Matches' },
-          { p: highestWinRatio, title: 'Highest Win Ratio (Min 10 Matches)', stat: 'winRatio', label: 'Win %', value: highestWinRatio ? ((highestWinRatio.win / highestWinRatio.matches) * 100).toFixed(2) + '%' : 'N/A' },
-          { p: mostGoalsSingleGame, title: 'Most Goals in a Single Game', stat: 'maxGoals', label: 'Goals' },
-          { p: mostPOTW, title: 'Most POTW', stat: 'potwCount', label: 'POTW' }
-        ];
-        html += `
-          <h3 style="font-size:26px;">Record Holders</h3>
-          <div style="display:flex;flex-wrap:wrap;gap:15px;justify-content:center;">`;
-        records.filter(r => r.p).forEach(r => {
-          html += `
-            <div class="record-card">
-              <div style="position:relative;">
-                <img src="${escapeHtml(r.p.photo)}" onerror="this.src='${DEFAULT_PHOTO}';">
-                <div class="title">${escapeHtml(r.title)}</div>
-              </div>
-              <div class="player-name">${escapeHtml(r.p.player)}</div>
-              <div class="stat">${r.label}: ${r.value || r.p[r.stat]}</div>
-            </div>`;
-        });
-        html += `</div>`;
-      }
-    }
-
-    console.log('Rendering Hall of Fame HTML');
-    container.innerHTML = html;
-  } catch (err) {
-    console.error('HOF display error:', err);
-    container.innerHTML = `<div class="small">Failed to load Hall of Fame: ${err.message}</div>`;
+  } catch (e) {
+    showError("Upload failed: " + e.message);
   }
 }
 
-/* ---------- Initialize ---------- */
-(async () => {
+function updatePlayerList() {
+  const list = document.getElementById("playerList");
+  list.innerHTML = "";
+  Object.keys(playerPhotoMap).forEach(p => {
+    list.innerHTML += `
+      <div class="admin-player">
+        <img src="${playerPhotoMap[p] || defaultAvatar}" onerror="this.src='${defaultAvatar}'" style="width: 40px; height: 40px; border-radius: 50%;"> ${p}
+      </div>
+    `;
+  });
+}
+
+async function addTeam() {
+  const name = document.getElementById("teamNameInput").value.trim();
+  const fileInput = document.getElementById("teamLogoInput");
+  const urlInput = document.getElementById("teamLogoUrl");
+  let imageUrl = urlInput.value.trim();
+  const file = fileInput.files[0];
+
   try {
-    console.log('Initializing dashboard...');
-    await Promise.all([
-      displayArchive(),
-      displayRanking(),
-      displayTopPerformance(),
-      populateHOFPlayers(),
-      displayHallOfFame()
-    ]);
-    console.log('Dashboard initialization complete');
-  } catch (err) {
-    console.error('Initialization error:', err);
-    alert('Initialization failed: ' + err.message);
+    if (!name) {
+      showError("Please enter a team name.");
+      return;
+    }
+    if (Object.keys(teamLogoMap).length >= 32) {
+      showError("Maximum 32 teams allowed.");
+      return;
+    }
+    if (file) {
+      imageUrl = await uploadToFirebase(file, `images/teams/${encodeURIComponent(name)}.jpg`);
+      urlInput.value = imageUrl;
+    } else if (!imageUrl) {
+      showError("Please select a file or enter a valid image URL.");
+      return;
+    }
+
+    const isValid = await validateImageUrl(imageUrl);
+    if (!isValid) {
+      showError("Invalid image URL or image failed to load.");
+      return;
+    }
+
+    teamLogoMap[name] = imageUrl;
+    if (safeSetItem("teamLogoMap", JSON.stringify(teamLogoMap))) {
+      updateTeamList();
+      updateTeamSelect();
+      document.getElementById("teamNameInput").value = '';
+      document.getElementById("teamLogoInput").value = '';
+      document.getElementById("teamLogoUrl").value = '';
+      showSuccess("Team logo successfully saved!");
+    } else {
+      delete teamLogoMap[name];
+    }
+  } catch (e) {
+    showError("Upload failed: " + e.message);
   }
-})();
+}
+
+function updateTeamList() {
+  const list = document.getElementById("teamList");
+  list.innerHTML = "";
+  Object.keys(teamLogoMap).forEach(t => {
+    list.innerHTML += `
+      <div class="admin-team">
+        <img src="${teamLogoMap[t] || defaultLogo}" onerror="this.src='${defaultLogo}'" style="width: 40px; height: 40px;"> ${t}
+      </div>
+    `;
+  });
+  updateTeamSelect();
+}
+
+function downloadScorecard() {
+  const card = document.getElementById("scorecard");
+  html2canvas(card, {scale: 2}).then(canvas => {
+    const link = document.createElement("a");
+    link.download = "scorecard.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  });
+}
 </script>
 </body>
 </html>
