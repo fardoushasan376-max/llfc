@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -499,6 +500,7 @@ td input {
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <!-- html2canvas for download -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
@@ -513,27 +515,29 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase with error handling
-let storage;
+let storage, db;
 try {
   if (typeof firebase === 'undefined') {
     throw new Error("Firebase SDK not loaded");
   }
   firebase.initializeApp(firebaseConfig);
   storage = firebase.storage();
+  db = firebase.firestore();
   console.log("Firebase initialized successfully");
 } catch (e) {
   console.error("Firebase initialization failed:", e.message);
   showError("Failed to load Firebase SDK. Check your internet connection or try again later.");
 }
 
-let playerPhotoMap = JSON.parse(localStorage.getItem("playerPhotoMap") || "{}");
-let teamLogoMap = JSON.parse(localStorage.getItem("teamLogoMap") || "{}");
-let matchdays = JSON.parse(localStorage.getItem("matchdays") || "[]");
-let groups = JSON.parse(localStorage.getItem("groups") || "[]");
-let squadSubmitLink = localStorage.getItem("squadSubmitLink") || "";
-let tournamentLogo = localStorage.getItem("tournamentLogo") || "https://i.ibb.co/QmTqf2K/default-logo.png";
-let archives = JSON.parse(localStorage.getItem("archives") || "[]");
-let playerRankings = JSON.parse(localStorage.getItem("playerRankings") || "{}");
+// Data variables
+let playerPhotoMap = {};
+let teamLogoMap = {};
+let matchdays = [];
+let groups = [];
+let squadSubmitLink = "";
+let tournamentLogo = "https://i.ibb.co/QmTqf2K/default-logo.png";
+let archives = [];
+let playerRankings = {};
 const defaultAvatar = "https://i.ibb.co/3R3p9rV/default-avatar.png";
 const defaultLogo = "https://i.ibb.co/QmTqf2K/default-logo.png";
 
@@ -554,17 +558,43 @@ function showError(message, timeout = 3000) {
   setTimeout(() => errorDiv.style.display = "none", timeout);
 }
 
-function safeSetItem(key, value) {
+async function saveToFirestore(collection, id, data) {
   try {
-    localStorage.setItem(key, value);
+    await db.collection(collection).doc(id).set(data);
     return true;
   } catch (e) {
-    if (e.name === 'QuotaExceededError') {
-      showError('Storage quota exceeded! Clear storage via "Clear All Storage" button and try again.');
-    } else {
-      showError('Storage error: ' + e.message);
-    }
+    showError('Firestore save error: ' + e.message);
     return false;
+  }
+}
+
+async function getFromFirestore(collection, id) {
+  try {
+    const doc = await db.collection(collection).doc(id).get();
+    return doc.exists ? doc.data() : null;
+  } catch (e) {
+    showError('Firestore retrieve error: ' + e.message);
+    return null;
+  }
+}
+
+async function deleteFromFirestore(collection, id) {
+  try {
+    await db.collection(collection).doc(id).delete();
+    return true;
+  } catch (e) {
+    showError('Firestore delete error: ' + e.message);
+    return false;
+  }
+}
+
+async function getAllFromFirestore(collection) {
+  try {
+    const snapshot = await db.collection(collection).get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (e) {
+    showError('Firestore retrieve all error: ' + e.message);
+    return [];
   }
 }
 
@@ -594,27 +624,40 @@ async function uploadToFirebase(file, path) {
   }
 }
 
-function clearStorage() {
+async function clearStorage() {
   if (confirm('Are you sure you want to clear all saved data (logos, photos, matchdays, groups, archives, rankings)?')) {
-    localStorage.clear();
-    playerPhotoMap = {};
-    teamLogoMap = {};
-    matchdays = [];
-    groups = [];
-    squadSubmitLink = "";
-    archives = [];
-    playerRankings = {};
-    tournamentLogo = defaultLogo;
-    updatePlayerList();
-    updateTeamList();
-    updateMatchdayList();
-    updateGroupList();
-    updateSquadLinkDisplay();
-    updateArchiveList();
-    updateRankingTable();
-    updateMergeSelects();
-    document.getElementById("tournamentLogo").src = tournamentLogo;
-    showSuccess("All storage cleared!");
+    try {
+      await Promise.all([
+        db.collection('playerPhotoMap').get().then(s => s.forEach(d => d.ref.delete())),
+        db.collection('teamLogoMap').get().then(s => s.forEach(d => d.ref.delete())),
+        db.collection('matchdays').get().then(s => s.forEach(d => d.ref.delete())),
+        db.collection('groups').get().then(s => s.forEach(d => d.ref.delete())),
+        db.collection('archives').get().then(s => s.forEach(d => d.ref.delete())),
+        db.collection('playerRankings').get().then(s => s.forEach(d => d.ref.delete())),
+        db.collection('config').doc('squadSubmitLink').delete(),
+        db.collection('config').doc('tournamentLogo').delete()
+      ]);
+      playerPhotoMap = {};
+      teamLogoMap = {};
+      matchdays = [];
+      groups = [];
+      squadSubmitLink = "";
+      archives = [];
+      playerRankings = {};
+      tournamentLogo = defaultLogo;
+      updatePlayerList();
+      updateTeamList();
+      updateMatchdayList();
+      updateGroupList();
+      updateSquadLinkDisplay();
+      updateArchiveList();
+      updateRankingTable();
+      updateMergeSelects();
+      document.getElementById("tournamentLogo").src = tournamentLogo;
+      showSuccess("All storage cleared!");
+    } catch (e) {
+      showError("Failed to clear Firestore: " + e.message);
+    }
   }
 }
 
@@ -639,7 +682,7 @@ function updateTeamSelect() {
   });
 }
 
-function addMatchday() {
+async function addMatchday() {
   const date = document.getElementById("matchdayDate").value;
   let team1 = document.getElementById("team1Select").value || document.getElementById("team1Manual").value.trim();
   let team2 = document.getElementById("team2Select").value || document.getElementById("team2Manual").value.trim();
@@ -655,8 +698,10 @@ function addMatchday() {
     return;
   }
 
-  matchdays.push({ date, team1, team2, groupNumber: parseInt(groupNumber) });
-  if (safeSetItem("matchdays", JSON.stringify(matchdays))) {
+  const matchday = { date, team1, team2, groupNumber: parseInt(groupNumber) };
+  const id = Date.now().toString();
+  if (await saveToFirestore('matchdays', id, matchday)) {
+    matchdays.push({ id, ...matchday });
     updateMatchdayList();
     document.getElementById("matchdayDate").value = "";
     document.getElementById("team1Select").value = "";
@@ -682,15 +727,16 @@ function updateMatchdayList() {
   updateOfficialSelect();
 }
 
-function deleteMatchday(index) {
-  matchdays.splice(index, 1);
-  if (safeSetItem("matchdays", JSON.stringify(matchdays))) {
+async function deleteMatchday(index) {
+  const matchday = matchdays[index];
+  if (await deleteFromFirestore('matchdays', matchday.id)) {
+    matchdays.splice(index, 1);
     updateMatchdayList();
     showSuccess("Matchday deleted!");
   }
 }
 
-function addGroup() {
+async function addGroup() {
   const name = document.getElementById("groupName").value.trim();
   const link = document.getElementById("groupLink").value.trim();
   const official1 = document.getElementById("official1").value.trim();
@@ -706,8 +752,10 @@ function addGroup() {
     return;
   }
 
-  groups.push({ name, link, officials: [official1, official2] });
-  if (safeSetItem("groups", JSON.stringify(groups))) {
+  const group = { name, link, officials: [official1, official2] };
+  const id = Date.now().toString();
+  if (await saveToFirestore('groups', id, group)) {
+    groups.push({ id, ...group });
     updateGroupList();
     document.getElementById("groupName").value = "";
     document.getElementById("groupLink").value = "";
@@ -731,21 +779,22 @@ function updateGroupList() {
   updateOfficialSelect();
 }
 
-function deleteGroup(index) {
-  groups.splice(index, 1);
-  if (safeSetItem("groups", JSON.stringify(groups))) {
+async function deleteGroup(index) {
+  const group = groups[index];
+  if (await deleteFromFirestore('groups', group.id)) {
+    groups.splice(index, 1);
     updateGroupList();
     showSuccess("Group deleted!");
   }
 }
 
-function saveSquadLink() {
+async function saveSquadLink() {
   const link = document.getElementById("squadSubmitLink").value.trim();
   if (!link) {
     showError("Please enter a squad submit link.");
     return;
   }
-  if (safeSetItem("squadSubmitLink", link)) {
+  if (await saveToFirestore('config', 'squadSubmitLink', { link })) {
     squadSubmitLink = link;
     updateSquadLinkDisplay();
     document.getElementById("squadSubmitLink").value = "";
@@ -834,7 +883,7 @@ function isSimilarName(name1, name2) {
   return distance / maxLen <= 0.2; // 80% similarity
 }
 
-function updatePlayerRankings(team1, team2, matches, motmPlayer, archiveId) {
+async function updatePlayerRankings(team1, team2, matches, motmPlayer, archiveId) {
   matches.forEach(match => {
     const [p1Raw, s1, s2, p2Raw] = match;
     const p1 = cleanName(p1Raw), p2 = cleanName(p2Raw);
@@ -842,7 +891,7 @@ function updatePlayerRankings(team1, team2, matches, motmPlayer, archiveId) {
 
     [ { player: p1, team: team1Exact, score: parseInt(s1), oppScore: parseInt(s2), isMotm: p1Raw.includes("👑") },
       { player: p2, team: team2Exact, score: parseInt(s2), oppScore: parseInt(s1), isMotm: p2Raw.includes("👑") } ]
-      .forEach(({ player, team, score, oppScore, isMotm }) => {
+      .forEach(async ({ player, team, score, oppScore, isMotm }) => {
         let matchedPlayer = player;
         const existingPlayers = Object.keys(playerRankings);
         const match = existingPlayers.find(p => 
@@ -857,11 +906,12 @@ function updatePlayerRankings(team1, team2, matches, motmPlayer, archiveId) {
         const outcome = score > oppScore ? 'win' : score === oppScore ? 'draw' : 'loss';
         playerRankings[matchedPlayer].matches.push({ id: archiveId, outcome, score, oppScore });
         if (isMotm) playerRankings[matchedPlayer].motm += 1;
+        await saveToFirestore('playerRankings', matchedPlayer, playerRankings[matchedPlayer]);
       });
   });
 
   // Recalculate stats
-  Object.keys(playerRankings).forEach(player => {
+  for (const player of Object.keys(playerRankings)) {
     const data = playerRankings[player];
     data.matchesPlayed = data.matches.length;
     data.wins = data.matches.filter(m => m.outcome === 'win').length;
@@ -870,26 +920,27 @@ function updatePlayerRankings(team1, team2, matches, motmPlayer, archiveId) {
     data.gd = data.matches.reduce((sum, m) => sum + (m.score - m.oppScore), 0);
     data.winPercentage = data.matchesPlayed > 0 ? ((data.wins / data.matchesPlayed) * 100).toFixed(2) : 0;
     data.score = (data.wins * 10) + (data.draws * 5) + (data.losses * -7) + (data.gd * 1) + (data.motm * 5);
-  });
+    await saveToFirestore('playerRankings', player, data);
+  }
 
   // Remove players with no matches
-  Object.keys(playerRankings).forEach(player => {
+  for (const player of Object.keys(playerRankings)) {
     if (playerRankings[player].matchesPlayed === 0) {
+      await deleteFromFirestore('playerRankings', player);
       delete playerRankings[player];
     }
-  });
-
-  if (safeSetItem("playerRankings", JSON.stringify(playerRankings))) {
-    updateRankingTable();
-    updateMergeSelects();
   }
+
+  updateRankingTable();
+  updateMergeSelects();
 }
 
-function recalculateRankings() {
+async function recalculateRankings() {
   playerRankings = {};
-  archives.forEach(archive => {
-    updatePlayerRankings(archive.team1, archive.team2, archive.matches, archive.motmPlayer, archive.id);
-  });
+  await db.collection('playerRankings').get().then(s => s.forEach(d => d.ref.delete()));
+  for (const archive of archives) {
+    await updatePlayerRankings(archive.team1, archive.team2, archive.matches, archive.motmPlayer, archive.id);
+  }
 }
 
 function updateRankingTable() {
@@ -900,28 +951,29 @@ function updateRankingTable() {
       const data = playerRankings[player];
       tbody.innerHTML += `
         <tr>
-          <td><input value="${player}" onchange="editRanking(${index}, 'player', this.value)"></td>
-          <td><input value="${data.team}" onchange="editRanking(${index}, 'team', this.value)"></td>
-          <td><input type="number" value="${data.matchesPlayed}" onchange="editRanking(${index}, 'matchesPlayed', this.value)"></td>
-          <td><input type="number" value="${data.wins}" onchange="editRanking(${index}, 'wins', this.value)"></td>
-          <td><input type="number" value="${data.draws}" onchange="editRanking(${index}, 'draws', this.value)"></td>
-          <td><input type="number" value="${data.losses}" onchange="editRanking(${index}, 'losses', this.value)"></td>
+          <td><input value="${player}" onchange="editRanking('${player}', 'player', this.value)"></td>
+          <td><input value="${data.team}" onchange="editRanking('${player}', 'team', this.value)"></td>
+          <td><input type="number" value="${data.matchesPlayed}" onchange="editRanking('${player}', 'matchesPlayed', this.value)"></td>
+          <td><input type="number" value="${data.wins}" onchange="editRanking('${player}', 'wins', this.value)"></td>
+          <td><input type="number" value="${data.draws}" onchange="editRanking('${player}', 'draws', this.value)"></td>
+          <td><input type="number" value="${data.losses}" onchange="editRanking('${player}', 'losses', this.value)"></td>
           <td>${data.winPercentage}%</td>
-          <td><input type="number" value="${data.gd}" onchange="editRanking(${index}, 'gd', this.value)"></td>
-          <td><input type="number" value="${data.motm}" onchange="editRanking(${index}, 'motm', this.value)"></td>
+          <td><input type="number" value="${data.gd}" onchange="editRanking('${player}', 'gd', this.value)"></td>
+          <td><input type="number" value="${data.motm}" onchange="editRanking('${player}', 'motm', this.value)"></td>
           <td>${data.score}</td>
-          <td><button class="delete-btn" onclick="deleteRanking(${index})">Delete</button></td>
+          <td><button class="delete-btn" onclick="deleteRanking('${player}')">Delete</button></td>
         </tr>
       `;
     });
 }
 
-function editRanking(index, field, value) {
-  const player = Object.keys(playerRankings)[index];
+async function editRanking(player, field, value) {
   if (field === 'player') {
     const data = playerRankings[player];
-    delete playerRankings[player];
+    await deleteFromFirestore('playerRankings', player);
     playerRankings[value] = data;
+    await saveToFirestore('playerRankings', value, data);
+    delete playerRankings[player];
   } else {
     playerRankings[player][field] = field === 'team' ? value : parseInt(value) || 0;
     playerRankings[player].winPercentage = playerRankings[player].matchesPlayed > 0 ? 
@@ -932,24 +984,22 @@ function editRanking(index, field, value) {
       (playerRankings[player].losses * -7) + 
       (playerRankings[player].gd * 1) + 
       (playerRankings[player].motm * 5);
+    await saveToFirestore('playerRankings', player, playerRankings[player]);
   }
-  if (safeSetItem("playerRankings", JSON.stringify(playerRankings))) {
-    updateRankingTable();
-    updateMergeSelects();
-  }
+  updateRankingTable();
+  updateMergeSelects();
 }
 
-function deleteRanking(index) {
-  const player = Object.keys(playerRankings)[index];
-  delete playerRankings[player];
-  if (safeSetItem("playerRankings", JSON.stringify(playerRankings))) {
+async function deleteRanking(player) {
+  if (await deleteFromFirestore('playerRankings', player)) {
+    delete playerRankings[player];
     updateRankingTable();
     updateMergeSelects();
     showSuccess("Player ranking deleted!");
   }
 }
 
-function mergePlayers() {
+async function mergePlayers() {
   const player1 = document.getElementById("mergePlayer1").value;
   const player2 = document.getElementById("mergePlayer2").value;
   if (!player1 || !player2 || player1 === player2) {
@@ -962,8 +1012,10 @@ function mergePlayers() {
   }
   playerRankings[player1].matches = playerRankings[player1].matches.concat(playerRankings[player2].matches);
   playerRankings[player1].motm += playerRankings[player2].motm;
+  await saveToFirestore('playerRankings', player1, playerRankings[player1]);
+  await deleteFromFirestore('playerRankings', player2);
   delete playerRankings[player2];
-  recalculateRankings();
+  await recalculateRankings();
   showSuccess(`Merged ${player2} into ${player1}!`);
 }
 
@@ -978,9 +1030,9 @@ function updateMergeSelects() {
   });
 }
 
-function saveToArchive(team1, team2, team1Points, team2Points, matches, motmPlayer) {
+async function saveToArchive(team1, team2, team1Points, team2Points, matches, motmPlayer) {
   const archive = {
-    id: Date.now(),
+    id: Date.now().toString(),
     timestamp: new Date().toISOString(),
     team1,
     team2,
@@ -990,8 +1042,8 @@ function saveToArchive(team1, team2, team1Points, team2Points, matches, motmPlay
     motmPlayer,
     inputText: document.getElementById("pasteText").value
   };
-  archives.push(archive);
-  if (safeSetItem("archives", JSON.stringify(archives))) {
+  if (await saveToFirestore('archives', archive.id, archive)) {
+    archives.push(archive);
     updateArchiveList();
     showSuccess("Scorecard archived!");
   }
@@ -1019,41 +1071,68 @@ function loadArchive(index) {
   showSuccess("Archive loaded!");
 }
 
-function editArchive(index) {
+async function editArchive(index) {
   const newText = prompt("Edit scorecard text:", archives[index].inputText);
   if (newText) {
     archives[index].inputText = newText;
-    if (safeSetItem("archives", JSON.stringify(archives))) {
+    if (await saveToFirestore('archives', archives[index].id, archives[index])) {
       updateArchiveList();
-      recalculateRankings();
+      await recalculateRankings();
       showSuccess("Archive updated!");
     }
   }
 }
 
-function deleteArchive(index) {
-  archives.splice(index, 1);
-  if (safeSetItem("archives", JSON.stringify(archives))) {
+async function deleteArchive(index) {
+  const archive = archives[index];
+  if (await deleteFromFirestore('archives', archive.id)) {
+    archives.splice(index, 1);
     updateArchiveList();
-    recalculateRankings();
+    await recalculateRankings();
     showSuccess("Archive deleted and rankings updated!");
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("tournamentLogo").src = tournamentLogo;
-  updateTournamentLogoDisplay();
-  updatePlayerList();
-  updateTeamList();
-  updateMatchdayList();
-  updateGroupList();
-  updateSquadLinkDisplay();
-  updateArchiveList();
-  updateRankingTable();
-  updateMergeSelects();
-  updateTeamSelect();
-  updateOfficialSelect();
-});
+async function initializeData() {
+  try {
+    const [playerPhotos, teams, matchdaysData, groupsData, archivesData, rankingsData, configSquad, configLogo] = await Promise.all([
+      getAllFromFirestore('playerPhotoMap'),
+      getAllFromFirestore('teamLogoMap'),
+      getAllFromFirestore('matchdays'),
+      getAllFromFirestore('groups'),
+      getAllFromFirestore('archives'),
+      getAllFromFirestore('playerRankings'),
+      getFromFirestore('config', 'squadSubmitLink'),
+      getFromFirestore('config', 'tournamentLogo')
+    ]);
+
+    playerPhotoMap = playerPhotos.reduce((acc, p) => ({ ...acc, [p.id]: p.url }), {});
+    teamLogoMap = teams.reduce((acc, t) => ({ ...acc, [t.id]: t.url }), {});
+    matchdays = matchdaysData;
+    groups = groupsData;
+    archives = archivesData;
+    playerRankings = rankingsData.reduce((acc, r) => ({ ...acc, [r.id]: r }), {});
+    squadSubmitLink = configSquad ? configSquad.link : "";
+    tournamentLogo = configLogo ? configLogo.url : defaultLogo;
+
+    document.getElementById("tournamentLogo").src = tournamentLogo;
+    updateTournamentLogoDisplay();
+    updatePlayerList();
+    updateTeamList();
+    updateMatchdayList();
+    updateGroupList();
+    updateSquadLinkDisplay();
+    updateArchiveList();
+    updateRankingTable();
+    updateMergeSelects();
+    updateTeamSelect();
+    updateOfficialSelect();
+  } catch (e) {
+    showError("Failed to load data from Firestore: " + e.message);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", initializeData);
 
 function openTab(tabId, btn) {
   document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
@@ -1072,7 +1151,7 @@ function getTeamLogo(teamName) {
   return teamLogoMap[matchedKey] || defaultLogo;
 }
 
-function generateScorecard() {
+async function generateScorecard() {
   const text = document.getElementById("pasteText").value;
   const lines = text.split("\n");
 
@@ -1128,8 +1207,8 @@ function generateScorecard() {
   document.getElementById("motmScorecard").innerText = "Man of the Match: " + (motmPlayer || "-");
   document.getElementById("tournamentLogo").src = tournamentLogo;
 
-  saveToArchive(team1, team2, team1Points, team2Points, matches, motmPlayer);
-  updatePlayerRankings(team1, team2, matches, motmPlayer, archives[archives.length - 1]?.id);
+  await saveToArchive(team1, team2, team1Points, team2Points, matches, motmPlayer);
+  await updatePlayerRankings(team1, team2, matches, motmPlayer, archives[archives.length - 1]?.id);
 }
 
 async function addTournamentLogo() {
@@ -1153,7 +1232,7 @@ async function addTournamentLogo() {
       return;
     }
 
-    if (safeSetItem("tournamentLogo", imageUrl)) {
+    if (await saveToFirestore('config', 'tournamentLogo', { url: imageUrl })) {
       tournamentLogo = imageUrl;
       document.getElementById("tournamentLogo").src = tournamentLogo;
       updateTournamentLogoDisplay();
@@ -1165,8 +1244,8 @@ async function addTournamentLogo() {
   }
 }
 
-function deleteTournamentLogo() {
-  if (safeSetItem("tournamentLogo", defaultLogo)) {
+async function deleteTournamentLogo() {
+  if (await saveToFirestore('config', 'tournamentLogo', { url: defaultLogo })) {
     tournamentLogo = defaultLogo;
     document.getElementById("tournamentLogo").src = tournamentLogo;
     updateTournamentLogoDisplay();
@@ -1207,15 +1286,13 @@ async function addPlayer() {
       return;
     }
 
-    playerPhotoMap[name] = imageUrl;
-    if (safeSetItem("playerPhotoMap", JSON.stringify(playerPhotoMap))) {
+    if (await saveToFirestore('playerPhotoMap', name, { url: imageUrl })) {
+      playerPhotoMap[name] = imageUrl;
       updatePlayerList();
       document.getElementById("playerNameInput").value = '';
       document.getElementById("playerPhotoInput").value = '';
       document.getElementById("playerPhotoUrl").value = '';
       showSuccess("Player successfully saved!");
-    } else {
-      delete playerPhotoMap[name];
     }
   } catch (e) {
     showError("Upload failed: " + e.message);
@@ -1264,16 +1341,14 @@ async function addTeam() {
       return;
     }
 
-    teamLogoMap[name] = imageUrl;
-    if (safeSetItem("teamLogoMap", JSON.stringify(teamLogoMap))) {
+    if (await saveToFirestore('teamLogoMap', name, { url: imageUrl })) {
+      teamLogoMap[name] = imageUrl;
       updateTeamList();
       updateTeamSelect();
       document.getElementById("teamNameInput").value = '';
       document.getElementById("teamLogoInput").value = '';
       document.getElementById("teamLogoUrl").value = '';
       showSuccess("Team logo successfully saved!");
-    } else {
-      delete teamLogoMap[name];
     }
   } catch (e) {
     showError("Upload failed: " + e.message);
