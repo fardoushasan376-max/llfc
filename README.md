@@ -374,7 +374,7 @@ td input {
       <img src="https://i.ibb.co/QmTqf2K/default-logo.png" class="tournament-logo" id="tournamentLogo">
       <div class="title" id="tournamentName">LLFC World Cup 2025</div>
     </div>
-    <div class="date" id="tournamentDate">08 October 2025</div>
+    <div class="date" id="tournamentDate">11 October 2025</div>
     <div class="teams">
       <div class="team-panel" id="team1panel">Team 1</div>
       <div class="team-score" id="team1score">0</div>
