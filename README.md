@@ -9,48 +9,57 @@
 
 body {
   font-family: 'Montserrat', sans-serif;
-  background: #1e2a44;
-  background-image: linear-gradient(45deg, #1e2a44 25%, #2a4066 25%, #2a4066 50%, #1e2a44 50%, #1e2a44 75%, #2a4066 75%, #2a4066);
+  background: #1a1a1a; /* Deep black for a sleek background */
+  background-image: linear-gradient(45deg, #1a1a1a 25%, #2c2c2c 25%, #2c2c2c 50%, #1a1a1a 50%, #1a1a1a 75%, #2c2c2c 75%, #2c2c2c);
   background-size: 20px 20px;
-  color: #fff;
+  color: #ffffff; /* White for primary text */
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  min-height: 100vh;
 }
 
 h1, h2, h3 {
   font-family: 'Orbitron', sans-serif;
-  color: #ffd700;
+  color: #d4af37; /* Golden for headings */
+  text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
 }
 
 .tabs {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   margin-bottom: 20px;
 }
 
 .tab-btn {
   padding: 12px 25px;
-  background: #2a4066;
-  border: 2px solid #00ffff;
+  background: #2c2c2c; /* Darker black-gray for buttons */
+  border: 2px solid #d4af37; /* Golden border */
   border-radius: 8px;
   cursor: pointer;
   font-weight: 700;
-  color: #fff;
-  transition: .3s;
+  color: #ffffff;
+  transition: all 0.3s ease;
   font-family: 'Orbitron', sans-serif;
 }
 
+.tab-btn:hover {
+  background: #d4af37; /* Golden on hover */
+  color: #1a1a1a;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+}
+
 .tab-btn.active {
-  background: #00ffff;
-  color: #1e2a44;
-  box-shadow: 0 0 15px #00ffff;
+  background: #d4af37;
+  color: #1a1a1a;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
 }
 
 section {
   display: none;
   width: 1080px;
+  max-width: 100%;
 }
 
 section.active {
@@ -60,11 +69,11 @@ section.active {
 .scorecard {
   width: 1080px;
   max-width: 100%;
-  background: #2a4066;
+  background: #2c2c2c; /* Dark gray-black for card background */
   border-radius: 15px;
   padding: 30px;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-  border: 2px solid #00ffff;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); /* Golden glow */
+  border: 2px solid #d4af37;
 }
 
 .title-container {
@@ -79,26 +88,26 @@ section.active {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  border: 3px solid #00ffff;
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+  border: 3px solid #d4af37; /* Golden border */
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
   object-fit: cover;
 }
 
 .title {
   font-size: 48px;
   font-family: 'Orbitron', sans-serif;
-  color: #00ffff;
-  text-shadow: 0 0 10px #00ffff;
-  border: 3px solid #ffffff;
+  color: #ffffff; /* White for contrast */
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+  border: 3px solid #d4af37; /* Golden border */
   padding: 10px 20px;
   border-radius: 10px;
-  background: #1e2a44;
+  background: #1a1a1a; /* Black background */
 }
 
 .date {
   font-size: 20px;
   font-family: 'Orbitron', sans-serif;
-  color: #ffd700;
+  color: #d4af37; /* Golden for date */
   text-align: center;
   margin-bottom: 25px;
 }
@@ -117,22 +126,22 @@ section.active {
   font-weight: 800;
   padding: 15px;
   border-radius: 10px;
-  border: 3px solid #ffd700;
+  border: 3px solid #d4af37; /* Golden border */
   font-family: 'Orbitron', sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  color: #ffd700;
-  background: #3a5088;
-  text-shadow: 0 0 8px #ffd700;
+  color: #ffffff; /* White text */
+  background: #2c2c2c; /* Dark gray-black */
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
 }
 
 .team-score {
   width: 80px;
   height: 50px;
-  background: #fff;
-  color: #1e2a44;
+  background: #ffffff; /* White for score boxes */
+  color: #1a1a1a; /* Black text */
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -140,8 +149,8 @@ section.active {
   font-family: 'Orbitron', sans-serif;
   font-size: 24px;
   font-weight: 700;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-  border: 3px solid #00ffff;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  border: 3px solid #d4af37; /* Golden border */
 }
 
 .team-logo {
@@ -149,13 +158,13 @@ section.active {
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #00ffff;
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+  border: 3px solid #d4af37; /* Golden border */
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
 }
 
 #team1panel, #team2panel {
-  color: #ffd700;
-  text-shadow: 0 0 8px #ffd700;
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
 }
 
 .matches {
@@ -177,18 +186,19 @@ section.active {
   align-items: center;
   justify-content: center;
   padding: 5px;
-  border: 2px solid #00ffff;
+  border: 2px solid #d4af37; /* Golden border */
   border-radius: 5px;
   height: 40px;
   box-sizing: border-box;
+  background: #2c2c2c; /* Dark gray-black */
 }
 
 .player-left, .player-right {
   font-family: 'Orbitron', sans-serif;
   font-size: 22px;
   font-weight: 600;
-  color: #ffffff;
-  text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff;
+  color: #ffffff; /* White text */
+  text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
   font-style: italic;
   text-align: center;
   width: 100%;
@@ -197,8 +207,8 @@ section.active {
 .score-box {
   width: 100px;
   height: 40px;
-  background: #fff;
-  color: #1e2a44;
+  background: #ffffff; /* White for score box */
+  color: #1a1a1a; /* Black text */
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -206,7 +216,7 @@ section.active {
   font-family: 'Orbitron', sans-serif;
   font-size: 20px;
   margin: 0 15px;
-  border: 3px solid #00ffff;
+  border: 3px solid #d4af37; /* Golden border */
 }
 
 .results-summary {
@@ -217,16 +227,17 @@ section.active {
 }
 
 #winner {
-  color: #ffd700;
+  color: #d4af37; /* Golden for winner */
   font-size: 26px;
   font-weight: 800;
 }
 
 #motmScorecard {
-  color: #00ffff;
+  color: #ffffff; /* White for MOTM */
   font-size: 24px;
   font-weight: 700;
   margin-top: 10px;
+  text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
 }
 
 textarea {
@@ -234,10 +245,11 @@ textarea {
   height: 200px;
   margin: 20px 0;
   padding: 12px;
-  background: #2a4066;
-  border: 1px solid #00ffff;
-  color: #fff;
+  background: #2c2c2c; /* Dark gray-black */
+  border: 1px solid #d4af37; /* Golden border */
+  color: #ffffff; /* White text */
   border-radius: 10px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 button {
@@ -247,30 +259,34 @@ button {
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  background: #00ffff;
-  color: #1e2a44;
+  background: #d4af37; /* Golden button */
+  color: #1a1a1a; /* Black text */
   font-weight: 700;
   font-family: 'Orbitron', sans-serif;
+  transition: all 0.3s ease;
 }
 
 button:hover {
-  background: #00cccc;
+  background: #b8972a; /* Darker gold on hover */
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
 }
 
 .delete-btn {
-  background: #ff0000;
-  color: #fff;
+  background: #ff3333; /* Keep red for delete to indicate danger */
+  color: #ffffff;
 }
 
 .delete-btn:hover {
   background: #cc0000;
+  box-shadow: 0 0 10px rgba(255, 51, 51, 0.7);
 }
 
 .admin-panel, .invitation-panel, .viewer-panel {
-  background: #2a4066;
+  background: #2c2c2c; /* Dark gray-black */
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+  border: 2px solid #d4af37; /* Golden border */
 }
 
 .admin-panel input, .admin-panel button, .invitation-panel input, .invitation-panel button, .invitation-panel select {
@@ -280,31 +296,33 @@ button:hover {
 .admin-player, .admin-team, .admin-group, .admin-matchday, .admin-archive {
   margin: 5px 0;
   padding: 5px;
-  background: #1e2a44;
+  background: #1a1a1a; /* Black */
   border-radius: 5px;
   display: flex;
   align-items: center;
   gap: 8px;
+  color: #ffffff; /* White text */
 }
 
 .url-input, select, input[type="date"], input[type="text"], input[type="password"], input[type="number"] {
   width: 100%;
   padding: 8px;
-  background: #1e2a44;
-  border: 1px solid #00ffff;
-  color: #fff;
+  background: #1a1a1a; /* Black */
+  border: 1px solid #d4af37; /* Golden border */
+  color: #ffffff; /* White text */
   border-radius: 5px;
   font-family: 'Montserrat', sans-serif;
 }
 
 .invitation-text, .archive-text {
-  background: #1e2a44;
+  background: #1a1a1a; /* Black */
   padding: 15px;
-  border: 1px solid #00ffff;
+  border: 1px solid #d4af37; /* Golden border */
   border-radius: 10px;
   white-space: pre-wrap;
   font-family: 'Montserrat', sans-serif;
   margin-top: 10px;
+  color: #ffffff; /* White text */
 }
 
 table {
@@ -315,21 +333,22 @@ table {
 
 th, td {
   padding: 8px;
-  border: 1px solid #00ffff;
+  border: 1px solid #d4af37; /* Golden border */
   text-align: left;
   font-family: 'Montserrat', sans-serif;
+  color: #ffffff; /* White text */
 }
 
 th {
-  background: #3a5088;
-  color: #ffd700;
+  background: #2c2c2c; /* Dark gray-black */
+  color: #d4af37; /* Golden text */
 }
 
 td input {
   width: 100%;
-  background: #1e2a44;
+  background: #1a1a1a; /* Black */
   border: none;
-  color: #fff;
+  color: #ffffff; /* White text */
 }
 
 .success-message, .error-message {
@@ -341,18 +360,18 @@ td input {
   font-family: 'Orbitron', sans-serif;
   font-size: 14px;
   z-index: 1000;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
 }
 
 .success-message {
-  background: #1e2a44;
-  color: #ffd700;
-  border: 1px solid #ffd700;
+  background: #1a1a1a; /* Black */
+  color: #d4af37; /* Golden text */
+  border: 1px solid #d4af37; /* Golden border */
 }
 
 .error-message {
-  background: #1e2a44;
-  color: #ff3333;
+  background: #1a1a1a; /* Black */
+  color: #ff3333; /* Red for errors */
   border: 1px solid #ff3333;
 }
 </style>
@@ -534,7 +553,7 @@ td input {
 <!-- html2canvas for download -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-// Your Firebase configuration
+// [Original JavaScript code remains unchanged]
 const firebaseConfig = {
   apiKey: "AIzaSyCsZrHcpJgGoTHeW0Ex4Hv20KLctDopPq4",
   authDomain: "llfc-4d2df.firebaseapp.com",
@@ -544,7 +563,6 @@ const firebaseConfig = {
   appId: "1:697058785471:web:7481cae8fe6b682d762e0a"
 };
 
-// Initialize Firebase with error handling
 let storage, db;
 try {
   if (typeof firebase === 'undefined') {
@@ -559,7 +577,6 @@ try {
   showError("Failed to load Firebase SDK. Check your internet connection or try again later.");
 }
 
-// Data variables
 let playerPhotoMap = {};
 let teamLogoMap = {};
 let matchdays = [];
