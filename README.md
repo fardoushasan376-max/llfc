@@ -391,7 +391,7 @@ td input {
   <div class="scorecard" id="scorecard">
     <div class="title-container">
       <img src="https://i.ibb.co/QmTqf2K/default-logo.png" class="tournament-logo" id="tournamentLogo">
-      <div class="title" id=L"tournamentName" Gkec Unity cup </div>
+      <div class="title" id="tournamentName" Gkec Unity cup </div>
     </div>
     <div class="date" id="tournamentDate"> Round of 32</div>
     <div class="teams">
