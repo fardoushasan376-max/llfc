@@ -9,10 +9,10 @@
 
 body {
   font-family: 'Montserrat', sans-serif;
-  background: #1a1a1a; /* Deep black for a sleek background */
+  background: #1a1a1a;
   background-image: linear-gradient(45deg, #1a1a1a 25%, #2c2c2c 25%, #2c2c2c 50%, #1a1a1a 50%, #1a1a1a 75%, #2c2c2c 75%, #2c2c2c);
   background-size: 20px 20px;
-  color: #ffffff; /* White for primary text */
+  color: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,7 +22,7 @@ body {
 
 h1, h2, h3 {
   font-family: 'Orbitron', sans-serif;
-  color: #d4af37; /* Golden for headings */
+  color: #d4af37;
   text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
 }
 
@@ -34,8 +34,8 @@ h1, h2, h3 {
 
 .tab-btn {
   padding: 12px 25px;
-  background: #2c2c2c; /* Darker black-gray for buttons */
-  border: 2px solid #d4af37; /* Golden border */
+  background: #2c2c2c;
+  border: 2px solid #d4af37;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 700;
@@ -45,7 +45,7 @@ h1, h2, h3 {
 }
 
 .tab-btn:hover {
-  background: #d4af37; /* Golden on hover */
+  background: #d4af37;
   color: #1a1a1a;
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
 }
@@ -66,14 +66,28 @@ section.active {
   display: block;
 }
 
+/* Original Scorecard */
 .scorecard {
   width: 1080px;
   max-width: 100%;
-  background: #2c2c2c; /* Dark gray-black for card background */
+  background: #2c2c2c;
   border-radius: 15px;
   padding: 30px;
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); /* Golden glow */
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
   border: 2px solid #d4af37;
+  margin-bottom: 20px;
+}
+
+/* Alternative Scorecard */
+.scorecard-alt {
+  width: 1080px;
+  max-width: 100%;
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  border: 2px solid #d4af37;
+  margin-bottom: 20px;
 }
 
 .title-container {
@@ -88,26 +102,44 @@ section.active {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  border: 3px solid #d4af37; /* Golden border */
+  border: 3px solid #d4af37;
   box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
   object-fit: cover;
 }
 
-.title {
+.scorecard .title {
   font-size: 48px;
   font-family: 'Orbitron', sans-serif;
-  color: #ffffff; /* White for contrast */
+  color: #ffffff;
   text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
-  border: 3px solid #d4af37; /* Golden border */
+  border: 3px solid #d4af37;
   padding: 10px 20px;
   border-radius: 10px;
-  background: #1a1a1a; /* Black background */
+  background: #1a1a1a;
 }
 
-.date {
-  font-size: 20px;
+.scorecard-alt .title {
+  font-size: 48px;
   font-family: 'Orbitron', sans-serif;
-  color: #d4af37; /* Golden for date */
+  color: #000000;
+  border: 3px solid #d4af37;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.scorecard .date {
+  font-size: 24px;
+  font-family: 'Orbitron', sans-serif;
+  color: #d4af37;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.scorecard-alt .date {
+  font-size: 24px;
+  font-family: 'Orbitron', sans-serif;
+  color: #000000;
   text-align: center;
   margin-bottom: 25px;
 }
@@ -119,29 +151,46 @@ section.active {
   margin-bottom: 20px;
 }
 
-.team-panel {
+.scorecard .team-panel {
   flex: 1;
   text-align: center;
   font-size: 28px;
   font-weight: 800;
   padding: 15px;
   border-radius: 10px;
-  border: 3px solid #d4af37; /* Golden border */
+  border: 3px solid #d4af37;
   font-family: 'Orbitron', sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  color: #ffffff; /* White text */
-  background: #2c2c2c; /* Dark gray-black */
+  color: #ffffff;
+  background: #2c2c2c;
   text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+}
+
+.scorecard-alt .team-panel {
+  flex: 1;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 800;
+  padding: 15px;
+  border-radius: 10px;
+  border: 3px solid #d4af37;
+  font-family: 'Orbitron', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #000000;
+  background: #ffffff;
 }
 
 .team-score {
   width: 80px;
   height: 50px;
-  background: #ffffff; /* White for score boxes */
-  color: #1a1a1a; /* Black text */
+  background: #ffffff;
+  color: #000000;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -150,7 +199,7 @@ section.active {
   font-size: 24px;
   font-weight: 700;
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-  border: 3px solid #d4af37; /* Golden border */
+  border: 3px solid #d4af37;
 }
 
 .team-logo {
@@ -158,13 +207,17 @@ section.active {
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #d4af37; /* Golden border */
+  border: 3px solid #d4af37;
   box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
 }
 
-#team1panel, #team2panel {
+.scorecard #team1panel, .scorecard #team2panel {
   color: #ffffff;
   text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+}
+
+.scorecard-alt #team1panel-alt, .scorecard-alt #team2panel-alt {
+  color: #000000;
 }
 
 .matches {
@@ -186,29 +239,87 @@ section.active {
   align-items: center;
   justify-content: center;
   padding: 5px;
-  border: 2px solid #d4af37; /* Golden border */
+  border: 2px solid #d4af37;
   border-radius: 5px;
   height: 40px;
   box-sizing: border-box;
-  background: #2c2c2c; /* Dark gray-black */
+  position: relative;
 }
 
-.player-left, .player-right {
+.scorecard .player-container {
+  background: #2c2c2c;
+}
+
+.scorecard-alt .player-container {
+  background: #ffffff;
+}
+
+.scorecard .player-left, .scorecard .player-right {
   font-family: 'Orbitron', sans-serif;
   font-size: 22px;
   font-weight: 600;
-  color: #ffffff; /* White text */
+  color: #ffffff;
   text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
   font-style: italic;
   text-align: center;
   width: 100%;
 }
 
+.scorecard-alt .player-left, .scorecard-alt .player-right {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #000000;
+  font-style: italic;
+  text-align: center;
+  width: 100%;
+}
+
+.motm-player {
+  border: 3px solid #00ff00;
+}
+
+.scorecard .motm-player .player-left, .scorecard .motm-player .player-right {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #ff69b4;
+  text-shadow: none;
+  font-style: normal;
+}
+
+.scorecard-alt .motm-player .player-left, .scorecard-alt .motm-player .player-right {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #ff69b4;
+  font-style: normal;
+}
+
+.motm-player::before {
+  content: '👑';
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 0 5px;
+}
+
+.scorecard .motm-player::before {
+  background: #1a1a1a;
+}
+
+.scorecard-alt .motm-player::before {
+  background: #ffffff;
+}
+
 .score-box {
   width: 100px;
   height: 40px;
-  background: #ffffff; /* White for score box */
-  color: #1a1a1a; /* Black text */
+  background: #ffffff;
+  color: #000000;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -216,7 +327,7 @@ section.active {
   font-family: 'Orbitron', sans-serif;
   font-size: 20px;
   margin: 0 15px;
-  border: 3px solid #d4af37; /* Golden border */
+  border: 3px solid #d4af37;
 }
 
 .results-summary {
@@ -226,18 +337,39 @@ section.active {
   font-size: 22px;
 }
 
-#winner {
-  color: #d4af37; /* Golden for winner */
+.scorecard .results-summary {
+  color: #ffffff;
+}
+
+.scorecard-alt .results-summary {
+  color: #000000;
+}
+
+.scorecard #winner {
+  color: #d4af37;
   font-size: 26px;
   font-weight: 800;
 }
 
-#motmScorecard {
-  color: #ffffff; /* White for MOTM */
+.scorecard-alt #winner-alt {
+  color: #d4af37;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.scorecard #motmScorecard {
+  color: #ffffff;
   font-size: 24px;
   font-weight: 700;
   margin-top: 10px;
   text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+}
+
+.scorecard-alt #motmScorecard-alt {
+  color: #000000;
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 10px;
 }
 
 textarea {
@@ -245,9 +377,9 @@ textarea {
   height: 200px;
   margin: 20px 0;
   padding: 12px;
-  background: #2c2c2c; /* Dark gray-black */
-  border: 1px solid #d4af37; /* Golden border */
-  color: #ffffff; /* White text */
+  background: #2c2c2c;
+  border: 1px solid #d4af37;
+  color: #ffffff;
   border-radius: 10px;
   font-family: 'Montserrat', sans-serif;
 }
@@ -259,20 +391,20 @@ button {
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  background: #d4af37; /* Golden button */
-  color: #1a1a1a; /* Black text */
+  background: #d4af37;
+  color: #1a1a1a;
   font-weight: 700;
   font-family: 'Orbitron', sans-serif;
   transition: all 0.3s ease;
 }
 
 button:hover {
-  background: #b8972a; /* Darker gold on hover */
+  background: #b8972a;
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
 }
 
 .delete-btn {
-  background: #ff3333; /* Keep red for delete to indicate danger */
+  background: #ff3333;
   color: #ffffff;
 }
 
@@ -281,74 +413,48 @@ button:hover {
   box-shadow: 0 0 10px rgba(255, 51, 51, 0.7);
 }
 
-.admin-panel, .invitation-panel, .viewer-panel {
-  background: #2c2c2c; /* Dark gray-black */
+.admin-panel, .invitation-panel {
+  background: #2c2c2c;
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
-  border: 2px solid #d4af37; /* Golden border */
+  border: 2px solid #d4af37;
 }
 
 .admin-panel input, .admin-panel button, .invitation-panel input, .invitation-panel button, .invitation-panel select {
   margin: 8px 0;
 }
 
-.admin-player, .admin-team, .admin-group, .admin-matchday, .admin-archive {
+.admin-player, .admin-team, .admin-group, .admin-matchday, .admin-archive, .admin-tournament {
   margin: 5px 0;
   padding: 5px;
-  background: #1a1a1a; /* Black */
+  background: #1a1a1a;
   border-radius: 5px;
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #ffffff; /* White text */
+  color: #ffffff;
 }
 
 .url-input, select, input[type="date"], input[type="text"], input[type="password"], input[type="number"] {
   width: 100%;
   padding: 8px;
-  background: #1a1a1a; /* Black */
-  border: 1px solid #d4af37; /* Golden border */
-  color: #ffffff; /* White text */
+  background: #1a1a1a;
+  border: 1px solid #d4af37;
+  color: #ffffff;
   border-radius: 5px;
   font-family: 'Montserrat', sans-serif;
 }
 
 .invitation-text, .archive-text {
-  background: #1a1a1a; /* Black */
+  background: #1a1a1a;
   padding: 15px;
-  border: 1px solid #d4af37; /* Golden border */
+  border: 1px solid #d4af37;
   border-radius: 10px;
   white-space: pre-wrap;
   font-family: 'Montserrat', sans-serif;
   margin-top: 10px;
-  color: #ffffff; /* White text */
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-th, td {
-  padding: 8px;
-  border: 1px solid #d4af37; /* Golden border */
-  text-align: left;
-  font-family: 'Montserrat', sans-serif;
-  color: #ffffff; /* White text */
-}
-
-th {
-  background: #2c2c2c; /* Dark gray-black */
-  color: #d4af37; /* Golden text */
-}
-
-td input {
-  width: 100%;
-  background: #1a1a1a; /* Black */
-  border: none;
-  color: #ffffff; /* White text */
+  color: #ffffff;
 }
 
 .success-message, .error-message {
@@ -364,14 +470,14 @@ td input {
 }
 
 .success-message {
-  background: #1a1a1a; /* Black */
-  color: #d4af37; /* Golden text */
-  border: 1px solid #d4af37; /* Golden border */
+  background: #1a1a1a;
+  color: #d4af37;
+  border: 1px solid #d4af37;
 }
 
 .error-message {
-  background: #1a1a1a; /* Black */
-  color: #ff3333; /* Red for errors */
+  background: #1a1a1a;
+  color: #ff3333;
   border: 1px solid #ff3333;
 }
 </style>
@@ -383,17 +489,18 @@ td input {
   <div class="tab-btn active" onclick="openTab('scorecardTab', this)">Scorecard</div>
   <div class="tab-btn" onclick="openTab('adminTab', this)">Admin</div>
   <div class="tab-btn" onclick="openTab('invitationTab', this)">Invitation</div>
-  <div class="tab-btn" onclick="openTab('viewerTab', this)">Viewer</div>
 </div>
 
 <!-- Scorecard -->
 <section id="scorecardTab" class="active">
+  <!-- Original Scorecard -->
+  <h2>Original Scorecard</h2>
   <div class="scorecard" id="scorecard">
     <div class="title-container">
       <img src="https://i.ibb.co/QmTqf2K/default-logo.png" class="tournament-logo" id="tournamentLogo">
       <div class="title" id="tournamentName">Gkec Unity Cup</div>
     </div>
-    <div class="date" id="tournamentDate"> Round of 32</div>
+    <div class="date" id="tournamentDate">Group Stage</div>
     <div class="teams">
       <div class="team-panel" id="team1panel">Team 1</div>
       <div class="team-score" id="team1score">0</div>
@@ -406,9 +513,30 @@ td input {
       <div id="motmScorecard">Man of the Match: -</div>
     </div>
   </div>
+  <!-- Alternative Scorecard -->
+  <h2>Alternative Scorecard</h2>
+  <div class="scorecard-alt" id="scorecard-alt">
+    <div class="title-container">
+      <img src="https://i.ibb.co/QmTqf2K/default-logo.png" class="tournament-logo" id="tournamentLogo-alt">
+      <div class="title" id="tournamentName-alt">Gkec Unity Cup</div>
+    </div>
+    <div class="date" id="tournamentDate-alt">Group Stage</div>
+    <div class="teams">
+      <div class="team-panel" id="team1panel-alt">Team 1</div>
+      <div class="team-score" id="team1score-alt">0</div>
+      <div class="team-score" id="team2score-alt">0</div>
+      <div class="team-panel" id="team2panel-alt">Team 2</div>
+    </div>
+    <div class="matches" id="matches-alt"></div>
+    <div class="results-summary">
+      <div id="winner-alt">Winner: -</div>
+      <div id="motmScorecard-alt">Man of the Match: -</div>
+    </div>
+  </div>
   <textarea id="pasteText" placeholder="Paste matches here"></textarea><br>
   <button onclick="generateScorecard()">Generate & Archive Scorecard</button>
-  <button onclick="downloadScorecard()">Download Scorecard</button>
+  <button onclick="downloadScorecard('scorecard')">Download Original Scorecard</button>
+  <button onclick="downloadScorecard('scorecard-alt')">Download Alternative Scorecard</button>
 </section>
 
 <!-- Admin -->
@@ -449,39 +577,31 @@ td input {
       <hr>
       <h3>Scorecard Archive</h3>
       <div id="archiveList"></div>
-      <hr>
-      <h3>Player Rankings</h3>
-      <table id="rankingTable">
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>Team</th>
-            <th>Matches Played</th>
-            <th>Wins</th>
-            <th>Draws</th>
-            <th>Losses</th>
-            <th>Win %</th>
-            <th>GD</th>
-            <th>MOTM</th>
-            <th>Score</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="rankingBody"></tbody>
-      </table>
-      <h3>Merge Players</h3>
-      <select id="mergePlayer1"></select>
-      <select id="mergePlayer2"></select>
-      <button onclick="mergePlayers()">Merge Players</button>
     </div>
     <hr>
+    <h3>Tournament Date/Stage</h3>
+    <input type="text" id="tournamentStageInput" placeholder="Enter Date or Stage (e.g., 11 October 2025 or Group Stage)">
+    <button onclick="saveTournamentStage()">Save Date/Stage</button>
+    <h3>Current Date/Stage</h3>
+    <div id="tournamentStageDisplay"></div>
+    <hr>
     <h3>Add Tournament Logo</h3>
+    <input type="text" id="tournamentNameInput" placeholder="Tournament Name">
     <input type="file" id="tournamentLogoInput" accept="image/*">
     <input type="text" id="tournamentLogoUrl" class="url-input" placeholder="Tournament Logo URL">
     <button onclick="addTournamentLogo()">Add Tournament Logo</button>
-    <button class="delete-btn" onclick="deleteTournamentLogo()">Delete Tournament Logo</button>
-    <h3>Current Tournament Logo</h3>
-    <div id="tournamentLogoDisplay"></div>
+    <h3>Saved Tournament Logos</h3>
+    <div id="tournamentLogoList"></div>
+    <hr>
+    <h3>Select Current Tournament</h3>
+    <select id="currentTournamentNameSelect" onchange="updateCurrentTournament()">
+      <option value="">Select Tournament Name</option>
+    </select>
+    <select id="currentTournamentLogoSelect" onchange="updateCurrentTournament()">
+      <option value="">Select Tournament Logo</option>
+    </select>
+    <h3>Current Tournament</h3>
+    <div id="currentTournamentDisplay"></div>
     <hr>
     <h3>Add Player</h3>
     <input type="text" id="playerNameInput" placeholder="Player Name">
@@ -518,30 +638,6 @@ td input {
   </div>
 </section>
 
-<!-- Viewer -->
-<section id="viewerTab">
-  <h2>Player Rankings</h2>
-  <div class="viewer-panel">
-    <table id="viewerRankingTable">
-      <thead>
-        <tr>
-          <th>Player</th>
-          <th>Team</th>
-          <th>Matches Played</th>
-          <th>Wins</th>
-          <th>Draws</th>
-          <th>Losses</th>
-          <th>Win %</th>
-          <th>GD</th>
-          <th>MOTM</th>
-          <th>Score</th>
-        </tr>
-      </thead>
-      <tbody id="viewerRankingBody"></tbody>
-    </table>
-  </div>
-</section>
-
 <!-- Success and Error Message Overlays -->
 <div id="successMessage" class="success-message" style="display: none;"></div>
 <div id="errorMessage" class="error-message" style="display: none;"></div>
@@ -553,9 +649,8 @@ td input {
 <!-- html2canvas for download -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-// [Original JavaScript code remains unchanged]
 const firebaseConfig = {
-  apiKey: "AIzaSyCsZrHcpJgGoTHeW0Ex4Hv20KLctDopPq4",
+  apiKey: "AIzaSyCsZrHcpJgGoTHeW0Ex4Hv20KLtDopPq4",
   authDomain: "llfc-4d2df.firebaseapp.com",
   projectId: "llfc-4d2df",
   storageBucket: "llfc-4d2df.firebasestorage.app",
@@ -582,9 +677,11 @@ let teamLogoMap = {};
 let matchdays = [];
 let groups = [];
 let squadSubmitLink = "";
-let tournamentLogo = "https://i.ibb.co/QmTqf2K/default-logo.png";
+let tournamentLogos = [];
+let tournamentNames = [];
+let currentTournament = { name: "Gkec Unity Cup", logo: "https://i.ibb.co/QmTqf2K/default-logo.png" };
+let currentStage = "Group Stage";
 let archives = [];
-let playerRankings = {};
 const defaultAvatar = "https://i.ibb.co/3R3p9rV/default-avatar.png";
 const defaultLogo = "https://i.ibb.co/QmTqf2K/default-logo.png";
 
@@ -606,6 +703,10 @@ function showError(message, timeout = 3000) {
 }
 
 async function saveToFirestore(collection, id, data) {
+  if (!db) {
+    showError("Firestore is not initialized.");
+    return false;
+  }
   try {
     const sanitizedData = {};
     for (const [key, value] of Object.entries(data)) {
@@ -624,6 +725,10 @@ async function saveToFirestore(collection, id, data) {
 }
 
 async function getFromFirestore(collection, id) {
+  if (!db) {
+    showError("Firestore is not initialized.");
+    return null;
+  }
   try {
     const doc = await db.collection(collection).doc(id).get();
     console.log(`Retrieved from ${collection}/${id}:`, doc.exists ? doc.data() : null);
@@ -636,6 +741,10 @@ async function getFromFirestore(collection, id) {
 }
 
 async function deleteFromFirestore(collection, id) {
+  if (!db) {
+    showError("Firestore is not initialized.");
+    return false;
+  }
   try {
     await db.collection(collection).doc(id).delete();
     console.log(`Deleted from ${collection}/${id}`);
@@ -648,6 +757,10 @@ async function deleteFromFirestore(collection, id) {
 }
 
 async function getAllFromFirestore(collection) {
+  if (!db) {
+    showError("Firestore is not initialized.");
+    return [];
+  }
   try {
     const snapshot = await db.collection(collection).get();
     const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -669,7 +782,7 @@ function validateImageUrl(url) {
       resolve(true);
     };
     img.onerror = () => {
-      console.error(`Image failed to load: ${url}`);
+      console.warn(`Image failed to load: ${url}`);
       resolve(false);
     };
     img.src = url;
@@ -722,7 +835,7 @@ async function ensureImagesLoaded(element) {
 }
 
 async function clearStorage() {
-  if (confirm('Are you sure you want to clear all saved data (logos, photos, matchdays, groups, archives, rankings)?')) {
+  if (confirm('Are you sure you want to clear all saved data (logos, photos, matchdays, groups, archives, tournaments, stage)?')) {
     try {
       await Promise.all([
         db.collection('playerPhotoMap').get().then(s => s.forEach(d => d.ref.delete())),
@@ -730,28 +843,32 @@ async function clearStorage() {
         db.collection('matchdays').get().then(s => s.forEach(d => d.ref.delete())),
         db.collection('groups').get().then(s => s.forEach(d => d.ref.delete())),
         db.collection('archives').get().then(s => s.forEach(d => d.ref.delete())),
-        db.collection('playerRankings').get().then(s => s.forEach(d => d.ref.delete())),
+        db.collection('tournamentNames').get().then(s => s.forEach(d => d.ref.delete())),
+        db.collection('tournamentLogos').get().then(s => s.forEach(d => d.ref.delete())),
         db.collection('config').doc('squadSubmitLink').delete(),
-        db.collection('config').doc('tournamentLogo').delete()
+        db.collection('config').doc('currentTournament').delete(),
+        db.collection('config').doc('currentStage').delete()
       ]);
       playerPhotoMap = {};
       teamLogoMap = {};
       matchdays = [];
       groups = [];
       squadSubmitLink = "";
+      tournamentLogos = [];
+      tournamentNames = [];
+      currentTournament = { name: "Gkec Unity Cup", logo: defaultLogo };
+      currentStage = "Group Stage";
       archives = [];
-      playerRankings = {};
-      tournamentLogo = defaultLogo;
       updatePlayerList();
       updateTeamList();
       updateMatchdayList();
       updateGroupList();
       updateSquadLinkDisplay();
+      updateTournamentLogoList();
+      updateTournamentSelects();
+      updateCurrentTournamentDisplay();
+      updateTournamentStageDisplay();
       updateArchiveList();
-      updateRankingTable();
-      updateViewerRankingTable();
-      updateMergeSelects();
-      document.getElementById("tournamentLogo").src = tournamentLogo;
       showSuccess("All storage cleared!");
     } catch (e) {
       showError("Failed to clear Firestore: " + e.message);
@@ -800,7 +917,7 @@ async function addMatchday() {
   }
 
   if (Object.keys(teamLogoMap).length >= 48 && !teamLogoMap[team1]) {
-    showError("Maximum 42 teams allowed. Add team via 'Add Team' first.");
+    showError("Maximum 48 teams allowed. Add team via 'Add Team' first.");
     return;
   }
 
@@ -914,6 +1031,272 @@ function updateSquadLinkDisplay() {
   document.getElementById("squadLinkDisplay").innerHTML = squadSubmitLink ? `<a href="${squadSubmitLink}" target="_blank">${squadSubmitLink}</a>` : "No link set";
 }
 
+async function saveTournamentStage() {
+  const stage = document.getElementById("tournamentStageInput").value.trim();
+  if (!stage) {
+    showError("Please enter a date or stage.");
+    return;
+  }
+  if (await saveToFirestore('config', 'currentStage', { stage })) {
+    currentStage = stage;
+    updateTournamentStageDisplay();
+    document.getElementById("tournamentStageInput").value = "";
+    document.getElementById("tournamentDate").textContent = currentStage;
+    document.getElementById("tournamentDate-alt").textContent = currentStage;
+    showSuccess("Tournament date/stage saved!");
+  }
+}
+
+function updateTournamentStageDisplay() {
+  document.getElementById("tournamentStageDisplay").textContent = currentStage || "No date/stage set";
+}
+
+async function addTournamentLogo() {
+  const name = document.getElementById("tournamentNameInput").value.trim();
+  const fileInput = document.getElementById("tournamentLogoInput");
+  const urlInput = document.getElementById("tournamentLogoUrl");
+  let imageUrl = urlInput.value.trim();
+  const file = fileInput.files[0];
+
+  try {
+    if (!name) {
+      showError("Please enter a tournament name.");
+      return;
+    }
+    if (tournamentNames.length >= 5) {
+      showError("Maximum 5 tournament names allowed.");
+      return;
+    }
+    if (tournamentLogos.length >= 5) {
+      showError("Maximum 5 tournament logos allowed.");
+      return;
+    }
+    if (file) {
+      imageUrl = await uploadToFirebase(file, `images/tournaments/${encodeURIComponent(name)}.jpg`);
+      urlInput.value = imageUrl;
+    } else if (!imageUrl) {
+      showError("Please select a file or enter a valid image URL.");
+      return;
+    }
+
+    const isValid = await validateImageUrl(imageUrl);
+    if (!isValid) {
+      showError("Invalid image URL or image failed to load.");
+      return;
+    }
+
+    if (!tournamentNames.includes(name)) {
+      if (await saveToFirestore('tournamentNames', name, { name })) {
+        tournamentNames.push(name);
+      }
+    }
+    if (!tournamentLogos.some(t => t.url === imageUrl)) {
+      if (await saveToFirestore('tournamentLogos', name, { url: imageUrl })) {
+        tournamentLogos.push({ name, url: imageUrl });
+      }
+    }
+    updateTournamentLogoList();
+    updateTournamentSelects();
+    document.getElementById("tournamentNameInput").value = '';
+    document.getElementById("tournamentLogoInput").value = '';
+    document.getElementById("tournamentLogoUrl").value = '';
+    showSuccess("Tournament logo and name saved!");
+  } catch (e) {
+    showError("Upload failed: " + e.message);
+  }
+}
+
+function updateTournamentLogoList() {
+  const list = document.getElementById("tournamentLogoList");
+  list.innerHTML = "";
+  tournamentLogos.forEach((t, index) => {
+    list.innerHTML += `
+      <div class="admin-tournament">
+        <img src="${t.url}" onerror="this.src='${defaultLogo}'" style="width: 40px; height: 40px; border-radius: 50%;">
+        ${t.name}
+        <button class="delete-btn" onclick="deleteTournamentLogo(${index})">Delete</button>
+      </div>
+    `;
+  });
+}
+
+async function deleteTournamentLogo(index) {
+  const tournament = tournamentLogos[index];
+  try {
+    await Promise.all([
+      deleteFromFirestore('tournamentNames', tournament.name),
+      deleteFromFirestore('tournamentLogos', tournament.name)
+    ]);
+    tournamentNames = tournamentNames.filter(name => name !== tournament.name);
+    tournamentLogos = tournamentLogos.filter(t => t.name !== tournament.name);
+    if (currentTournament.name === tournament.name) {
+      currentTournament = { name: "Gkec Unity Cup", logo: defaultLogo };
+      await saveToFirestore('config', 'currentTournament', currentTournament);
+      document.getElementById("tournamentLogo").src = currentTournament.logo;
+      document.getElementById("tournamentLogo-alt").src = currentTournament.logo;
+      document.getElementById("tournamentName").textContent = currentTournament.name;
+      document.getElementById("tournamentName-alt").textContent = currentTournament.name;
+    }
+    updateTournamentLogoList();
+    updateTournamentSelects();
+    updateCurrentTournamentDisplay();
+    showSuccess("Tournament logo and name deleted!");
+  } catch (e) {
+    showError("Failed to delete tournament: " + e.message);
+  }
+}
+
+function updateTournamentSelects() {
+  const nameSelect = document.getElementById("currentTournamentNameSelect");
+  const logoSelect = document.getElementById("currentTournamentLogoSelect");
+  nameSelect.innerHTML = '<option value="">Select Tournament Name</option>';
+  logoSelect.innerHTML = '<option value="">Select Tournament Logo</option>';
+  tournamentNames.forEach(name => {
+    nameSelect.innerHTML += `<option value="${name}">${name}</option>`;
+  });
+  tournamentLogos.forEach(t => {
+    logoSelect.innerHTML += `<option value="${t.url}">${t.name}</option>`;
+  });
+  nameSelect.value = currentTournament.name;
+  logoSelect.value = currentTournament.logo;
+}
+
+async function updateCurrentTournament() {
+  const name = document.getElementById("currentTournamentNameSelect").value;
+  const logo = document.getElementById("currentTournamentLogoSelect").value;
+  if (name && logo) {
+    currentTournament = { name, logo };
+    if (await saveToFirestore('config', 'currentTournament', currentTournament)) {
+      document.getElementById("tournamentName").textContent = name;
+      document.getElementById("tournamentName-alt").textContent = name;
+      document.getElementById("tournamentLogo").src = logo;
+      document.getElementById("tournamentLogo-alt").src = logo;
+      updateCurrentTournamentDisplay();
+      showSuccess("Current tournament updated!");
+    }
+  } else {
+    showError("Please select both a tournament name and logo.");
+  }
+}
+
+function updateCurrentTournamentDisplay() {
+  const display = document.getElementById("currentTournamentDisplay");
+  display.innerHTML = `
+    <div class="admin-tournament">
+      <img src="${currentTournament.logo}" onerror="this.src='${defaultLogo}'" style="width: 40px; height: 40px; border-radius: 50%;">
+      ${currentTournament.name}
+    </div>
+  `;
+}
+
+async function addPlayer() {
+  const name = document.getElementById("playerNameInput").value.trim();
+  const fileInput = document.getElementById("playerPhotoInput");
+  const urlInput = document.getElementById("playerPhotoUrl");
+  let imageUrl = urlInput.value.trim();
+  const file = fileInput.files[0];
+
+  try {
+    if (!name) {
+      showError("Please enter a player name.");
+      return;
+    }
+    if (file) {
+      imageUrl = await uploadToFirebase(file, `images/players/${encodeURIComponent(name)}.jpg`);
+      urlInput.value = imageUrl;
+    } else if (!imageUrl) {
+      showError("Please select a file or enter a valid image URL.");
+      return;
+    }
+
+    const isValid = await validateImageUrl(imageUrl);
+    if (!isValid) {
+      showError("Invalid image URL or image failed to load.");
+      return;
+    }
+
+    if (await saveToFirestore('playerPhotoMap', name, { url: imageUrl })) {
+      playerPhotoMap[name] = imageUrl;
+      updatePlayerList();
+      document.getElementById("playerNameInput").value = '';
+      document.getElementById("playerPhotoInput").value = '';
+      document.getElementById("playerPhotoUrl").value = '';
+      showSuccess("Player successfully saved!");
+    }
+  } catch (e) {
+    showError("Upload failed: " + e.message);
+  }
+}
+
+function updatePlayerList() {
+  const list = document.getElementById("playerList");
+  list.innerHTML = "";
+  Object.keys(playerPhotoMap).forEach(p => {
+    list.innerHTML += `
+      <div class="admin-player">
+        <img src="${playerPhotoMap[p] || defaultAvatar}" onerror="this.src='${defaultAvatar}'" style="width: 40px; height: 40px; border-radius: 50%;"> ${p}
+      </div>
+    `;
+  });
+}
+
+async function addTeam() {
+  const name = document.getElementById("teamNameInput").value.trim();
+  const fileInput = document.getElementById("teamLogoInput");
+  const urlInput = document.getElementById("teamLogoUrl");
+  let imageUrl = urlInput.value.trim();
+  const file = fileInput.files[0];
+
+  try {
+    if (!name) {
+      showError("Please enter a team name.");
+      return;
+    }
+    if (Object.keys(teamLogoMap).length >= 48) {
+      showError("Maximum 48 teams allowed.");
+      return;
+    }
+    if (file) {
+      imageUrl = await uploadToFirebase(file, `images/teams/${encodeURIComponent(name)}.jpg`);
+      urlInput.value = imageUrl;
+    } else if (!imageUrl) {
+      showError("Please select a file or enter a valid image URL.");
+      return;
+    }
+
+    const isValid = await validateImageUrl(imageUrl);
+    if (!isValid) {
+      showError("Invalid image URL or image failed to load.");
+      return;
+    }
+
+    if (await saveToFirestore('teamLogoMap', name, { url: imageUrl })) {
+      teamLogoMap[name] = imageUrl;
+      updateTeamList();
+      updateTeamSelect();
+      document.getElementById("teamNameInput").value = '';
+      document.getElementById("teamLogoInput").value = '';
+      document.getElementById("teamLogoUrl").value = '';
+      showSuccess("Team logo successfully saved!");
+    }
+  } catch (e) {
+    showError("Upload failed: " + e.message);
+  }
+}
+
+function updateTeamList() {
+  const list = document.getElementById("teamList");
+  list.innerHTML = "";
+  Object.keys(teamLogoMap).forEach(t => {
+    list.innerHTML += `
+      <div class="admin-team">
+        <img src="${teamLogoMap[t] || defaultLogo}" onerror="this.src='${defaultLogo}'" style="width: 40px; height: 40px;"> ${t}
+      </div>
+    `;
+  });
+  updateTeamSelect();
+}
+
 function updateOfficialSelect() {
   const select = document.getElementById("officialSelect");
   select.innerHTML = '<option value="">Select Official</option>';
@@ -1003,222 +1386,9 @@ function copyText(text) {
   });
 }
 
-function levenshteinDistance(a, b) {
-  const matrix = Array(b.length + 1).fill().map(() => Array(a.length + 1).fill(0));
-  for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
-  for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
-  for (let j = 1; j <= b.length; j++) {
-    for (let i = 1; i <= a.length; i++) {
-      const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
-      matrix[j][i] = Math.min(
-        matrix[j][i - 1] + 1,
-        matrix[j - 1][i] + 1,
-        matrix[j - 1][i - 1] + indicator
-      );
-    }
-  }
-  return matrix[b.length][a.length];
-}
-
-function isSimilarName(name1, name2) {
-  const maxLen = Math.max(name1.length, name2.length);
-  const distance = levenshteinDistance(name1.toLowerCase(), name2.toLowerCase());
-  return distance / maxLen <= 0.2;
-}
-
-async function updatePlayerRankings(team1, team2, matches, motmPlayer, archiveId) {
-  if (!team1 || !team2 || !matches || !archiveId) {
-    console.error("Invalid input for updatePlayerRankings:", { team1, team2, matches, motmPlayer, archiveId });
-    showError("Invalid match data. Please check scorecard input.");
-    return;
-  }
-
-  for (const match of matches) {
-    const [p1Raw, s1, s2, p2Raw] = match;
-    const p1 = cleanName(p1Raw) || "Unknown Player 1";
-    const p2 = cleanName(p2Raw) || "Unknown Player 2";
-    const team1Exact = team1 || "Unknown Team 1";
-    const team2Exact = team2 || "Unknown Team 2";
-    const score1 = parseInt(s1) || 0;
-    const score2 = parseInt(s2) || 0;
-
-    for (const { player, team, score, oppScore, isMotm } of [
-      { player: p1, team: team1Exact, score: score1, oppScore: score2, isMotm: p1Raw.includes("👑") },
-      { player: p2, team: team2Exact, score: score2, oppScore: score1, isMotm: p2Raw.includes("👑") }
-    ]) {
-      let matchedPlayer = player;
-      const existingPlayers = Object.keys(playerRankings);
-      const match = existingPlayers.find(p => 
-        playerRankings[p].team.toLowerCase() === team.toLowerCase() && 
-        isSimilarName(p, player)
-      );
-      if (match) matchedPlayer = match;
-
-      if (!playerRankings[matchedPlayer]) {
-        playerRankings[matchedPlayer] = {
-          team: team || "Unknown",
-          matchesPlayed: 0,
-          wins: 0,
-          draws: 0,
-          losses: 0,
-          gd: 0,
-          motm: 0,
-          score: 0,
-          winPercentage: 0,
-          matches: []
-        };
-      }
-      const outcome = score > oppScore ? 'win' : score === oppScore ? 'draw' : 'loss';
-      playerRankings[matchedPlayer].matches.push({ id: archiveId, outcome, score, oppScore });
-      if (isMotm) playerRankings[matchedPlayer].motm += 1;
-      console.log(`Updating ranking for ${matchedPlayer}:`, playerRankings[matchedPlayer]);
-      await saveToFirestore('playerRankings', matchedPlayer, playerRankings[matchedPlayer]);
-    }
-  }
-
-  for (const player of Object.keys(playerRankings)) {
-    const data = playerRankings[player];
-    data.matchesPlayed = data.matches.length || 0;
-    data.wins = data.matches.filter(m => m.outcome === 'win').length || 0;
-    data.draws = data.matches.filter(m => m.outcome === 'draw').length || 0;
-    data.losses = data.matches.filter(m => m.outcome === 'loss').length || 0;
-    data.gd = data.matches.reduce((sum, m) => sum + (m.score - m.oppScore), 0) || 0;
-    data.winPercentage = data.matchesPlayed > 0 ? ((data.wins / data.matchesPlayed) * 100).toFixed(2) : 0;
-    data.score = (data.wins * 10) + (data.draws * 5) + (data.losses * -7) + (data.gd * 1) + (data.motm * 5);
-    console.log(`Recalculated stats for ${player}:`, data);
-    await saveToFirestore('playerRankings', player, data);
-  }
-
-  for (const player of Object.keys(playerRankings)) {
-    if (playerRankings[player].matchesPlayed === 0) {
-      await deleteFromFirestore('playerRankings', player);
-      delete playerRankings[player];
-    }
-  }
-
-  updateRankingTable();
-  updateViewerRankingTable();
-  updateMergeSelects();
-}
-
-async function recalculateRankings() {
-  playerRankings = {};
-  await db.collection('playerRankings').get().then(s => s.forEach(d => d.ref.delete()));
-  for (const archive of archives) {
-    await updatePlayerRankings(archive.team1, archive.team2, archive.matches, archive.motmPlayer, archive.id);
-  }
-}
-
-function updateRankingTable() {
-  const tbody = document.getElementById("rankingBody");
-  tbody.innerHTML = "";
-  Object.keys(playerRankings).sort((a, b) => playerRankings[b].score - playerRankings[a].score)
-    .forEach((player, index) => {
-      const data = playerRankings[player];
-      tbody.innerHTML += `
-        <tr>
-          <td><input value="${player}" onchange="editRanking('${player}', 'player', this.value)"></td>
-          <td><input value="${data.team}" onchange="editRanking('${player}', 'team', this.value)"></td>
-          <td><input type="number" value="${data.matchesPlayed}" onchange="editRanking('${player}', 'matchesPlayed', this.value)"></td>
-          <td><input type="number" value="${data.wins}" onchange="editRanking('${player}', 'wins', this.value)"></td>
-          <td><input type="number" value="${data.draws}" onchange="editRanking('${player}', 'draws', this.value)"></td>
-          <td><input type="number" value="${data.losses}" onchange="editRanking('${player}', 'losses', this.value)"></td>
-          <td>${data.winPercentage}%</td>
-          <td><input type="number" value="${data.gd}" onchange="editRanking('${player}', 'gd', this.value)"></td>
-          <td><input type="number" value="${data.motm}" onchange="editRanking('${player}', 'motm', this.value)"></td>
-          <td>${data.score}</td>
-          <td><button class="delete-btn" onclick="deleteRanking('${player}')">Delete</button></td>
-        </tr>
-      `;
-    });
-}
-
-function updateViewerRankingTable() {
-  const tbody = document.getElementById("viewerRankingBody");
-  tbody.innerHTML = "";
-  Object.keys(playerRankings).sort((a, b) => playerRankings[b].score - playerRankings[a].score)
-    .forEach(player => {
-      const data = playerRankings[player];
-      tbody.innerHTML += `
-        <tr>
-          <td>${player}</td>
-          <td>${data.team}</td>
-          <td>${data.matchesPlayed}</td>
-          <td>${data.wins}</td>
-          <td>${data.draws}</td>
-          <td>${data.losses}</td>
-          <td>${data.winPercentage}%</td>
-          <td>${data.gd}</td>
-          <td>${data.motm}</td>
-          <td>${data.score}</td>
-        </tr>
-      `;
-    });
-}
-
-async function editRanking(player, field, value) {
-  if (field === 'player') {
-    const data = playerRankings[player];
-    await deleteFromFirestore('playerRankings', player);
-    playerRankings[value] = { ...data, team: data.team || "Unknown" };
-    await saveToFirestore('playerRankings', value, playerRankings[value]);
-    delete playerRankings[player];
-  } else {
-    playerRankings[player][field] = field === 'team' ? value : parseInt(value) || 0;
-    playerRankings[player].winPercentage = playerRankings[player].matchesPlayed > 0 ? 
-      ((playerRankings[player].wins / playerRankings[player].matchesPlayed) * 100).toFixed(2) : 0;
-    playerRankings[player].score = 
-      (playerRankings[player].wins * 10) + 
-      (playerRankings[player].draws * 5) + 
-      (playerRankings[player].losses * -7) + 
-      (playerRankings[player].gd * 1) + 
-      (playerRankings[player].motm * 5);
-    await saveToFirestore('playerRankings', player, playerRankings[player]);
-  }
-  updateRankingTable();
-  updateViewerRankingTable();
-  updateMergeSelects();
-}
-
-async function deleteRanking(player) {
-  if (await deleteFromFirestore('playerRankings', player)) {
-    delete playerRankings[player];
-    updateRankingTable();
-    updateViewerRankingTable();
-    updateMergeSelects();
-    showSuccess("Player ranking deleted!");
-  }
-}
-
-async function mergePlayers() {
-  const player1 = document.getElementById("mergePlayer1").value;
-  const player2 = document.getElementById("mergePlayer2").value;
-  if (!player1 || !player2 || player1 === player2) {
-    showError("Please select two different players to merge.");
-    return;
-  }
-  if (playerRankings[player1].team !== playerRankings[player2].team) {
-    showError("Players must be from the same team to merge.");
-    return;
-  }
-  playerRankings[player1].matches = playerRankings[player1].matches.concat(playerRankings[player2].matches);
-  playerRankings[player1].motm += playerRankings[player2].motm;
-  await saveToFirestore('playerRankings', player1, playerRankings[player1]);
-  await deleteFromFirestore('playerRankings', player2);
-  delete playerRankings[player2];
-  await recalculateRankings();
-  showSuccess(`Merged ${player2} into ${player1}!`);
-}
-
-function updateMergeSelects() {
-  const merge1 = document.getElementById("mergePlayer1");
-  const merge2 = document.getElementById("mergePlayer2");
-  merge1.innerHTML = '<option value="">Select Player 1</option>';
-  merge2.innerHTML = '<option value="">Select Player 2</option>';
-  Object.keys(playerRankings).forEach(player => {
-    merge1.innerHTML += `<option value="${player}">${player} (${playerRankings[player].team})</option>`;
-    merge2.innerHTML += `<option value="${player}">${player} (${playerRankings[player].team})</option>`;
-  });
+function cleanName(name) {
+  if (!name) return "";
+  return name.replace(/[👑🔑@]/g, '').trim();
 }
 
 async function saveToArchive(team1, team2, team1Points, team2Points, matches, motmPlayer) {
@@ -1231,7 +1401,10 @@ async function saveToArchive(team1, team2, team1Points, team2Points, matches, mo
     team2Points: parseInt(team2Points) || 0,
     matches: matches || [],
     motmPlayer: motmPlayer || "",
-    inputText: document.getElementById("pasteText").value || ""
+    inputText: document.getElementById("pasteText").value || "",
+    tournamentName: currentTournament.name,
+    tournamentLogo: currentTournament.logo,
+    stage: currentStage
   };
   try {
     if (await saveToFirestore('archives', archive.id, archive)) {
@@ -1268,6 +1441,12 @@ function updateArchiveList() {
 function loadArchive(index) {
   const archive = archives[index];
   document.getElementById("pasteText").value = archive.inputText;
+  document.getElementById("tournamentName").textContent = archive.tournamentName;
+  document.getElementById("tournamentName-alt").textContent = archive.tournamentName;
+  document.getElementById("tournamentLogo").src = archive.tournamentLogo;
+  document.getElementById("tournamentLogo-alt").src = archive.tournamentLogo;
+  document.getElementById("tournamentDate").textContent = archive.stage;
+  document.getElementById("tournamentDate-alt").textContent = archive.stage;
   generateScorecard();
   showSuccess("Archive loaded!");
 }
@@ -1278,7 +1457,6 @@ async function editArchive(index) {
     archives[index].inputText = newText;
     if (await saveToFirestore('archives', archives[index].id, archives[index])) {
       updateArchiveList();
-      await recalculateRankings();
       showSuccess("Archive updated!");
     }
   }
@@ -1289,22 +1467,195 @@ async function deleteArchive(index) {
   if (await deleteFromFirestore('archives', archive.id)) {
     archives.splice(index, 1);
     updateArchiveList();
-    await recalculateRankings();
-    showSuccess("Archive deleted and rankings updated!");
+    showSuccess("Archive deleted!");
   }
+}
+
+async function generateScorecard() {
+  const text = document.getElementById("pasteText").value.trim();
+  if (!text) {
+    showError("Please paste match data.");
+    return;
+  }
+
+  const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+  if (lines.length < 1) {
+    showError("No valid input provided.");
+    return;
+  }
+
+  // Extract team names from the first line containing ⚒️, 🆚, or |
+  let team1 = "", team2 = "";
+  let teamLineFound = false;
+  for (const line of lines) {
+    if (line.includes('⚒️') || line.includes('🆚') || line.includes('|')) {
+      const separator = line.includes('⚒️') ? '⚒️' : line.includes('🆚') ? '🆚' : '|';
+      const teams = line.split(separator).map(t => t.trim());
+      if (teams.length >= 2) {
+        team1 = teams[0].replace(/🅻🅻🅵🅲/, 'LLFC').trim(); // Normalize team names
+        team2 = teams[1].replace(/🅲🅿︎🅲/, 'CPC').trim();
+        teamLineFound = true;
+        break;
+      }
+    }
+  }
+
+  if (!teamLineFound || !team1 || !team2) {
+    showError("Could not find valid team names separated by ⚒️, 🆚, or |.");
+    return;
+  }
+
+  // Parse match lines
+  const matchRegex = /(.+?)\s*\(?(\d+)\)?\s*🆚\s*\(?(\d+)\)?\s*(.+)/;
+  const matches = [];
+  let motmPlayer = "";
+  for (const line of lines) {
+    const match = line.match(matchRegex);
+    if (match) {
+      const [, p1, s1, s2, p2] = match;
+      matches.push([p1.trim(), s1, s2, p2.trim()]);
+      if (p1.includes('👑')) motmPlayer = cleanName(p1);
+      else if (p2.includes('👑')) motmPlayer = cleanName(p2);
+    }
+  }
+
+  if (matches.length === 0) {
+    showError("No valid matches found. Use format 'Player1 X🆚Y Player2'.");
+    return;
+  }
+
+  if (!motmPlayer) {
+    showError("No Man of the Match (👑) specified in any match.");
+    return;
+  }
+
+  // Calculate team points based on match outcomes
+  let team1Points = 0, team2Points = 0;
+  matches.forEach(([p1, s1, s2, p2]) => {
+    const score1 = parseInt(s1);
+    const score2 = parseInt(s2);
+    if (score1 > score2) {
+      team1Points += 3; // Team 1 wins
+    } else if (score2 > score1) {
+      team2Points += 3; // Team 2 wins
+    } else {
+      team1Points += 1; // Draw
+      team2Points += 1;
+    }
+  });
+
+  const team1Logo = teamLogoMap[team1] || defaultLogo;
+  const team2Logo = teamLogoMap[team2] || defaultLogo;
+
+  // Update Original Scorecard
+  document.getElementById("team1panel").innerHTML = `<img src="${team1Logo}" class="team-logo" onerror="this.src='${defaultLogo}'">${team1}`;
+  document.getElementById("team2panel").innerHTML = `<img src="${team2Logo}" class="team-logo" onerror="this.src='${defaultLogo}'">${team2}`;
+  document.getElementById("team1score").textContent = team1Points;
+  document.getElementById("team2score").textContent = team2Points;
+  document.getElementById("tournamentName").textContent = currentTournament.name;
+  document.getElementById("tournamentLogo").src = currentTournament.logo;
+  document.getElementById("tournamentDate").textContent = currentStage;
+
+  // Update Alternative Scorecard
+  document.getElementById("team1panel-alt").innerHTML = `<img src="${team1Logo}" class="team-logo" onerror="this.src='${defaultLogo}'">${team1}`;
+  document.getElementById("team2panel-alt").innerHTML = `<img src="${team2Logo}" class="team-logo" onerror="this.src='${defaultLogo}'">${team2}`;
+  document.getElementById("team1score-alt").textContent = team1Points;
+  document.getElementById("team2score-alt").textContent = team2Points;
+  document.getElementById("tournamentName-alt").textContent = currentTournament.name;
+  document.getElementById("tournamentLogo-alt").src = currentTournament.logo;
+  document.getElementById("tournamentDate-alt").textContent = currentStage;
+
+  // Generate match rows
+  const matchesDiv = document.getElementById("matches");
+  const matchesDivAlt = document.getElementById("matches-alt");
+  matchesDiv.innerHTML = "";
+  matchesDivAlt.innerHTML = "";
+  matches.forEach(([p1, s1, s2, p2]) => {
+    const cleanP1 = cleanName(p1);
+    const cleanP2 = cleanName(p2);
+    const isMotmP1 = p1.includes("👑");
+    const isMotmP2 = p2.includes("👑");
+    const player1Class = isMotmP1 ? "motm-player" : "";
+    const player2Class = isMotmP2 ? "motm-player" : "";
+    matchesDiv.innerHTML += `
+      <div class="match-row">
+        <div class="player-container ${player1Class}">
+          <span class="player-left">${cleanP1}</span>
+        </div>
+        <div class="score-box">${s1} - ${s2}</div>
+        <div class="player-container ${player2Class}">
+          <span class="player-right">${cleanP2}</span>
+        </div>
+      </div>
+    `;
+    matchesDivAlt.innerHTML += `
+      <div class="match-row">
+        <div class="player-container ${player1Class}">
+          <span class="player-left">${cleanP1}</span>
+        </div>
+        <div class="score-box">${s1} - ${s2}</div>
+        <div class="player-container ${player2Class}">
+          <span class="player-right">${cleanP2}</span>
+        </div>
+      </div>
+    `;
+  });
+
+  // Update winner and MOTM
+  const winnerText = team1Points > team2Points ? `${team1} wins!` : team2Points > team1Points ? `${team2} wins!` : "Draw!";
+  document.getElementById("winner").textContent = `Winner: ${winnerText}`;
+  document.getElementById("winner-alt").textContent = `Winner: ${winnerText}`;
+  document.getElementById("motmScorecard").textContent = `Man of the Match: ${motmPlayer}`;
+  document.getElementById("motmScorecard-alt").textContent = `Man of the Match: ${motmPlayer}`;
+
+  await saveToArchive(team1, team2, team1Points, team2Points, matches, motmPlayer);
+  showSuccess("Scorecard generated and archived!");
+}
+
+async function downloadScorecard(scorecardId) {
+  const scorecard = document.getElementById(scorecardId);
+  await ensureImagesLoaded(scorecard);
+  try {
+    const canvas = await html2canvas(scorecard, {
+      backgroundColor: scorecardId === 'scorecard' ? '#2c2c2c' : '#ffffff',
+      scale: 2,
+      useCORS: true
+    });
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = `llfc_scorecard_${new Date().toISOString().split('T')[0]}_${scorecardId === 'scorecard' ? 'dark' : 'light'}.png`;
+    link.click();
+    showSuccess(`${scorecardId === 'scorecard' ? 'Original' : 'Alternative'} scorecard downloaded!`);
+  } catch (e) {
+    console.error("Download error:", e);
+    showError("Failed to download scorecard: " + e.message);
+  }
+}
+
+function openTab(tabId, button) {
+  document.querySelectorAll('section').forEach(section => {
+    section.classList.remove('active');
+  });
+  document.getElementById(tabId).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  button.classList.add('active');
 }
 
 async function initializeData() {
   try {
-    const [playerPhotos, teams, matchdaysData, groupsData, archivesData, rankingsData, configSquad, configLogo] = await Promise.all([
+    const [playerPhotos, teams, matchdaysData, groupsData, archivesData, configSquad, configTournament, configStage, tournamentNamesData, tournamentLogosData] = await Promise.all([
       getAllFromFirestore('playerPhotoMap'),
       getAllFromFirestore('teamLogoMap'),
       getAllFromFirestore('matchdays'),
       getAllFromFirestore('groups'),
       getAllFromFirestore('archives'),
-      getAllFromFirestore('playerRankings'),
       getFromFirestore('config', 'squadSubmitLink'),
-      getFromFirestore('config', 'tournamentLogo')
+      getFromFirestore('config', 'currentTournament'),
+      getFromFirestore('config', 'currentStage'),
+      getAllFromFirestore('tournamentNames'),
+      getAllFromFirestore('tournamentLogos')
     ]);
 
     playerPhotoMap = playerPhotos.reduce((acc, p) => ({ ...acc, [p.id]: p.url }), {});
@@ -1312,291 +1663,46 @@ async function initializeData() {
     matchdays = matchdaysData;
     groups = groupsData;
     archives = archivesData;
-    playerRankings = rankingsData.reduce((acc, r) => ({ ...acc, [r.id]: { ...r, matches: r.matches || [] } }), {});
     squadSubmitLink = configSquad ? configSquad.link : "";
-    tournamentLogo = configLogo ? configLogo.url : defaultLogo;
+    currentTournament = configTournament || { name: "Gkec Unity Cup", logo: defaultLogo };
+    currentStage = configStage ? configStage.stage : "Group Stage";
+    tournamentNames = tournamentNamesData.map(t => t.name);
+    tournamentLogos = tournamentLogosData.map(t => ({ name: t.id, url: t.url }));
 
-    document.getElementById("tournamentLogo").src = tournamentLogo;
-    updateTournamentLogoDisplay();
+    document.getElementById("tournamentLogo").src = currentTournament.logo;
+    document.getElementById("tournamentLogo-alt").src = currentTournament.logo;
+    document.getElementById("tournamentName").textContent = currentTournament.name;
+    document.getElementById("tournamentName-alt").textContent = currentTournament.name;
+    document.getElementById("tournamentDate").textContent = currentStage;
+    document.getElementById("tournamentDate-alt").textContent = currentStage;
+    updateTournamentLogoList();
+    updateTournamentSelects();
+    updateCurrentTournamentDisplay();
+    updateTournamentStageDisplay();
     updatePlayerList();
     updateTeamList();
     updateMatchdayList();
     updateGroupList();
-    updateGroupSelect();
     updateSquadLinkDisplay();
     updateArchiveList();
-    updateRankingTable();
-    updateViewerRankingTable();
-    updateMergeSelects();
-    updateTeamSelect();
-    updateOfficialSelect();
-    console.log("Data initialized:", { playerPhotoMap, teamLogoMap, matchdays, groups, archives, playerRankings, squadSubmitLink, tournamentLogo });
+    console.log("Initialization complete");
   } catch (e) {
-    console.error("Failed to initialize data:", e);
-    showError("Failed to load data from Firestore: " + e.message);
+    console.error("Initialization error:", e.message);
+    showError("Failed to initialize data: " + e.message);
   }
 }
 
-document.addEventListener("DOMContentLoaded", initializeData);
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  initializeData();
+});
 
-function openTab(tabId, btn) {
-  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
-  document.getElementById(tabId).classList.add("active");
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-}
-
-function cleanName(name) {
-  return name ? name.replace(/[@()⭐⛔🔑🔥👑!*\-_]/g, '').trim() : "Unknown";
-}
-
-function getTeamLogo(teamName) {
-  const teamMapKeys = Object.keys(teamLogoMap);
-  const matchedKey = teamMapKeys.find(key => key.toLowerCase() === (teamName || "").toLowerCase());
-  return teamLogoMap[matchedKey] || defaultLogo;
-}
-
-async function generateScorecard() {
-  const text = document.getElementById("pasteText").value;
-  const lines = text.split("\n");
-
-  let teamLine = lines.find(l => l.includes("⚔️"));
-  let team1 = teamLine ? cleanName(teamLine.split("⚔️")[0]) : "Team 1";
-  let team2 = teamLine ? cleanName(teamLine.split("⚔️")[1]) : "Team 2";
-
-  const matchesContainer = document.getElementById("matches");
-  matchesContainer.innerHTML = "";
-
-  let team1Points = 0, team2Points = 0, motmPlayer = "";
-  const matches = [];
-
-  lines.forEach(line => {
-    if (line.includes("🆚")) {
-      let m = line.match(/(.+?)\s*\(?(\d+)\)?\s*🆚\s*\(?(\d+)\)?\s*(.+)/);
-      if (m) {
-        let p1Raw = m[1].trim(), p2Raw = m[4].trim();
-        let p1 = cleanName(p1Raw), p2 = cleanName(p2Raw);
-        let s1 = parseInt(m[2]) || 0, s2 = parseInt(m[3]) || 0;
-
-        if (p1Raw.includes("👑")) motmPlayer = p1;
-        if (p2Raw.includes("👑")) motmPlayer = p2;
-
-        matches.push([p1Raw, s1, s2, p2Raw]);
-        matchesContainer.innerHTML += `
-          <div class="match-row">
-            <div class="player-container player-left">${p1}</div>
-            <div class="score-box">${s1} - ${s2}</div>
-            <div class="player-container player-right">${p2}</div>
-          </div>
-        `;
-
-        if (s1 > s2) team1Points += 3;
-        else if (s2 > s1) team2Points += 3;
-        else { team1Points++; team2Points++; }
-      }
-    }
-  });
-
-  let team1LogoSrc = getTeamLogo(team1);
-  let team2LogoSrc = getTeamLogo(team2);
-  let team1Logo = `<img src="${team1LogoSrc}" class="team-logo" onerror="this.src='${defaultLogo}'">`;
-  let team2Logo = `<img src="${team2LogoSrc}" class="team-logo" onerror="this.src='${defaultLogo}'">`;
-
-  document.getElementById("team1panel").innerHTML = `${team1Logo}${team1}`;
-  document.getElementById("team2panel").innerHTML = `${team2Logo}${team2}`;
-  document.getElementById("team1score").innerText = team1Points;
-  document.getElementById("team2score").innerText = team2Points;
-
-  const winner = team1Points > team2Points ? team1 : (team2Points > team1Points ? team2 : "Draw");
-  document.getElementById("winner").innerText = "Winner: " + winner;
-  document.getElementById("motmScorecard").innerText = "Man of the Match: " + (motmPlayer || "-");
-  document.getElementById("tournamentLogo").src = tournamentLogo;
-
-  await saveToArchive(team1, team2, team1Points, team2Points, matches, motmPlayer);
-  await updatePlayerRankings(team1, team2, matches, motmPlayer, archives[archives.length - 1]?.id);
-}
-
-async function addTournamentLogo() {
-  const fileInput = document.getElementById("tournamentLogoInput");
-  const urlInput = document.getElementById("tournamentLogoUrl");
-  let imageUrl = urlInput.value.trim();
-  const file = fileInput.files[0];
-
-  try {
-    if (file) {
-      imageUrl = await uploadToFirebase(file, `images/tournament-logo.jpg`);
-      urlInput.value = imageUrl;
-    } else if (!imageUrl) {
-      showError("Please select a file or enter a valid image URL.");
-      return;
-    }
-
-    const isValid = await validateImageUrl(imageUrl);
-    if (!isValid) {
-      showError("Invalid image URL or image failed to load.");
-      return;
-    }
-
-    if (await saveToFirestore('config', 'tournamentLogo', { url: imageUrl })) {
-      tournamentLogo = imageUrl;
-      document.getElementById("tournamentLogo").src = tournamentLogo;
-      updateTournamentLogoDisplay();
-      fileInput.value = '';
-      showSuccess("Tournament logo successfully saved!");
-    }
-  } catch (e) {
-    showError("Upload failed: " + e.message);
+// Handle Enter key for password input
+document.getElementById("adminPassword").addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    unlockMatchdaySetup();
   }
-}
-
-async function deleteTournamentLogo() {
-  if (await saveToFirestore('config', 'tournamentLogo', { url: defaultLogo })) {
-    tournamentLogo = defaultLogo;
-    document.getElementById("tournamentLogo").src = tournamentLogo;
-    updateTournamentLogoDisplay();
-    document.getElementById("tournamentLogoInput").value = '';
-    document.getElementById("tournamentLogoUrl").value = '';
-    showSuccess("Tournament logo reset to default!");
-  }
-}
-
-function updateTournamentLogoDisplay() {
-  const display = document.getElementById("tournamentLogoDisplay");
-  display.innerHTML = `<img src="${tournamentLogo}" class="tournament-logo" onerror="this.src='${defaultLogo}'">`;
-}
-
-async function addPlayer() {
-  const name = document.getElementById("playerNameInput").value.trim();
-  const fileInput = document.getElementById("playerPhotoInput");
-  const urlInput = document.getElementById("playerPhotoUrl");
-  let imageUrl = urlInput.value.trim();
-  const file = fileInput.files[0];
-
-  try {
-    if (!name) {
-      showError("Please enter a player name.");
-      return;
-    }
-    if (file) {
-      imageUrl = await uploadToFirebase(file, `images/players/${encodeURIComponent(name)}.jpg`);
-      urlInput.value = imageUrl;
-    } else if (!imageUrl) {
-      showError("Please select a file or enter a valid image URL.");
-      return;
-    }
-
-    const isValid = await validateImageUrl(imageUrl);
-    if (!isValid) {
-      showError("Invalid image URL or image failed to load.");
-      return;
-    }
-
-    if (await saveToFirestore('playerPhotoMap', name, { url: imageUrl })) {
-      playerPhotoMap[name] = imageUrl;
-      updatePlayerList();
-      document.getElementById("playerNameInput").value = '';
-      document.getElementById("playerPhotoInput").value = '';
-      document.getElementById("playerPhotoUrl").value = '';
-      showSuccess("Player successfully saved!");
-    }
-  } catch (e) {
-    showError("Upload failed: " + e.message);
-  }
-}
-
-function updatePlayerList() {
-  const list = document.getElementById("playerList");
-  list.innerHTML = "";
-  Object.keys(playerPhotoMap).forEach(p => {
-    list.innerHTML += `
-      <div class="admin-player">
-        <img src="${playerPhotoMap[p] || defaultAvatar}" onerror="this.src='${defaultAvatar}'" style="width: 40px; height: 40px; border-radius: 50%;"> ${p}
-      </div>
-    `;
-  });
-}
-
-async function addTeam() {
-  const name = document.getElementById("teamNameInput").value.trim();
-  const fileInput = document.getElementById("teamLogoInput");
-  const urlInput = document.getElementById("teamLogoUrl");
-  let imageUrl = urlInput.value.trim();
-  const file = fileInput.files[0];
-
-  try {
-    if (!name) {
-      showError("Please enter a team name.");
-      return;
-    }
-    if (Object.keys(teamLogoMap).length >= 42) {
-      showError("Maximum 48 teams allowed.");
-      return;
-    }
-    if (file) {
-      imageUrl = await uploadToFirebase(file, `images/teams/${encodeURIComponent(name)}.jpg`);
-      urlInput.value = imageUrl;
-    } else if (!imageUrl) {
-      showError("Please select a file or enter a valid image URL.");
-      return;
-    }
-
-    const isValid = await validateImageUrl(imageUrl);
-    if (!isValid) {
-      showError("Invalid image URL or image failed to load.");
-      return;
-    }
-
-    if (await saveToFirestore('teamLogoMap', name, { url: imageUrl })) {
-      teamLogoMap[name] = imageUrl;
-      updateTeamList();
-      updateTeamSelect();
-      document.getElementById("teamNameInput").value = '';
-      document.getElementById("teamLogoInput").value = '';
-      document.getElementById("teamLogoUrl").value = '';
-      showSuccess("Team logo successfully saved!");
-    }
-  } catch (e) {
-    showError("Upload failed: " + e.message);
-  }
-}
-
-function updateTeamList() {
-  const list = document.getElementById("teamList");
-  list.innerHTML = "";
-  Object.keys(teamLogoMap).forEach(t => {
-    list.innerHTML += `
-      <div class="admin-team">
-        <img src="${teamLogoMap[t] || defaultLogo}" onerror="this.src='${defaultLogo}'" style="width: 40px; height: 40px;"> ${t}
-      </div>
-    `;
-  });
-  updateTeamSelect();
-}
-
-async function downloadScorecard() {
-  const card = document.getElementById("scorecard");
-  try {
-    await ensureImagesLoaded(card);
-    html2canvas(card, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: null
-    }).then(canvas => {
-      const link = document.createElement("a");
-      link.download = "scorecard.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-      showSuccess("Scorecard downloaded!");
-    }).catch(err => {
-      console.error("html2canvas error:", err);
-      showError("Failed to download scorecard. Check console for details.");
-    });
-  } catch (e) {
-    console.error("Image loading error:", e);
-    showError("Image loading failed: " + e.message);
-  }
-}
+});
 </script>
 </body>
 </html>
