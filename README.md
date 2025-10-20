@@ -283,7 +283,7 @@ section.active {
   font-family: 'Montserrat', sans-serif;
   font-size: 26px;
   font-weight: 800;
-  color: #ff69b4;
+  color: ##FF4500;
   text-shadow: none;
   font-style: normal;
 }
@@ -292,7 +292,7 @@ section.active {
   font-family: 'Montserrat', sans-serif;
   font-size: 26px;
   font-weight: 800;
-  color: #ff69b4;
+  color: #FF4500;
   font-style: normal;
 }
 
