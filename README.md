@@ -86,7 +86,7 @@ section.active {
   border-radius: 15px;
   padding: 30px;
   box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-  border: 2px solid #d4af37;
+  border: 2px solid #87CEFA;
   margin-bottom: 20px;
 }
 
@@ -102,7 +102,7 @@ section.active {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  border: 3px solid #d4af37;
+  border: 3px solid #87CEFA;
   box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
   object-fit: cover;
 }
@@ -112,7 +112,7 @@ section.active {
   font-family: 'Orbitron', sans-serif;
   color: #ffffff;
   text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
-  border: 3px solid #d4af37;
+  border: 3px solid #87CEFA;
   padding: 10px 20px;
   border-radius: 10px;
   background: #1a1a1a;
@@ -122,7 +122,7 @@ section.active {
   font-size: 48px;
   font-family: 'Orbitron', sans-serif;
   color: #000000;
-  border: 3px solid #d4af37;
+  border: 3px solid #87CEFA;
   padding: 10px 20px;
   border-radius: 10px;
   background: #ffffff;
@@ -158,7 +158,7 @@ section.active {
   font-weight: 800;
   padding: 15px;
   border-radius: 10px;
-  border: 3px solid #d4af37;
+  border: 3px solid #87CEFA;
   font-family: 'Orbitron', sans-serif;
   display: flex;
   align-items: center;
@@ -176,7 +176,7 @@ section.active {
   font-weight: 800;
   padding: 15px;
   border-radius: 10px;
-  border: 3px solid #d4af37;
+  border: 3px solid #87CEFA;
   font-family: 'Orbitron', sans-serif;
   display: flex;
   align-items: center;
@@ -199,7 +199,7 @@ section.active {
   font-size: 24px;
   font-weight: 700;
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-  border: 3px solid #d4af37;
+  border: 3px solid #87CEFA;
 }
 
 .team-logo {
@@ -207,7 +207,7 @@ section.active {
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #d4af37;
+  border: 3px solid #87CEFA;
   box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
 }
 
@@ -239,7 +239,7 @@ section.active {
   align-items: center;
   justify-content: center;
   padding: 5px;
-  border: 2px solid #d4af37;
+  border: 2px solid #87CEFA;
   border-radius: 5px;
   height: 40px;
   box-sizing: border-box;
@@ -327,7 +327,7 @@ section.active {
   font-family: 'Orbitron', sans-serif;
   font-size: 20px;
   margin: 0 15px;
-  border: 3px solid #d4af37;
+  border: 3px solid #87CEFA;
 }
 
 .results-summary {
@@ -378,7 +378,7 @@ textarea {
   margin: 20px 0;
   padding: 12px;
   background: #2c2c2c;
-  border: 1px solid #d4af37;
+  border: 1px solid #87CEFA;
   color: #ffffff;
   border-radius: 10px;
   font-family: 'Montserrat', sans-serif;
@@ -391,7 +391,7 @@ button {
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  background: #d4af37;
+  background: #87CEFA;
   color: #1a1a1a;
   font-weight: 700;
   font-family: 'Orbitron', sans-serif;
