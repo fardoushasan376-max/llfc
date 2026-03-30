@@ -1253,7 +1253,7 @@ async function addTeam() {
       return;
     }
     if (Object.keys(teamLogoMap).length >= 48) {
-      showError("Maximum 48 teams allowed.");
+      showError("Maximum 64 teams allowed.");
       return;
     }
     if (file) {
