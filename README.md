@@ -3,323 +3,501 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LLFC Juvenile Division System</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>LLFC eFootball Division System</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
+/* ===== UCL THEME ===== */
 :root{
-  --red:#CC0000;--red-bright:#FF1A1A;--red-dark:#8B0000;
-  --white:#FFFFFF;--gray-mid:#B0A0A0;--black:#080000;
-  --card-bg:#160808;--card-border:rgba(204,0,0,0.28);
+  --ucl-navy:#0A1628;
+  --ucl-blue:#1B3A6B;
+  --ucl-mid:#2A5298;
+  --ucl-light:#4472C4;
+  --ucl-bright:#5B8FE8;
+  --ucl-star:#F5C518;
+  --ucl-silver:#C8D8F0;
+  --ucl-white:#EEF4FF;
+  --ucl-dark:#060E1C;
+  --ucl-card:#0D1F3C;
+  --ucl-border:rgba(68,114,196,0.35);
   --gold:#FFD700;--silver:#C0C0C0;--bronze:#CD7F32;
-  --green:#00CC44;--yellow:#FFAA00;--blue:#4499FF;--purple:#AA44FF;
+  --green:#00E676;--yellow:#FFEA00;--red:#FF3D3D;--purple:#CE93D8;
+  --card-bg:var(--ucl-card);--card-border:var(--ucl-border);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{font-family:'Rajdhani',sans-serif;background:var(--black);color:var(--white);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 80px,rgba(204,0,0,0.02) 80px,rgba(204,0,0,0.02) 81px),repeating-linear-gradient(90deg,transparent,transparent 80px,rgba(204,0,0,0.02) 80px,rgba(204,0,0,0.02) 81px);pointer-events:none;z-index:0;}
+body{font-family:'Montserrat',sans-serif;background:var(--ucl-dark);color:var(--ucl-white);min-height:100vh;overflow-x:hidden;}
 
-/* HEADER */
-header{position:sticky;top:0;z-index:1000;background:rgba(8,0,0,0.97);backdrop-filter:blur(12px);border-bottom:2px solid var(--red);box-shadow:0 4px 30px rgba(204,0,0,0.25);}
-.header-inner{max-width:1400px;margin:0 auto;padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:60px;gap:8px;}
-.logo-area{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;}
-.logo-badge{width:42px;height:42px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;color:white;box-shadow:0 0 15px rgba(204,0,0,0.5);flex-shrink:0;letter-spacing:1px;}
-.logo-text{display:flex;flex-direction:column;line-height:1;}
-.logo-main{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;}
-.logo-sub{font-size:10px;color:var(--red-bright);letter-spacing:3px;text-transform:uppercase;font-weight:600;}
-.header-nav{display:flex;gap:4px;align-items:center;}
-.nav-btn{background:none;border:1px solid transparent;color:var(--gray-mid);padding:6px 12px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13px;letter-spacing:1px;cursor:pointer;border-radius:4px;transition:all .2s;text-transform:uppercase;}
-.nav-btn:hover,.nav-btn.active{color:var(--white);border-color:var(--red);background:rgba(204,0,0,0.14);}
+/* Stars bg */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(27,58,107,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(42,82,152,0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(6,14,28,0.8) 0%, transparent 100%);
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:
+    radial-gradient(1px 1px at 10% 15%, rgba(245,197,24,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 40%, rgba(245,197,24,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 25%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 60%, rgba(245,197,24,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 20%, rgba(255,255,255,0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 70%, rgba(245,197,24,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 45%, rgba(245,197,24,0.35) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 90%, rgba(255,255,255,0.15) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 35%, rgba(245,197,24,0.5) 0%, transparent 100%);
+  pointer-events:none;z-index:0;
+}
+
+/* ===== HEADER ===== */
+header{
+  position:sticky;top:0;z-index:1000;
+  background:rgba(6,14,28,0.97);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--ucl-border);
+  box-shadow:0 4px 30px rgba(27,58,107,0.5);
+}
+.header-inner{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:62px;gap:8px;}
+.logo-area{display:flex;align-items:center;gap:12px;cursor:pointer;flex-shrink:0;}
+.logo-badge{
+  width:44px;height:44px;
+  background:linear-gradient(135deg,var(--ucl-mid),var(--ucl-blue));
+  border:2px solid var(--ucl-light);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:13px;color:white;
+  box-shadow:0 0 16px rgba(68,114,196,0.5);flex-shrink:0;letter-spacing:0.5px;
+}
+.logo-text{display:flex;flex-direction:column;line-height:1.1;}
+.logo-main{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--ucl-white);}
+.logo-sub{font-size:9px;color:var(--ucl-star);letter-spacing:4px;text-transform:uppercase;font-weight:700;}
+.header-nav{display:flex;gap:2px;align-items:center;}
+.nav-btn{
+  background:none;border:1px solid transparent;color:var(--ucl-silver);
+  padding:7px 14px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:12px;
+  letter-spacing:1px;cursor:pointer;border-radius:4px;transition:all .2s;text-transform:uppercase;
+}
+.nav-btn:hover,.nav-btn.active{color:var(--ucl-white);border-color:var(--ucl-light);background:rgba(68,114,196,0.18);}
 .header-auth{display:flex;gap:6px;align-items:center;flex-shrink:0;}
-.btn-login{background:transparent;border:1px solid var(--red);color:var(--red-bright);padding:6px 14px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;cursor:pointer;border-radius:3px;transition:all .2s;text-transform:uppercase;}
-.btn-login:hover{background:var(--red);color:white;}
-.btn-register{background:var(--red);border:1px solid var(--red);color:white;padding:6px 14px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;cursor:pointer;border-radius:3px;transition:all .2s;text-transform:uppercase;}
-.btn-register:hover{background:var(--red-bright);}
-.user-pill{display:flex;align-items:center;gap:8px;background:rgba(204,0,0,0.14);border:1px solid var(--red);border-radius:20px;padding:4px 12px 4px 4px;cursor:pointer;}
-.user-avatar{width:28px;height:28px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
-.user-name{font-size:13px;font-weight:600;}
-.mod-badge-hdr{font-size:9px;background:rgba(170,68,255,0.3);border:1px solid var(--purple);color:var(--purple);padding:1px 5px;border-radius:3px;}
+.btn-login{
+  background:transparent;border:1px solid var(--ucl-light);color:var(--ucl-bright);
+  padding:6px 14px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;
+  cursor:pointer;border-radius:4px;transition:all .2s;text-transform:uppercase;
+}
+.btn-login:hover{background:var(--ucl-mid);color:white;}
+.btn-register{
+  background:linear-gradient(135deg,var(--ucl-mid),var(--ucl-light));
+  border:none;color:white;padding:6px 14px;
+  font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;
+  cursor:pointer;border-radius:4px;transition:all .2s;text-transform:uppercase;
+}
+.btn-register:hover{background:linear-gradient(135deg,var(--ucl-light),var(--ucl-bright));box-shadow:0 0 12px rgba(68,114,196,0.5);}
+.user-pill{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(68,114,196,0.15);border:1px solid var(--ucl-light);
+  border-radius:20px;padding:4px 14px 4px 4px;cursor:pointer;
+}
+.user-avatar{
+  width:30px;height:30px;
+  background:linear-gradient(135deg,var(--ucl-mid),var(--ucl-light));
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;flex-shrink:0;font-family:'Bebas Neue',sans-serif;
+}
+.user-name{font-size:13px;font-weight:600;color:var(--ucl-white);}
+.mod-badge-hdr{font-size:9px;background:rgba(206,147,216,0.25);border:1px solid var(--purple);color:var(--purple);padding:1px 5px;border-radius:3px;letter-spacing:1px;}
 
-/* MAIN */
-main{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:20px 16px;min-height:calc(100vh - 60px);}
-.page{display:none;}.page.active{display:block;}
+/* ===== MAIN ===== */
+main{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:24px 20px;min-height:calc(100vh - 62px);}
+.page{display:none;}.page.active{display:block;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-/* BUTTONS */
-.btn-primary{background:var(--red);color:white;border:none;padding:10px 24px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;cursor:pointer;border-radius:4px;text-transform:uppercase;transition:all .2s;box-shadow:0 4px 12px rgba(204,0,0,0.3);}
-.btn-primary:hover{background:var(--red-bright);transform:translateY(-1px);}
-.btn-secondary{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,0.22);padding:10px 24px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;cursor:pointer;border-radius:4px;text-transform:uppercase;transition:all .2s;}
-.btn-secondary:hover{border-color:var(--red);background:rgba(204,0,0,0.1);}
-.btn-sm{padding:5px 11px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;cursor:pointer;border-radius:3px;transition:all .2s;text-transform:uppercase;}
-.btn-approve{background:rgba(0,204,68,.2);color:var(--green);border:1px solid rgba(0,204,68,.4);}
-.btn-approve:hover{background:var(--green);color:#000;}
-.btn-reject{background:rgba(204,0,0,.2);color:var(--red-bright);border:1px solid var(--red);}
-.btn-reject:hover{background:var(--red);color:white;}
-.btn-edit{background:rgba(255,170,0,.15);color:var(--yellow);border:1px solid rgba(255,170,0,.4);}
-.btn-edit:hover{background:rgba(255,170,0,.3);}
-.btn-ban{background:rgba(80,0,80,.3);color:#cc88ff;border:1px solid rgba(150,0,150,.4);}
-.btn-ban:hover{background:rgba(150,0,150,.4);}
-.btn-mod{background:rgba(68,153,255,.15);color:var(--blue);border:1px solid rgba(68,153,255,.4);}
-.btn-mod:hover{background:rgba(68,153,255,.3);}
+/* ===== CARDS ===== */
+.card{background:var(--ucl-card);border:1px solid var(--ucl-border);border-radius:10px;padding:20px;}
+.card-blue{background:linear-gradient(135deg,rgba(27,58,107,0.5),rgba(10,22,40,0.95));border:1px solid var(--ucl-light);}
+
+/* ===== BUTTONS ===== */
+.btn-primary{
+  background:linear-gradient(135deg,var(--ucl-mid),var(--ucl-light));
+  color:white;border:none;padding:10px 24px;
+  font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;
+  letter-spacing:1px;cursor:pointer;border-radius:6px;text-transform:uppercase;
+  transition:all .2s;box-shadow:0 4px 14px rgba(68,114,196,0.35);
+}
+.btn-primary:hover{background:linear-gradient(135deg,var(--ucl-light),var(--ucl-bright));transform:translateY(-1px);box-shadow:0 6px 18px rgba(68,114,196,0.5);}
+.btn-secondary{
+  background:transparent;color:var(--ucl-silver);
+  border:1px solid rgba(68,114,196,0.5);
+  padding:10px 24px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:13px;
+  cursor:pointer;border-radius:6px;text-transform:uppercase;transition:all .2s;
+}
+.btn-secondary:hover{border-color:var(--ucl-light);background:rgba(68,114,196,0.1);color:white;}
+.btn-sm{padding:5px 12px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.5px;cursor:pointer;border-radius:4px;transition:all .2s;text-transform:uppercase;}
+.btn-approve{background:rgba(0,230,118,.15);color:#00E676;border:1px solid rgba(0,230,118,.4);}
+.btn-approve:hover{background:rgba(0,230,118,.3);}
+.btn-reject{background:rgba(255,61,61,.15);color:#FF3D3D;border:1px solid rgba(255,61,61,.4);}
+.btn-reject:hover{background:rgba(255,61,61,.3);}
+.btn-edit{background:rgba(255,234,0,.12);color:#FFEA00;border:1px solid rgba(255,234,0,.35);}
+.btn-edit:hover{background:rgba(255,234,0,.22);}
+.btn-ban{background:rgba(206,147,216,.15);color:#CE93D8;border:1px solid rgba(206,147,216,.35);}
+.btn-ban:hover{background:rgba(206,147,216,.25);}
+.btn-mod{background:rgba(68,153,255,.14);color:#82B1FF;border:1px solid rgba(68,153,255,.35);}
+.btn-mod:hover{background:rgba(68,153,255,.25);}
 .w-full{width:100%;}
 
-/* SECTION TITLE */
-.section-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;color:var(--white);display:flex;align-items:center;gap:12px;margin-bottom:16px;}
-.section-title::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,var(--red),transparent);}
+/* ===== SECTION TITLE ===== */
+.section-title{
+  font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:4px;
+  color:var(--ucl-white);display:flex;align-items:center;gap:14px;margin-bottom:18px;
+}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--ucl-light),transparent);}
 
-/* HERO */
-.hero{background:linear-gradient(135deg,rgba(139,0,0,.35) 0%,rgba(8,0,0,.9) 60%);border:1px solid var(--red);border-radius:12px;padding:34px 26px;margin-bottom:20px;position:relative;overflow:hidden;}
-.hero::before{content:'LLFC';position:absolute;right:-10px;top:-10px;font-family:'Bebas Neue',sans-serif;font-size:160px;color:rgba(204,0,0,.04);pointer-events:none;}
-.hero-tag{display:inline-block;background:var(--red);color:white;font-size:11px;font-weight:700;letter-spacing:3px;padding:3px 10px;border-radius:2px;margin-bottom:10px;text-transform:uppercase;}
-.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(30px,5vw,60px);letter-spacing:4px;line-height:1;margin-bottom:10px;}
-.hero h1 span{color:var(--red-bright);}
-.hero p{color:var(--gray-mid);font-size:15px;max-width:500px;margin-bottom:20px;line-height:1.5;}
-.hero-actions{display:flex;gap:10px;flex-wrap:wrap;}
+/* ===== HERO ===== */
+.hero{
+  background:linear-gradient(135deg,rgba(27,58,107,0.5) 0%,rgba(10,22,40,0.95) 60%);
+  border:1px solid var(--ucl-light);border-radius:14px;padding:40px 32px;margin-bottom:24px;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'UCL';position:absolute;right:-20px;bottom:-30px;
+  font-family:'Bebas Neue',sans-serif;font-size:220px;
+  color:rgba(68,114,196,0.05);pointer-events:none;line-height:1;letter-spacing:10px;
+}
+.hero::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--ucl-star),var(--ucl-light),transparent);
+}
+.hero-tag{
+  display:inline-block;background:linear-gradient(135deg,var(--ucl-star),#E6A800);
+  color:#0A1628;font-size:11px;font-weight:800;letter-spacing:3px;
+  padding:3px 12px;border-radius:2px;margin-bottom:12px;text-transform:uppercase;
+}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,68px);letter-spacing:5px;line-height:1;margin-bottom:12px;color:var(--ucl-white);}
+.hero h1 span{color:var(--ucl-star);}
+.hero p{color:var(--ucl-silver);font-size:15px;max-width:520px;margin-bottom:24px;line-height:1.6;}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
 
-/* STATS */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px;}
-.stat-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;padding:14px;text-align:center;}
-.stat-num{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--red-bright);line-height:1;}
-.stat-label{font-size:10px;color:var(--gray-mid);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+/* ===== STATS ===== */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:24px;}
+.stat-card{
+  background:var(--ucl-card);border:1px solid var(--ucl-border);border-radius:10px;padding:16px;
+  text-align:center;transition:border-color .2s;
+  background:linear-gradient(135deg,rgba(27,58,107,0.3),rgba(10,22,40,0.8));
+}
+.stat-card:hover{border-color:var(--ucl-light);}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--ucl-star);line-height:1;}
+.stat-label{font-size:10px;color:var(--ucl-silver);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
 
-/* GRIDS */
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+/* ===== GRIDS ===== */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
 @media(max-width:900px){.two-col{grid-template-columns:1fr;}.three-col{grid-template-columns:1fr 1fr;}.header-nav{display:none;}}
 @media(max-width:500px){.three-col{grid-template-columns:1fr;}}
 
-/* DIVISION BADGES - visual */
-.div-badge{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;font-weight:700;font-size:13px;flex-shrink:0;position:relative;}
-.div-1{background:linear-gradient(135deg,#FFD700,#FF8C00);color:#000;box-shadow:0 0 8px rgba(255,215,0,.5);}
-.div-2{background:linear-gradient(135deg,#E8E8E8,#909090);color:#000;box-shadow:0 0 6px rgba(192,192,192,.4);}
-.div-3{background:linear-gradient(135deg,#E8A060,#8B4513);color:#fff;box-shadow:0 0 6px rgba(205,127,50,.4);}
-.div-4{background:linear-gradient(135deg,#CC0000,#800000);color:#fff;box-shadow:0 0 6px rgba(204,0,0,.4);}
-.div-5{background:linear-gradient(135deg,#990000,#500000);color:#eee;}
-.div-6{background:linear-gradient(135deg,#660000,#300000);color:#ccc;}
-.div-7{background:linear-gradient(135deg,#440000,#200000);color:#aaa;}
-.div-8{background:linear-gradient(135deg,#2a0000,#180000);color:#888;border:1px solid #440000;}
-.div-9{background:linear-gradient(135deg,#1a1010,#0a0808);color:#666;border:1px solid #333;}
+/* ===== DIVISION BADGES ===== */
+.div-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:50%;font-weight:800;font-size:13px;
+  flex-shrink:0;font-family:'Montserrat',sans-serif;
+}
+.div-1{background:linear-gradient(135deg,#FFD700,#FF8C00);color:#000;box-shadow:0 0 10px rgba(255,215,0,0.5);}
+.div-2{background:linear-gradient(135deg,#E8E8E8,#909090);color:#000;box-shadow:0 0 8px rgba(192,192,192,0.4);}
+.div-3{background:linear-gradient(135deg,#E8A060,#8B4513);color:#fff;box-shadow:0 0 8px rgba(205,127,50,0.4);}
+.div-4{background:linear-gradient(135deg,#3A8FD4,#1B5A9E);color:#fff;box-shadow:0 0 6px rgba(58,143,212,0.4);}
+.div-5{background:linear-gradient(135deg,#2E75B6,#1A4A7A);color:#eee;}
+.div-6{background:linear-gradient(135deg,#1B5499,#0E3060);color:#ccc;}
+.div-7{background:linear-gradient(135deg,#123C7A,#082050);color:#bbb;}
+.div-8{background:linear-gradient(135deg,#0A2850,#061530);color:#999;border:1px solid #1B3A6B;}
+.div-9{background:linear-gradient(135deg,#071428,#030A14);color:#667;border:1px solid #1B3A6B;}
 
-/* LARGE DIV BADGE for profile */
-.div-badge-lg{width:70px;height:70px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:22px;flex-shrink:0;position:relative;}
-.div-badge-lg .div-label{font-family:'Bebas Neue',sans-serif;font-size:9px;letter-spacing:2px;margin-top:1px;}
+/* ===== DIVISION GUIDE CARDS (bigger, green) ===== */
+.div-guide-card{
+  background:linear-gradient(135deg,rgba(0,100,50,0.22),rgba(10,22,40,0.9));
+  border:1px solid rgba(0,200,80,0.35);border-radius:12px;padding:18px;
+  transition:all .2s;
+}
+.div-guide-card:hover{border-color:rgba(0,230,118,0.6);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,200,80,0.15);}
+.div-guide-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:#00E676;margin:8px 0 4px;}
+.div-guide-desc{font-size:12px;color:var(--ucl-silver);line-height:1.5;}
+.div-guide-pts{font-size:11px;color:#FFEA00;font-weight:700;margin-top:5px;letter-spacing:1px;}
+.div-guide-badge{font-size:10px;color:#00E676;margin-top:4px;font-weight:700;letter-spacing:1.5px;}
 
-/* NEWS TICKER */
-.news-ticker{background:rgba(204,0,0,.1);border:1px solid rgba(204,0,0,.3);border-radius:6px;margin-bottom:16px;overflow:hidden;display:flex;align-items:center;}
-.news-label{background:var(--red);color:white;padding:8px 14px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;flex-shrink:0;white-space:nowrap;}
-.news-scroll-wrap{overflow:hidden;flex:1;padding:8px 12px;}
-.news-scroll-text{font-size:13px;font-weight:600;color:var(--gold);white-space:nowrap;display:inline-block;animation:scrollNews 22s linear infinite;}
-@keyframes scrollNews{0%{transform:translateX(100vw);}100%{transform:translateX(-100%);}}
-
-/* TABLE - FIXED for readability */
-.lb-table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--card-border);}
+/* ===== TABLE - FIXED (UCL colors, readable) ===== */
+.lb-table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--ucl-border);}
 table{width:100%;border-collapse:collapse;}
-thead tr{background:#2a0808;border-bottom:2px solid var(--red);}
-thead th{padding:11px 12px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#D0B0B0;font-weight:700;white-space:nowrap;background:#2a0808;}
-tbody tr{border-bottom:1px solid rgba(204,0,0,.1);transition:background .15s;}
-tbody tr:hover{background:rgba(204,0,0,.08);}
+thead tr{background:#0D1E3A !important;}
+thead th{
+  padding:12px 14px;text-align:left;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:#82B1FF !important;font-weight:700;
+  white-space:nowrap;background:#0D1E3A !important;
+}
+tbody tr{border-bottom:1px solid rgba(68,114,196,0.1);transition:background .15s;}
+tbody tr:hover{background:rgba(68,114,196,0.1) !important;}
 tbody tr:last-child{border-bottom:none;}
-tbody td{padding:10px 12px;font-size:14px;font-weight:500;vertical-align:middle;color:#F0E0E0;background:transparent;}
-tbody tr.top-1{background:linear-gradient(90deg,rgba(255,215,0,.09),transparent) !important;}
-tbody tr.top-2{background:linear-gradient(90deg,rgba(192,192,192,.07),transparent) !important;}
-tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent) !important;}
-.rank-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gray-mid);}
-.rank-1{color:var(--gold);}.rank-2{color:var(--silver);}.rank-3{color:var(--bronze);}
+tbody td{padding:11px 14px;font-size:14px;font-weight:500;vertical-align:middle;color:#D0E4FF !important;}
+tbody tr.top-1{background:linear-gradient(90deg,rgba(255,215,0,0.1),transparent) !important;}
+tbody tr.top-2{background:linear-gradient(90deg,rgba(192,192,192,0.07),transparent) !important;}
+tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparent) !important;}
+.rank-num{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#4472C4;}
+.rank-1{color:var(--gold)!important;}.rank-2{color:var(--silver)!important;}.rank-3{color:var(--bronze)!important;}
 
 /* WDL PILLS */
 .wdl-row{display:flex;align-items:center;gap:5px;}
-.wdl-pill{display:inline-flex;align-items:center;gap:2px;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700;white-space:nowrap;}
-.wdl-w{background:rgba(0,204,68,.2);color:#44FF88;border:1px solid rgba(0,204,68,.35);}
-.wdl-d{background:rgba(255,170,0,.2);color:#FFCC44;border:1px solid rgba(255,170,0,.35);}
-.wdl-l{background:rgba(204,0,0,.2);color:#FF6666;border:1px solid rgba(204,0,0,.35);}
-.wdl-num{font-family:'Bebas Neue',sans-serif;font-size:16px;line-height:1;}
+.wdl-pill{display:inline-flex;align-items:center;gap:3px;padding:4px 9px;border-radius:5px;font-size:12px;font-weight:700;white-space:nowrap;}
+.wdl-w{background:rgba(0,230,118,.18);color:#00E676;border:1px solid rgba(0,230,118,.35);}
+.wdl-d{background:rgba(255,234,0,.15);color:#FFEA00;border:1px solid rgba(255,234,0,.3);}
+.wdl-l{background:rgba(255,61,61,.15);color:#FF5555;border:1px solid rgba(255,61,61,.3);}
+.wdl-num{font-family:'Bebas Neue',sans-serif;font-size:17px;line-height:1;}
 
 /* WINRATE */
 .winrate-wrap{display:flex;align-items:center;gap:5px;}
-.winrate-bar{position:relative;background:rgba(255,255,255,.08);border-radius:10px;height:5px;width:50px;overflow:hidden;flex-shrink:0;}
-.winrate-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--red),var(--red-bright));border-radius:10px;}
-.winrate-pct{font-size:12px;font-weight:700;color:#C0A0A0;white-space:nowrap;}
+.winrate-bar{background:rgba(255,255,255,.08);border-radius:8px;height:5px;width:52px;overflow:hidden;flex-shrink:0;position:relative;}
+.winrate-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--ucl-mid),var(--ucl-bright));border-radius:8px;}
+.winrate-pct{font-size:12px;font-weight:700;color:#82B1FF;white-space:nowrap;}
 
 /* FORM DOTS */
 .form-dots{display:flex;gap:3px;align-items:center;}
-.form-dot{width:8px;height:8px;border-radius:50%;}
-.form-w{background:var(--green);}.form-d{background:var(--yellow);}.form-l{background:var(--red);}
+.form-dot{width:9px;height:9px;border-radius:50%;}
+.form-w{background:#00E676;}.form-d{background:#FFEA00;}.form-l{background:#FF3D3D;}
 
 /* PLAYER LINK */
-.player-link{cursor:pointer;color:#F0E0E0;font-weight:600;transition:color .2s;display:inline-flex;align-items:center;gap:6px;}
-.player-link:hover{color:var(--red-bright);}
+.player-link{cursor:pointer;color:#D0E4FF;font-weight:600;transition:color .2s;display:inline-flex;align-items:center;gap:7px;}
+.player-link:hover{color:var(--ucl-star);}
 
-/* STATUS */
-.status-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
-.status-confirmed{background:rgba(0,204,68,.2);color:#44FF88;border:1px solid rgba(0,204,68,.3);}
-.status-pending{background:rgba(255,170,0,.2);color:#FFCC44;border:1px solid rgba(255,170,0,.3);}
-.status-disputed{background:rgba(204,0,0,.2);color:#FF6666;border:1px solid rgba(204,0,0,.3);}
+/* STATUS BADGES */
+.status-badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.status-confirmed{background:rgba(0,230,118,.18);color:#00E676;border:1px solid rgba(0,230,118,.3);}
+.status-pending{background:rgba(255,234,0,.15);color:#FFEA00;border:1px solid rgba(255,234,0,.3);}
+.status-disputed{background:rgba(255,61,61,.18);color:#FF5555;border:1px solid rgba(255,61,61,.3);}
 
 /* LB TABS */
-.lb-tabs{display:flex;gap:4px;margin-bottom:16px;background:rgba(204,0,0,.05);border:1px solid var(--card-border);border-radius:8px;padding:4px;flex-wrap:wrap;}
-.lb-tab{flex:1;min-width:70px;background:none;border:none;color:var(--gray-mid);padding:8px 10px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13px;cursor:pointer;border-radius:5px;transition:all .2s;text-transform:uppercase;}
-.lb-tab.active{background:var(--red);color:white;}
+.lb-tabs{display:flex;gap:5px;margin-bottom:18px;background:rgba(27,58,107,.2);border:1px solid var(--ucl-border);border-radius:10px;padding:5px;flex-wrap:wrap;}
+.lb-tab{flex:1;min-width:70px;background:none;border:none;color:var(--ucl-silver);padding:8px 12px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:12px;cursor:pointer;border-radius:7px;transition:all .2s;text-transform:uppercase;letter-spacing:1px;}
+.lb-tab.active{background:linear-gradient(135deg,var(--ucl-mid),var(--ucl-light));color:white;box-shadow:0 2px 8px rgba(68,114,196,0.4);}
 
 /* SEARCH */
-.search-bar{display:flex;gap:8px;margin-bottom:14px;}
-.search-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(204,0,0,.3);border-radius:5px;color:#F0E0E0;padding:9px 13px;font-family:'Rajdhani',sans-serif;font-size:14px;}
-.search-input:focus{outline:none;border-color:var(--red);}
-.search-input::placeholder{color:#806060;}
-.form-select-sm{background:rgba(255,255,255,.05);border:1px solid rgba(204,0,0,.3);border-radius:5px;color:#F0E0E0;padding:9px 10px;font-family:'Rajdhani',sans-serif;font-size:13px;cursor:pointer;}
-.form-select-sm:focus{outline:none;border-color:var(--red);}
-.form-select-sm option{background:#1a0808;color:#F0E0E0;}
-
-/* CARD */
-.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;padding:18px;}
-.card-red{background:linear-gradient(135deg,rgba(204,0,0,.18),rgba(8,0,0,.95));border:1px solid var(--red);}
+.search-bar{display:flex;gap:8px;margin-bottom:16px;}
+.search-input{flex:1;background:rgba(27,58,107,.25);border:1px solid var(--ucl-border);border-radius:6px;color:#D0E4FF;padding:10px 14px;font-family:'Montserrat',sans-serif;font-size:14px;}
+.search-input:focus{outline:none;border-color:var(--ucl-light);}
+.search-input::placeholder{color:#4472C4;}
+.form-select-sm{background:rgba(27,58,107,.25);border:1px solid var(--ucl-border);border-radius:6px;color:#D0E4FF;padding:10px 10px;font-family:'Montserrat',sans-serif;font-size:12px;cursor:pointer;}
+.form-select-sm:focus{outline:none;border-color:var(--ucl-light);}
+.form-select-sm option{background:#0D1E3A;color:#D0E4FF;}
 
 /* FORM INPUTS */
 .match-form{display:grid;gap:14px;}
-.form-group{display:flex;flex-direction:column;gap:5px;}
-.form-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray-mid);}
-.form-input,.form-select{background:rgba(255,255,255,.05);border:1px solid rgba(204,0,0,.3);border-radius:5px;color:#F0E0E0;padding:9px 13px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:500;transition:border-color .2s;width:100%;}
-.form-input:focus,.form-select:focus{outline:none;border-color:var(--red);background:rgba(204,0,0,.07);}
-.form-select option{background:#160808;color:#F0E0E0;}
-.score-row{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;}
-.score-vs{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--red);text-align:center;}
-.score-input{text-align:center;font-size:26px;font-family:'Bebas Neue',sans-serif;padding:10px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#82B1FF;}
+.form-input,.form-select{
+  background:rgba(27,58,107,.2);border:1px solid var(--ucl-border);border-radius:6px;
+  color:#D0E4FF;padding:10px 14px;font-family:'Montserrat',sans-serif;font-size:14px;
+  font-weight:500;transition:border-color .2s;width:100%;
+}
+.form-input:focus,.form-select:focus{outline:none;border-color:var(--ucl-light);}
+.form-select option{background:#0D1E3A;color:#D0E4FF;}
+.score-row{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;}
+.score-vs{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--ucl-star);text-align:center;}
+.score-input{text-align:center;font-size:28px;font-family:'Bebas Neue',sans-serif;padding:10px;}
 
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.87);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);}
 .modal-overlay.open{display:flex;}
-.modal{background:#120000;border:1px solid var(--red);border-radius:10px;padding:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;position:relative;}
-.modal-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;color:var(--white);margin-bottom:16px;}
-.modal-close{position:absolute;top:12px;right:12px;background:rgba(204,0,0,.2);border:1px solid var(--red);color:var(--red-bright);width:26px;height:26px;border-radius:50%;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
-.modal-close:hover{background:var(--red);color:white;}
+.modal{
+  background:#0A1628;border:1px solid var(--ucl-light);border-radius:12px;
+  padding:26px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.7);
+}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:var(--ucl-white);margin-bottom:18px;}
+.modal-close{
+  position:absolute;top:14px;right:14px;
+  background:rgba(68,114,196,.2);border:1px solid var(--ucl-light);
+  color:var(--ucl-bright);width:28px;height:28px;border-radius:50%;
+  font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.modal-close:hover{background:var(--ucl-mid);color:white;}
 
 /* TOAST */
-.toast{position:fixed;bottom:80px;right:16px;z-index:9999;background:#160808;border-left:4px solid var(--red);border-radius:6px;padding:12px 16px;min-width:220px;max-width:340px;box-shadow:0 8px 24px rgba(0,0,0,.5);transform:translateX(120%);transition:transform .3s;font-weight:600;font-size:14px;color:#F0E0E0;}
+.toast{
+  position:fixed;bottom:80px;right:16px;z-index:9999;
+  background:#0D1E3A;border-left:4px solid var(--ucl-light);border-radius:8px;
+  padding:13px 18px;min-width:240px;max-width:340px;
+  box-shadow:0 8px 30px rgba(0,0,0,.6);transform:translateX(120%);
+  transition:transform .3s;font-weight:600;font-size:14px;color:#D0E4FF;
+}
 .toast.show{transform:translateX(0);}
 .toast.success{border-color:var(--green);}
-.toast.error{border-color:var(--red-bright);}
-.toast.info{border-color:var(--yellow);}
+.toast.error{border-color:#FF3D3D;}
+.toast.info{border-color:var(--ucl-star);}
+
+/* NEWS TICKER */
+.news-ticker{
+  background:linear-gradient(135deg,rgba(27,58,107,0.4),rgba(10,22,40,0.9));
+  border:1px solid var(--ucl-border);border-radius:8px;margin-bottom:18px;overflow:hidden;display:flex;align-items:center;
+}
+.news-label{
+  background:linear-gradient(135deg,var(--ucl-star),#E6A800);color:#0A1628;
+  padding:9px 16px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;flex-shrink:0;white-space:nowrap;
+}
+.news-scroll-wrap{overflow:hidden;flex:1;padding:9px 14px;}
+.news-scroll-text{font-size:13px;font-weight:600;color:var(--ucl-star);white-space:nowrap;display:inline-block;animation:scrollNews 22s linear infinite;}
+@keyframes scrollNews{0%{transform:translateX(100vw);}100%{transform:translateX(-100%);}}
 
 /* MATCH CARD */
-.match-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:6px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;transition:border-color .2s;}
-.match-card:hover{border-color:var(--red);}
-.match-card.high-score{border-color:rgba(255,215,0,.45);background:linear-gradient(135deg,rgba(255,215,0,.04),var(--card-bg));}
-.match-result-badge{width:34px;height:34px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;font-weight:700;flex-shrink:0;}
-.result-W{background:rgba(0,204,68,.2);color:#44FF88;border:1px solid rgba(0,204,68,.4);}
-.result-D{background:rgba(255,170,0,.2);color:#FFCC44;border:1px solid rgba(255,170,0,.4);}
-.result-L{background:rgba(204,0,0,.2);color:#FF6666;border:1px solid rgba(204,0,0,.4);}
+.match-card{
+  background:linear-gradient(135deg,rgba(27,58,107,.2),rgba(10,22,40,.8));
+  border:1px solid var(--ucl-border);border-radius:8px;padding:13px 16px;margin-bottom:9px;
+  display:flex;align-items:center;gap:12px;transition:all .2s;
+}
+.match-card:hover{border-color:var(--ucl-light);transform:translateX(2px);}
+.match-card.high-score{border-color:rgba(245,197,24,.45);}
+.match-result-badge{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:17px;font-weight:700;flex-shrink:0;}
+.result-W{background:rgba(0,230,118,.2);color:#00E676;border:1px solid rgba(0,230,118,.4);}
+.result-D{background:rgba(255,234,0,.18);color:#FFEA00;border:1px solid rgba(255,234,0,.4);}
+.result-L{background:rgba(255,61,61,.18);color:#FF5555;border:1px solid rgba(255,61,61,.4);}
 .match-info{flex:1;min-width:0;}
-.match-vs{font-size:14px;font-weight:600;color:#F0E0E0;}
-.match-meta{font-size:11px;color:var(--gray-mid);margin-top:2px;}
-.match-score{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--white);text-align:right;flex-shrink:0;}
-.high-score-badge{background:rgba(255,215,0,.2);color:var(--gold);border:1px solid rgba(255,215,0,.4);border-radius:3px;font-size:10px;font-weight:700;padding:1px 6px;}
+.match-vs{font-size:14px;font-weight:600;color:#D0E4FF;}
+.match-meta{font-size:11px;color:#4472C4;margin-top:2px;}
+.match-score{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--ucl-white);text-align:right;flex-shrink:0;}
+.high-score-badge{background:rgba(245,197,24,.2);color:var(--ucl-star);border:1px solid rgba(245,197,24,.4);border-radius:4px;font-size:10px;font-weight:700;padding:1px 7px;letter-spacing:1px;}
+.x2-badge{background:rgba(0,230,118,.2);color:#00E676;border:1px solid rgba(0,230,118,.4);border-radius:4px;font-size:10px;font-weight:700;padding:1px 7px;letter-spacing:1px;}
 
 /* PENDING */
-.pending-item{background:var(--card-bg);border:1px solid var(--card-border);border-radius:6px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.pending-item{
+  background:linear-gradient(135deg,rgba(27,58,107,.2),rgba(10,22,40,.8));
+  border:1px solid var(--ucl-border);border-radius:8px;padding:13px 16px;margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
 .pending-info{flex:1;min-width:120px;}
-.pending-name{font-size:15px;font-weight:700;color:#F0E0E0;}
-.pending-meta{font-size:11px;color:var(--gray-mid);}
-.confirm-card{background:linear-gradient(135deg,rgba(204,0,0,.1),var(--card-bg));border:1px solid var(--red);border-radius:8px;padding:14px;margin-bottom:10px;}
+.pending-name{font-size:15px;font-weight:700;color:#D0E4FF;}
+.pending-meta{font-size:11px;color:#4472C4;margin-top:2px;}
+
+/* CONFIRM CARD */
+.confirm-card{
+  background:linear-gradient(135deg,rgba(68,114,196,.15),rgba(10,22,40,.9));
+  border:1px solid var(--ucl-light);border-radius:10px;padding:16px;margin-bottom:12px;
+}
 .confirm-vs{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
 .confirm-player{text-align:center;flex:1;}
-.confirm-player-name{font-size:15px;font-weight:700;color:#F0E0E0;}
-.confirm-score-display{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--red-bright);padding:0 12px;flex-shrink:0;}
+.confirm-player-name{font-size:15px;font-weight:700;color:#D0E4FF;}
+.confirm-score-display{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--ucl-star);padding:0 12px;flex-shrink:0;}
 
 /* PROFILE */
-.profile-header{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;margin-bottom:20px;}
-.profile-avatar{width:76px;height:76px;background:var(--red-dark);border:3px solid var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:30px;color:white;flex-shrink:0;box-shadow:0 0 20px rgba(204,0,0,.4);}
+.profile-header{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;margin-bottom:22px;}
+.profile-avatar{
+  width:80px;height:80px;
+  background:linear-gradient(135deg,var(--ucl-blue),var(--ucl-light));
+  border:3px solid var(--ucl-light);border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:32px;color:white;flex-shrink:0;
+  box-shadow:0 0 24px rgba(68,114,196,.5);
+}
 .profile-info{flex:1;}
-.profile-name{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;line-height:1;color:#F0E0E0;}
-.profile-cat{display:inline-block;background:rgba(204,0,0,.2);border:1px solid var(--red);color:var(--red-bright);font-size:11px;font-weight:700;letter-spacing:2px;padding:2px 8px;border-radius:2px;margin-top:4px;text-transform:uppercase;}
-.profile-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:9px;margin-bottom:18px;}
-.p-stat{background:var(--card-bg);border:1px solid var(--card-border);border-radius:6px;padding:11px;text-align:center;}
-.p-stat-val{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;}
-.p-stat-lbl{font-size:10px;color:var(--gray-mid);letter-spacing:1.5px;text-transform:uppercase;}
+.profile-name{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;line-height:1;color:var(--ucl-white);}
+.profile-cat{
+  display:inline-block;background:rgba(68,114,196,.25);border:1px solid var(--ucl-light);
+  color:var(--ucl-bright);font-size:11px;font-weight:700;letter-spacing:2px;
+  padding:2px 10px;border-radius:3px;margin-top:5px;text-transform:uppercase;
+}
+.profile-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:10px;margin-bottom:18px;}
+.p-stat{
+  background:linear-gradient(135deg,rgba(27,58,107,.3),rgba(10,22,40,.8));
+  border:1px solid var(--ucl-border);border-radius:8px;padding:12px;text-align:center;
+}
+.p-stat-val{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;}
+.p-stat-lbl{font-size:9px;color:#4472C4;letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
 
-/* PROMO TRACKER */
-.promo-tracker{background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;padding:14px;margin-top:14px;}
-.promo-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray-mid);margin-bottom:8px;}
-.promo-bar-wrap{background:rgba(255,255,255,.07);border-radius:6px;height:9px;margin-bottom:5px;overflow:hidden;}
-.promo-bar-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--red-bright));border-radius:6px;transition:width .5s;}
-.promo-label{font-size:12px;color:var(--gray-mid);display:flex;justify-content:space-between;}
-.promo-cycle-info{font-size:11px;color:#FFAA00;margin-top:6px;font-weight:600;}
+/* PROMO */
+.promo-tracker{
+  background:linear-gradient(135deg,rgba(0,100,50,.2),rgba(10,22,40,.9));
+  border:1px solid rgba(0,200,80,.3);border-radius:10px;padding:16px;margin-top:16px;
+}
+.promo-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#00E676;margin-bottom:8px;}
+.promo-bar-wrap{background:rgba(255,255,255,.07);border-radius:8px;height:10px;margin-bottom:6px;overflow:hidden;}
+.promo-bar-fill{height:100%;background:linear-gradient(90deg,#00A550,#00E676);border-radius:8px;transition:width .5s;}
+.promo-label{font-size:12px;color:#82B1FF;display:flex;justify-content:space-between;}
+.promo-cycle-info{font-size:11px;color:#FFEA00;margin-top:6px;font-weight:700;}
 
-/* BADGES - player profile */
+/* BADGES */
 .badges-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
-.player-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border:1px solid;}
+.player-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:5px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border:1px solid;}
 .badge-gold{background:rgba(255,215,0,.15);color:var(--gold);border-color:rgba(255,215,0,.4);}
-.badge-silver{background:rgba(192,192,192,.15);color:var(--silver);border-color:rgba(192,192,192,.4);}
-.badge-red{background:rgba(204,0,0,.2);color:#FF6666;border-color:rgba(204,0,0,.4);}
-.badge-green{background:rgba(0,204,68,.15);color:#44FF88;border-color:rgba(0,204,68,.4);}
-.badge-blue{background:rgba(68,153,255,.15);color:#88CCFF;border-color:rgba(68,153,255,.4);}
-.badge-purple{background:rgba(170,68,255,.15);color:#CC88FF;border-color:rgba(170,68,255,.4);}
+.badge-silver{background:rgba(192,192,192,.12);color:var(--silver);border-color:rgba(192,192,192,.35);}
+.badge-green{background:rgba(0,230,118,.13);color:#00E676;border-color:rgba(0,230,118,.35);}
+.badge-blue{background:rgba(68,114,196,.15);color:#82B1FF;border-color:rgba(68,114,196,.4);}
+.badge-purple{background:rgba(206,147,216,.13);color:#CE93D8;border-color:rgba(206,147,216,.35);}
+.badge-red{background:rgba(255,61,61,.13);color:#FF5555;border-color:rgba(255,61,61,.35);}
+.badge-star{background:rgba(245,197,24,.13);color:var(--ucl-star);border-color:rgba(245,197,24,.4);}
+
+/* CATEGORY TAG */
+.cat-main{color:#FF6B6B;font-weight:700;}
+.cat-youth{color:#82B1FF;font-weight:700;}
+.cat-academy{color:#A5D6A7;font-weight:700;}
 
 /* ADMIN */
-.admin-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px;border-bottom:2px solid var(--red);padding-bottom:8px;}
-.admin-tab{background:none;border:1px solid transparent;color:var(--gray-mid);padding:6px 12px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:12px;cursor:pointer;border-radius:4px;transition:all .2s;text-transform:uppercase;}
-.admin-tab.active{background:var(--red);color:white;border-color:var(--red);}
-.admin-tab:hover:not(.active){border-color:var(--red);color:white;}
+.admin-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--ucl-border);padding-bottom:10px;}
+.admin-tab{background:none;border:1px solid transparent;color:var(--ucl-silver);padding:7px 13px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:11px;cursor:pointer;border-radius:5px;transition:all .2s;text-transform:uppercase;letter-spacing:1px;}
+.admin-tab.active{background:linear-gradient(135deg,var(--ucl-mid),var(--ucl-light));color:white;border-color:var(--ucl-light);}
+.admin-tab:hover:not(.active){border-color:var(--ucl-light);color:white;}
 
 /* MOD INFO */
-.mod-info-box{background:rgba(68,153,255,.07);border:1px solid rgba(68,153,255,.3);border-radius:8px;padding:14px;margin-bottom:16px;}
-.mod-info-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--blue);margin-bottom:5px;}
+.mod-info-box{background:rgba(68,114,196,.1);border:1px solid rgba(68,114,196,.3);border-radius:8px;padding:14px;margin-bottom:16px;}
+.mod-info-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:#82B1FF;margin-bottom:5px;}
+
+/* RANKING CARD */
+.rc-card{width:820px;background:#060E1C;border:2px solid #1B3A6B;border-radius:14px;overflow:hidden;font-family:'Montserrat',sans-serif;}
+.rc-header{background:linear-gradient(135deg,#0A1E3C 0%,#1B3A6B 40%,#0A1E3C 100%);padding:22px 28px 18px;position:relative;overflow:hidden;}
+.rc-header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#F5C518,#4472C4,#F5C518,transparent);}
+.rc-header::after{content:'UCL';position:absolute;right:-15px;bottom:-25px;font-family:'Bebas Neue',sans-serif;font-size:100px;color:rgba(68,114,196,0.07);pointer-events:none;}
+.rc-header-top{display:flex;align-items:center;justify-content:space-between;}
+.rc-title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:5px;color:white;}
+.rc-subtitle{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:3px;color:rgba(255,255,255,0.6);margin-top:3px;}
+.rc-period{background:rgba(245,197,24,.15);border:1px solid rgba(245,197,24,.4);border-radius:5px;padding:5px 14px;font-size:12px;font-weight:700;letter-spacing:2px;color:#F5C518;text-transform:uppercase;}
+.rc-body{padding:0;background:#060E1C;}
+.rc-row{display:grid;grid-template-columns:48px 1fr 90px 110px 80px 70px;align-items:center;padding:12px 28px;border-bottom:1px solid rgba(27,58,107,0.5);gap:8px;}
+.rc-row:last-child{border-bottom:none;}
+.rc-header-row{background:#0D1E3A !important;padding:9px 28px;border-bottom:2px solid rgba(68,114,196,0.4);}
+.rc-header-row span{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#4472C4;font-weight:700;}
+.rc-row.rank-1-row{background:linear-gradient(90deg,rgba(255,215,0,.08),transparent);}
+.rc-row.rank-2-row{background:linear-gradient(90deg,rgba(192,192,192,.06),transparent);}
+.rc-row.rank-3-row{background:linear-gradient(90deg,rgba(205,127,50,.06),transparent);}
+.rc-rank{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#1B3A6B;}
+.rc-rank.r1{color:#FFD700;}.rc-rank.r2{color:#C0C0C0;}.rc-rank.r3{color:#CD7F32;}
+.rc-player-info{display:flex;align-items:center;gap:10px;}
+.rc-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#1B3A6B,#4472C4);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;color:white;flex-shrink:0;}
+.rc-name{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;color:#D0E4FF;}
+.rc-div-small{font-size:9px;color:#4472C4;letter-spacing:1px;font-weight:600;}
+.rc-rating{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#F5C518;text-align:right;}
+.rc-wdl-nums{font-family:'Bebas Neue',sans-serif;font-size:14px;display:flex;gap:6px;}
+.rc-w{color:#00E676;}.rc-d{color:#FFEA00;}.rc-l{color:#FF5555;}
+.rc-winpct{font-family:'Bebas Neue',sans-serif;font-size:18px;color:#4472C4;text-align:right;}
+.rc-footer{background:#040A14;padding:10px 28px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(27,58,107,.4);}
+.rc-footer-brand{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:4px;color:#1B3A6B;}
+.rc-footer-date{font-size:10px;color:#1B3A6B;letter-spacing:2px;}
+
+/* RANKING PREVIEW */
+.ranking-card-preview{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:3000;align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:20px;overflow:auto;}
+.ranking-card-preview.open{display:flex;}
+.ranking-card-close{position:absolute;top:16px;right:16px;background:rgba(27,58,107,.4);border:1px solid var(--ucl-light);color:white;width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 
 /* MOBILE NAV */
-.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(8,0,0,.98);border-top:2px solid var(--red);z-index:999;padding:5px 0;}
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(6,14,28,.98);border-top:1px solid var(--ucl-border);z-index:999;padding:6px 0;}
 .mobile-nav-inner{display:flex;justify-content:space-around;}
-.mob-nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;color:var(--gray-mid);font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:600;padding:4px 10px;cursor:pointer;transition:color .2s;text-transform:uppercase;}
-.mob-nav-btn.active,.mob-nav-btn:hover{color:var(--red-bright);}
-.mob-nav-icon{font-size:18px;}
-@media(max-width:768px){.mobile-nav{display:block;}main{padding-bottom:70px;}}
+.mob-nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;color:#4472C4;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;padding:4px 10px;cursor:pointer;transition:color .2s;text-transform:uppercase;}
+.mob-nav-btn.active,.mob-nav-btn:hover{color:var(--ucl-star);}
+.mob-nav-icon{font-size:19px;}
+@media(max-width:768px){.mobile-nav{display:block;}main{padding-bottom:72px;}}
 
-/* LOADING / EMPTY */
-.loading-spinner{display:flex;align-items:center;justify-content:center;padding:40px;gap:12px;color:var(--gray-mid);}
-.spinner{width:24px;height:24px;border:2px solid rgba(204,0,0,.2);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;}
+/* MISC */
+.loading-spinner{display:flex;align-items:center;justify-content:center;padding:48px;gap:12px;color:#4472C4;}
+.spinner{width:26px;height:26px;border:2px solid rgba(68,114,196,0.2);border-top-color:var(--ucl-light);border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.empty-state{text-align:center;padding:40px 20px;color:var(--gray-mid);}
-.empty-icon{font-size:40px;margin-bottom:10px;}
-.empty-text{font-size:16px;font-weight:600;color:#C0A0A0;}
+.empty-state{text-align:center;padding:48px 20px;color:#4472C4;}
+.empty-icon{font-size:44px;margin-bottom:12px;}
+.empty-text{font-size:17px;font-weight:700;color:#82B1FF;}
 .empty-sub{font-size:13px;margin-top:5px;opacity:.6;}
-
-/* TEXT UTILS */
-.text-red{color:#FF6666;}.text-green{color:#44FF88;}.text-yellow{color:#FFCC44;}.text-gold{color:var(--gold);}.text-blue{color:#88CCFF;}.text-purple{color:#CC88FF;}.text-gray{color:var(--gray-mid);}.text-sm{font-size:13px;}.font-bold{font-weight:700;}
+.text-gold{color:var(--gold);}.text-green{color:#00E676;}.text-red{color:#FF5555;}.text-yellow{color:#FFEA00;}.text-blue{color:#82B1FF;}.text-gray{color:#4472C4;}.text-sm{font-size:13px;}.font-bold{font-weight:700;}
 .mt-8{margin-top:8px;}.mt-12{margin-top:12px;}.mt-16{margin-top:16px;}.mb-8{margin-bottom:8px;}.mb-16{margin-bottom:16px;}
-.flex{display:flex;}.gap-6{gap:6px;}.gap-8{gap:8px;}.items-center{align-items:center;}.justify-between{justify-content:space-between;}.flex-wrap{flex-wrap:wrap;}
-
-/* ===== RANKING GRAPHIC CARD ===== */
-#rankingCardCanvas{display:none;}
-.ranking-card-preview{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:3000;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:20px;}
-.ranking-card-preview.open{display:flex;}
-.ranking-card-close{position:absolute;top:16px;right:16px;background:rgba(204,0,0,.3);border:1px solid var(--red);color:white;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-
-/* The actual rendered card */
-.rc-card{width:800px;background:#0a0000;border:2px solid #CC0000;border-radius:12px;overflow:hidden;position:relative;font-family:'Rajdhani',sans-serif;}
-.rc-header{background:linear-gradient(135deg,#CC0000 0%,#800000 50%,#400000 100%);padding:20px 24px 16px;position:relative;overflow:hidden;}
-.rc-header::before{content:'LLFC';position:absolute;right:-15px;top:-15px;font-family:'Bebas Neue',sans-serif;font-size:120px;color:rgba(255,255,255,.07);pointer-events:none;}
-.rc-header-top{display:flex;align-items:center;justify-content:space-between;}
-.rc-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:4px;color:white;}
-.rc-subtitle{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:3px;color:rgba(255,255,255,.7);margin-top:2px;}
-.rc-period{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.2);border-radius:4px;padding:4px 12px;font-size:12px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.8);text-transform:uppercase;}
-.rc-body{padding:0;}
-.rc-row{display:grid;grid-template-columns:44px 1fr 80px 80px 140px 70px;align-items:center;padding:11px 24px;border-bottom:1px solid rgba(204,0,0,.12);gap:8px;}
-.rc-row:last-child{border-bottom:none;}
-.rc-row.header-row{background:#1a0606;padding:9px 24px;border-bottom:2px solid rgba(204,0,0,.3);}
-.rc-row.header-row span{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#906060;font-weight:700;}
-.rc-row.rank-1-row{background:linear-gradient(90deg,rgba(255,215,0,.1),transparent);}
-.rc-row.rank-2-row{background:linear-gradient(90deg,rgba(192,192,192,.07),transparent);}
-.rc-row.rank-3-row{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent);}
-.rc-rank{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#806060;}
-.rc-rank.r1{color:#FFD700;}.rc-rank.r2{color:#C0C0C0;}.rc-rank.r3{color:#CD7F32;}
-.rc-player-info{display:flex;align-items:center;gap:8px;}
-.rc-avatar{width:28px;height:28px;border-radius:50%;background:#CC0000;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;color:white;flex-shrink:0;}
-.rc-name{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:#F0E0E0;}
-.rc-div-small{font-family:'Bebas Neue',sans-serif;font-size:10px;color:#906060;letter-spacing:1px;}
-.rc-rating{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#FF4444;text-align:right;}
-.rc-wdl{display:flex;flex-direction:column;gap:3px;}
-.rc-wdl-num{font-family:'Bebas Neue',sans-serif;font-size:14px;display:flex;gap:6px;}
-.rc-w{color:#44FF88;}.rc-d{color:#FFCC44;}.rc-l{color:#FF6666;}
-.rc-winpct{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#C0A0A0;text-align:right;}
-.rc-footer{background:#0d0000;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(204,0,0,.2);}
-.rc-footer-brand{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:3px;color:#603030;}
-.rc-footer-date{font-size:11px;color:#503030;letter-spacing:1px;}
 </style>
 </head>
 <body>
@@ -330,7 +508,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
       <div class="logo-badge">LLFC</div>
       <div class="logo-text">
         <span class="logo-main">LLFC</span>
-        <span class="logo-sub">Juvenile Division</span>
+        <span class="logo-sub">eFootball Division</span>
       </div>
     </div>
     <nav class="header-nav">
@@ -342,7 +520,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
     <div class="header-auth" id="headerAuth">
       <button class="btn-login" onclick="openModal('loginModal')">Login</button>
       <button class="btn-register" onclick="openModal('registerModal')">Register</button>
-      <button class="btn-login" style="border-color:var(--yellow);color:var(--yellow);font-size:11px" onclick="navTo('admin')">Admin</button>
+      <button class="btn-login" style="border-color:var(--ucl-star);color:var(--ucl-star);font-size:11px" onclick="navTo('admin')">Admin</button>
     </div>
   </div>
 </header>
@@ -357,8 +535,8 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
   </div>
   <div class="hero">
     <div class="hero-tag">Season Active</div>
-    <h1>LLFC <span>Juvenile</span> Division</h1>
-    <p>Play freely. Submit results. Climb the ranks. From Division 9 to Division 1.</p>
+    <h1>LLFC <span>eFootball</span> Division</h1>
+    <p>Play freely. Submit results. Climb the ranks. From Division 9 to Division 1 — prove yourself on the pitch.</p>
     <div class="hero-actions">
       <button class="btn-primary" onclick="navTo('leaderboard')">View Rankings</button>
       <button class="btn-secondary" onclick="navTo('submit')">Submit Result</button>
@@ -381,16 +559,16 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
     </div>
   </div>
   <div class="mt-16">
-    <div class="section-title">Division Guide</div>
+    <div class="section-title">Division Structure</div>
     <div class="three-col" id="divisionGuide"></div>
   </div>
 </div>
 
 <!-- LEADERBOARD -->
 <div class="page" id="page-leaderboard">
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
-    <div class="section-title" style="margin-bottom:0">Leaderboards</div>
-    <button class="btn-primary" style="padding:8px 18px;font-size:12px" onclick="openRankingCardPreview()">Download Ranking Card (JPG)</button>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px">
+    <div class="section-title" style="margin-bottom:0;flex:1">Rankings</div>
+    <button class="btn-primary" style="padding:9px 18px;font-size:11px;flex-shrink:0" onclick="openRankingCardPreview()">Download Ranking Card (JPG)</button>
   </div>
   <div class="lb-tabs">
     <button class="lb-tab active" onclick="switchLbTab('overall',this)">Overall</button>
@@ -411,20 +589,12 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
     <table>
       <thead>
         <tr>
-          <th style="width:42px">Rank</th>
-          <th>Player</th>
-          <th>Div</th>
-          <th>Rating</th>
-          <th>W / D / L</th>
-          <th>MP</th>
-          <th>Win%</th>
-          <th>GD</th>
-          <th>Form</th>
-          <th>Cycle</th>
+          <th>#</th><th>Player</th><th>Div</th><th>Rating</th>
+          <th>W / D / L</th><th>MP</th><th>Win%</th><th>GD</th><th>CS</th><th>Form</th><th>Cycle</th>
         </tr>
       </thead>
       <tbody id="lbTableBody">
-        <tr><td colspan="10" style="text-align:center;padding:30px"><div class="spinner" style="margin:0 auto"></div></td></tr>
+        <tr><td colspan="11" style="text-align:center;padding:30px"><div class="spinner" style="margin:0 auto"></div></td></tr>
       </tbody>
     </table>
   </div>
@@ -434,17 +604,15 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
 <div class="page" id="page-matches">
   <div class="section-title">Match History</div>
   <div class="search-bar">
-    <input class="search-input" placeholder="Search by player..." id="matchSearch" oninput="filterMatches()">
+    <input class="search-input" placeholder="Search player..." id="matchSearch" oninput="filterMatches()">
     <select class="form-select-sm" id="matchStatusFilter" onchange="filterMatches()">
-      <option value="">All</option>
-      <option value="confirmed">Confirmed</option>
-      <option value="pending">Pending</option>
-      <option value="disputed">Disputed</option>
+      <option value="">All</option><option value="confirmed">Confirmed</option>
+      <option value="pending">Pending</option><option value="disputed">Disputed</option>
     </select>
   </div>
   <div id="matchesList"><div class="loading-spinner"><div class="spinner"></div></div></div>
   <div id="pendingConfirmSection" style="display:none">
-    <div class="section-title mt-16">Awaiting Confirmation</div>
+    <div class="section-title mt-16">Awaiting Your Confirmation</div>
     <div id="pendingConfirmList"></div>
   </div>
 </div>
@@ -461,7 +629,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
     </div>
   </div>
   <div id="submitForm" style="display:none">
-    <div class="card card-red" style="max-width:540px;margin:0 auto">
+    <div class="card card-blue" style="max-width:540px;margin:0 auto">
       <div class="match-form">
         <div class="form-group"><label class="form-label">Your Name</label><input class="form-input" id="submitMyName" readonly></div>
         <div class="form-group"><label class="form-label">Opponent</label>
@@ -477,7 +645,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
         </div>
         <div class="form-group"><label class="form-label">Match Date</label><input class="form-input" type="date" id="matchDate"></div>
         <button class="btn-primary w-full" onclick="submitMatchResult()">Submit Result</button>
-        <p class="text-gray text-sm" style="text-align:center;margin-top:6px">Opponent must confirm. Multiple pending allowed.</p>
+        <p class="text-gray text-sm" style="text-align:center;margin-top:8px">Opponent must confirm. Multiple pending matches allowed.</p>
       </div>
     </div>
   </div>
@@ -485,7 +653,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
 
 <!-- PROFILE -->
 <div class="page" id="page-profile">
-  <button class="btn-secondary mb-16" onclick="navBack()">Back</button>
+  <button class="btn-secondary mb-16" onclick="navBack()">&#8592; Back</button>
   <div id="profileContent"><div class="loading-spinner"><div class="spinner"></div></div></div>
 </div>
 
@@ -535,7 +703,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
       <div class="section-title">Moderator Management</div>
       <div class="mod-info-box">
         <div class="mod-info-title">About Moderators</div>
-        <p class="text-gray text-sm">Moderators can approve or dispute any pending match. Cannot edit players or admin settings.</p>
+        <p class="text-gray text-sm">Moderators can approve or dispute any pending match result. They cannot edit players or change admin settings.</p>
       </div>
       <div class="search-bar"><input class="search-input" placeholder="Search player..." id="modPlayerSearch" oninput="filterModPlayers()"></div>
       <div id="modPlayersList"></div>
@@ -543,15 +711,14 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
     <div id="adminTab-season" style="display:none">
       <div class="section-title">Season Management</div>
       <div class="card" style="max-width:480px;margin-bottom:20px">
-        <p class="text-gray mb-16">Configure season duration and division promotion cycle.</p>
         <div class="match-form">
           <div class="form-group"><label class="form-label">Season Duration (days)</label><input class="form-input" type="number" id="seasonDuration" value="30" min="7"></div>
           <div class="form-group"><label class="form-label">Season Start Date</label><input class="form-input" type="date" id="seasonStart"></div>
-          <button class="btn-primary" onclick="saveSeasonSettings()">Save Season Settings</button>
+          <button class="btn-primary" onclick="saveSeasonSettings()">Save Settings</button>
         </div>
       </div>
       <div class="card" style="max-width:480px">
-        <p class="text-gray mb-16" style="color:#FF8888;">Full reset: clears all match results, resets all player stats to zero. Player accounts remain.</p>
+        <p class="text-sm mb-16" style="color:#FF5555">Full reset: clears all matches and resets all player stats.</p>
         <button class="btn-reject btn-sm" style="padding:10px 24px;font-size:13px" onclick="confirmSeasonReset()">Reset Season</button>
       </div>
     </div>
@@ -559,8 +726,8 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
       <div class="section-title">Settings</div>
       <div class="card" style="max-width:400px">
         <div class="match-form">
-          <div class="form-group"><label class="form-label">New Admin Password</label><input class="form-input" type="password" id="newAdminPw" placeholder="New password"></div>
-          <div class="form-group"><label class="form-label">Confirm Password</label><input class="form-input" type="password" id="confirmAdminPw" placeholder="Confirm"></div>
+          <div class="form-group"><label class="form-label">New Admin Password</label><input class="form-input" type="password" id="newAdminPw"></div>
+          <div class="form-group"><label class="form-label">Confirm Password</label><input class="form-input" type="password" id="confirmAdminPw"></div>
           <button class="btn-primary" onclick="changeAdminPassword()">Update Password</button>
         </div>
       </div>
@@ -593,8 +760,8 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
 <!-- RANKING CARD PREVIEW -->
 <div class="ranking-card-preview" id="rankingCardPreview">
   <button class="ranking-card-close" onclick="closeRankingPreview()">X</button>
-  <div id="rcCardContainer"></div>
-  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+  <div id="rcCardContainer" style="overflow:auto;max-width:100%"></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
     <button class="btn-primary" onclick="downloadRankingCard()">Download JPG</button>
     <button class="btn-secondary" onclick="closeRankingPreview()">Close</button>
   </div>
@@ -607,9 +774,9 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
     <div class="modal-title">Player Login</div>
     <div class="match-form">
       <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="loginName" placeholder="Your registered name"></div>
-      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="loginPw" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="loginPw" onkeydown="if(event.key==='Enter')doLogin()"></div>
       <button class="btn-primary w-full" onclick="doLogin()">Login</button>
-      <p class="text-gray text-sm" style="text-align:center;margin-top:8px">No account? <span class="text-red" style="cursor:pointer" onclick="closeModal('loginModal');openModal('registerModal')">Register</span></p>
+      <p class="text-gray text-sm" style="text-align:center;margin-top:8px">No account? <span style="color:var(--ucl-star);cursor:pointer" onclick="closeModal('loginModal');openModal('registerModal')">Register</span></p>
     </div>
   </div>
 </div>
@@ -621,12 +788,29 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
     <div class="match-form">
       <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="regName" placeholder="Your name"></div>
       <div class="form-group"><label class="form-label">Category</label>
-        <select class="form-select" id="regCategory"><option value="Youth">Youth</option><option value="Academy">Academy</option></select>
+        <select class="form-select" id="regCategory">
+          <option value="Main">Main Team</option>
+          <option value="Youth">Youth</option>
+          <option value="Academy">Academy</option>
+        </select>
       </div>
-      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="regPw" placeholder="Password"></div>
-      <div class="form-group"><label class="form-label">Confirm Password</label><input class="form-input" type="password" id="regPwConfirm" placeholder="Confirm"></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="regPw"></div>
+      <div class="form-group"><label class="form-label">Confirm Password</label><input class="form-input" type="password" id="regPwConfirm"></div>
       <button class="btn-primary w-full" onclick="doRegister()">Register</button>
-      <p class="text-gray text-sm" style="text-align:center;margin-top:8px">Requires admin approval before you can play.</p>
+      <p class="text-gray text-sm" style="text-align:center;margin-top:8px">Requires admin approval before playing.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="changePwModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('changePwModal')">X</button>
+    <div class="modal-title">Change Password</div>
+    <div class="match-form">
+      <div class="form-group"><label class="form-label">Current Password</label><input class="form-input" type="password" id="cpOld"></div>
+      <div class="form-group"><label class="form-label">New Password</label><input class="form-input" type="password" id="cpNew"></div>
+      <div class="form-group"><label class="form-label">Confirm New</label><input class="form-input" type="password" id="cpConfirm"></div>
+      <button class="btn-primary w-full" onclick="changeMyPassword()">Update Password</button>
     </div>
   </div>
 </div>
@@ -638,16 +822,25 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
     <div class="match-form">
       <input type="hidden" id="editPlayerId">
       <div class="form-group"><label class="form-label">Division (1-9)</label><input class="form-input" type="number" min="1" max="9" id="editDivision"></div>
-      <div class="form-group"><label class="form-label">Points</label><input class="form-input" type="number" id="editPoints"></div>
+      <div class="form-group"><label class="form-label">Category</label>
+        <select class="form-select" id="editCategory">
+          <option value="Main">Main Team</option>
+          <option value="Youth">Youth</option>
+          <option value="Academy">Academy</option>
+        </select>
+      </div>
       <div class="form-group"><label class="form-label">Wins</label><input class="form-input" type="number" id="editWins"></div>
       <div class="form-group"><label class="form-label">Draws</label><input class="form-input" type="number" id="editDraws"></div>
       <div class="form-group"><label class="form-label">Losses</label><input class="form-input" type="number" id="editLosses"></div>
-      <div class="form-group"><label class="form-label">Goals For (overall)</label><input class="form-input" type="number" id="editGF"></div>
-      <div class="form-group"><label class="form-label">Goals Against (overall)</label><input class="form-input" type="number" id="editGA"></div>
-      <div class="form-group"><label class="form-label">Cycle Matches Played</label><input class="form-input" type="number" id="editCycleMP"></div>
+      <div class="form-group"><label class="form-label">Goals For</label><input class="form-input" type="number" id="editGF"></div>
+      <div class="form-group"><label class="form-label">Goals Against</label><input class="form-input" type="number" id="editGA"></div>
+      <div class="form-group"><label class="form-label">Clean Sheets</label><input class="form-input" type="number" id="editCS"></div>
+      <div class="form-group"><label class="form-label">Cycle MP</label><input class="form-input" type="number" id="editCycleMP"></div>
       <div class="form-group"><label class="form-label">Cycle Points</label><input class="form-input" type="number" id="editCyclePts"></div>
       <div class="form-group"><label class="form-label">Status</label>
-        <select class="form-select" id="editStatus"><option value="active">Active</option><option value="banned">Banned</option><option value="pending">Pending</option></select>
+        <select class="form-select" id="editStatus">
+          <option value="active">Active</option><option value="banned">Banned</option><option value="pending">Pending</option>
+        </select>
       </div>
       <button class="btn-primary w-full" onclick="savePlayerEdit()">Save Changes</button>
     </div>
@@ -679,55 +872,53 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,.07),transparent
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
-  getFirestore, collection, doc, getDoc, getDocs, addDoc, setDoc,
-  updateDoc, deleteDoc, query, where, orderBy, limit, serverTimestamp
+  getFirestore,collection,doc,getDoc,getDocs,addDoc,setDoc,
+  updateDoc,deleteDoc,query,where,orderBy,limit,serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const app = initializeApp({
   apiKey:"AIzaSyCsZrHcpJgGoTHeW0Ex4Hv20KLtDopPq4",
-  authDomain:"llfc-4d2df.firebaseapp.com",
-  projectId:"llfc-4d2df",
+  authDomain:"llfc-4d2df.firebaseapp.com",projectId:"llfc-4d2df",
   storageBucket:"llfc-4d2df.firebasestorage.app",
-  messagingSenderId:"697058785471",
-  appId:"1:697058785471:web:7481cae8fe6b682d762e0a"
+  messagingSenderId:"697058785471",appId:"1:697058785471:web:7481cae8fe6b682d762e0a"
 });
 const db = getFirestore(app);
 
-// ===== DIVISION SYSTEM =====
-// Each division has: cycle (max matches), points needed to promote early, relegation points
-// Div 9 = easy entry, higher = harder
+// ===== DIVISION RULES =====
 const DIV_RULES = {
-  9: { cycle:10, promoPoints:12, reloPoints:0,  nextDiv:8, name:'Rookie',       color:'#333333' },
-  8: { cycle:10, promoPoints:15, reloPoints:3,  nextDiv:7, name:'Amateur',      color:'#440000' },
-  7: { cycle:10, promoPoints:18, reloPoints:4,  nextDiv:6, name:'Regional',     color:'#550000' },
-  6: { cycle:10, promoPoints:21, reloPoints:5,  nextDiv:5, name:'National',     color:'#660000' },
-  5: { cycle:10, promoPoints:24, reloPoints:6,  nextDiv:4, name:'League Two',   color:'#880000' },
-  4: { cycle:10, promoPoints:27, reloPoints:7,  nextDiv:3, name:'League One',   color:'#CC0000' },
-  3: { cycle:10, promoPoints:30, reloPoints:8,  nextDiv:2, name:'Championship', color:'#CD7F32' },
-  2: { cycle:10, promoPoints:33, reloPoints:9,  nextDiv:1, name:'Premier',      color:'#C0C0C0' },
-  1: { cycle:10, promoPoints:999,reloPoints:10, nextDiv:1, name:'Elite',        color:'#FFD700' },
+  9:{cycle:10,promo:12,relo:0, next:8,name:'Rookie'},
+  8:{cycle:10,promo:15,relo:3, next:7,name:'Amateur'},
+  7:{cycle:10,promo:18,relo:4, next:6,name:'Regional'},
+  6:{cycle:10,promo:21,relo:5, next:5,name:'National'},
+  5:{cycle:10,promo:24,relo:6, next:4,name:'League Two'},
+  4:{cycle:10,promo:27,relo:7, next:3,name:'League One'},
+  3:{cycle:10,promo:30,relo:8, next:2,name:'Championship'},
+  2:{cycle:10,promo:33,relo:9, next:1,name:'Premier'},
+  1:{cycle:10,promo:999,relo:10,next:1,name:'Elite'},
 };
 
-// ===== GLOBAL STATE =====
-let S = {
-  user:null, lbTab:'overall', players:[], matches:[],
-  lbPlayers:[], allMatchesData:[], adminPlayers:[],
-  pageHistory:['home'], adminPw:'fardous',
-  seasonStart: null, seasonDuration: 30
+// ===== STATE =====
+let S={
+  user:null,lbTab:'overall',players:[],matches:[],
+  lbPlayers:[],allMatchesData:[],adminPlayers:[],
+  pageHistory:['home'],adminPw:'fardous'
 };
 
 // ===== UTILS =====
-const $ = id => document.getElementById(id);
-function T(msg,type='info'){const t=$('toast');t.textContent=msg;t.className=`toast show ${type}`;clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),3500);}
+const $=id=>document.getElementById(id);
+function T(msg,type='info'){
+  const t=$('toast');t.textContent=msg;t.className=`toast show ${type}`;
+  clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),3500);
+}
 function openModal(id){$(id).classList.add('open');}
 function closeModal(id){$(id).classList.remove('open');}
 
 function showPage(pg){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const el=$('page-'+pg); if(el)el.classList.add('active');
+  const el=$('page-'+pg);if(el)el.classList.add('active');
 }
 function navTo(pg){
-  S.pageHistory.push(pg); showPage(pg);
+  S.pageHistory.push(pg);showPage(pg);
   const m={home:'navHome',leaderboard:'navLeaderboard',matches:'navMatches',submit:'navSubmit'};
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   if(m[pg])$(m[pg])?.classList.add('active');
@@ -738,15 +929,13 @@ function navTo(pg){
   else if(pg==='myprofile')loadMyProfile();
   else if(pg==='modpanel')loadModPanel();
 }
-function navBack(){S.pageHistory.pop();const prev=S.pageHistory[S.pageHistory.length-1]||'home';showPage(prev);}
+function navBack(){S.pageHistory.pop();const p=S.pageHistory[S.pageHistory.length-1]||'home';showPage(p);}
 function setNavActive(b){document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');}
 function setMobActive(b){document.querySelectorAll('.mob-nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');}
 
-// --- Helpers ---
-function divBadge(d,size='sm'){
-  const s=size==='lg'?'div-badge-lg':'div-badge';
-  return `<div class="${s} div-${d||9}">${d||9}</div>`;
-}
+function divBadge(d){return`<div class="div-badge div-${d||9}">${d||9}</div>`;}
+function formBadge(r){const c=r==='W'?'form-w':r==='D'?'form-d':'form-l';return`<div class="form-dot ${c}"></div>`;}
+function statusBadge(s){return`<span class="status-badge status-${s}">${s}</span>`;}
 function fmtDate(ts){
   if(!ts)return'';
   try{const d=ts.toDate?ts.toDate():new Date(ts);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}catch{return'';}
@@ -761,100 +950,33 @@ function timeAgo(ts){
 }
 function getRC(sA,sB,side){const my=side==='A'?sA:sB,op=side==='A'?sB:sA;return my>op?'W':my<op?'L':'D';}
 function isHigh(sA,sB){return(sA+sB)>7;}
-function statusBadge(s){return`<span class="status-badge status-${s}">${s}</span>`;}
-function formBadge(r){const c=r==='W'?'form-w':r==='D'?'form-d':'form-l';return`<div class="form-dot ${c}" title="${r}"></div>`;}
+function catClass(c){return c==='Main'?'cat-main':c==='Youth'?'cat-youth':'cat-academy';}
 
-// ===== RATING CALCULATION (from match history) =====
-// Rating = W*10 + D*5 + L*(-5) + GD*1 + CleanSheets*2
-function calcRatingFromStats(w,d,l,gf,ga,cs){
-  return Math.max(0, w*10 + d*5 + l*(-5) + (gf-ga)*1 + cs*2);
+// 2x RATING LOGIC
+// If a non-Main (Youth/Academy) beats a Main player -> 2x rating gain
+// If a Main player loses to a non-Main -> 2x rating loss
+function getRatingMultiplier(myCategory, oppCategory, result) {
+  const imNonMain = myCategory==='Youth'||myCategory==='Academy';
+  const oppIsMain = oppCategory==='Main';
+  const imMain = myCategory==='Main';
+  const oppIsNonMain = oppCategory==='Youth'||oppCategory==='Academy';
+  if(imNonMain && oppIsMain && result==='W') return 2;
+  if(imMain && oppIsNonMain && result==='L') return 2;
+  return 1;
 }
 
-// ===== DIVISION CYCLE LOGIC =====
-// After each confirmed match, check if cycle complete (cycleMP >= 10) or early promo
-// Returns {promoted, relegated, cycleComplete}
-function checkDivisionStatus(player) {
-  const div = player.division || 9;
-  const rules = DIV_RULES[div];
-  const cmp = player.cycleMP || 0;
-  const cpts = player.cyclePts || 0;
-  
-  // Early promotion: hit points target before 10 matches
-  if(cpts >= rules.promoPoints && div > 1) return 'promote';
-  // Cycle complete (10 matches played)
-  if(cmp >= rules.cycle) {
-    if(cpts >= rules.promoPoints) return 'promote';
-    if(cpts <= rules.reloPoints && div < 9) return 'relegate';
-    return 'stay';
-  }
-  return null;
-}
-
-async function applyDivisionCheck(pid, playerData) {
-  const div = playerData.division || 9;
-  const result = checkDivisionStatus(playerData);
-  if(!result) return;
-  
-  let newDiv = div;
-  if(result === 'promote') {
-    newDiv = Math.max(1, div - 1);
-  } else if(result === 'relegate') {
-    newDiv = Math.min(9, div + 1);
-  }
-  
-  // Reset cycle
-  await updateDoc(doc(db,'players',pid), {
-    division: newDiv,
-    cycleMP: 0,
-    cyclePts: 0,
-    highestDivision: Math.min(newDiv, playerData.highestDivision || 9)
-  });
-  
-  return result;
-}
-
-// ===== BADGES CALCULATION =====
-function calcBadges(player, allMatches) {
-  const badges = [];
-  const div = player.division || 9;
-  const highest = player.highestDivision || div;
-  const total = (player.wins||0)+(player.draws||0)+(player.losses||0);
-  const wr = total>0 ? Math.round((player.wins||0)/total*100) : 0;
-  
-  // Division badge
-  if(div <= 1) badges.push({text:'Elite Division', cls:'badge-gold'});
-  else if(div <= 2) badges.push({text:'Premier Division', cls:'badge-silver'});
-  else if(div <= 3) badges.push({text:'Championship', cls:'badge-red'});
-  
-  // Highest division badge
-  if(highest < div) badges.push({text:'Was Div '+highest, cls:'badge-blue'});
-  
-  // Win ratio badges
-  if(wr >= 80 && total >= 5) badges.push({text:'Win Machine 80%+', cls:'badge-gold'});
-  else if(wr >= 70 && total >= 5) badges.push({text:'Sharp 70%+', cls:'badge-green'});
-  
-  // Winning streak
-  const form = (player.form || []);
-  let streak = 0;
-  for(let i=form.length-1;i>=0;i--){ if(form[i]==='W') streak++; else break; }
-  if(streak >= 5) badges.push({text:'On Fire '+ streak + ' Streak', cls:'badge-red'});
-  else if(streak >= 3) badges.push({text:streak+' Win Streak', cls:'badge-green'});
-  
-  // Special awards
-  if(player.isPOTD) badges.push({text:'Player of the Day', cls:'badge-gold'});
-  if(player.isPOTW) badges.push({text:'Player of the Week', cls:'badge-gold'});
-  if(player.isPOTM) badges.push({text:'Player of the Month', cls:'badge-purple'});
-  if(player.isPOTS) badges.push({text:'Player of the Season', cls:'badge-gold'});
-  if(player.isModerator) badges.push({text:'Moderator', cls:'badge-blue'});
-  
-  return badges;
+// RATING = computed from match history (always fresh)
+// W*10 + D*5 + L*(-5) + GD*1 + CS*2
+// multiplier applied at match time is stored per match, but we recompute from stored aggregate stats
+function calcRating(w,d,l,gf,ga,cs){
+  return Math.max(0, w*10 + d*5 + l*(-5) + (gf-ga) + cs*2);
 }
 
 // ===== NEWS =====
-function buildNews(matches) {
-  const hi = matches.filter(m=>m.status==='confirmed'&&isHigh(m.scoreA,m.scoreB));
+function buildNews(matches){
+  const hi=matches.filter(m=>m.status==='confirmed'&&isHigh(m.scoreA,m.scoreB));
   if(!hi.length){$('newsTicker').style.display='none';return;}
-  $('newsText').textContent = hi.slice(0,8).map(m=>`GOAL FEST: ${m.playerAName} ${m.scoreA}-${m.scoreB} ${m.playerBName} (${m.scoreA+m.scoreB} goals)`).join('     |     ');
+  $('newsText').textContent=hi.slice(0,8).map(m=>`GOAL FEST: ${m.playerAName} ${m.scoreA}-${m.scoreB} ${m.playerBName} (${m.scoreA+m.scoreB} goals!)`).join('     |     ');
   $('newsTicker').style.display='flex';
 }
 
@@ -870,9 +992,9 @@ async function doLogin(){
     if(p.status==='pending')return T('Account pending admin approval','info');
     if(p.status==='banned')return T('Account banned. Contact admin.','error');
     S.user={id:d.id,...p};
-    closeModal('loginModal'); updateHeaderAuth();
+    closeModal('loginModal');updateHeaderAuth();
     T('Welcome back, '+name+'!','success');
-    loadSubmitPage(); loadMatches();
+    loadSubmitPage();loadMatches();
   }catch(e){T('Login failed: '+e.message,'error');}
 }
 
@@ -911,17 +1033,34 @@ function updateHeaderAuth(){
         <span class="user-name">${S.user.name}</span>
         ${isMod?'<span class="mod-badge-hdr">MOD</span>':''}
       </div>
-      ${isMod?`<button class="btn-login" style="border-color:var(--blue);color:var(--blue);font-size:11px" onclick="navTo('modpanel')">Mod Panel</button>`:''}
+      ${isMod?`<button class="btn-login" style="border-color:#82B1FF;color:#82B1FF;font-size:11px" onclick="navTo('modpanel')">Mod Panel</button>`:''}
       <button class="btn-login" onclick="doLogout()">Logout</button>
-      <button class="btn-login" style="border-color:var(--yellow);color:var(--yellow);font-size:11px" onclick="navTo('admin')">Admin</button>
+      <button class="btn-login" style="border-color:var(--ucl-star);color:var(--ucl-star);font-size:11px" onclick="navTo('admin')">Admin</button>
     `;
   }else{
     el.innerHTML=`
       <button class="btn-login" onclick="openModal('loginModal')">Login</button>
       <button class="btn-register" onclick="openModal('registerModal')">Register</button>
-      <button class="btn-login" style="border-color:var(--yellow);color:var(--yellow);font-size:11px" onclick="navTo('admin')">Admin</button>
+      <button class="btn-login" style="border-color:var(--ucl-star);color:var(--ucl-star);font-size:11px" onclick="navTo('admin')">Admin</button>
     `;
   }
+}
+
+// ===== PASSWORD CHANGE =====
+async function changeMyPassword(){
+  if(!S.user)return;
+  const oldPw=$('cpOld').value,newPw=$('cpNew').value,conf=$('cpConfirm').value;
+  if(!oldPw||!newPw||!conf)return T('Fill in all fields','error');
+  if(oldPw!==S.user.password)return T('Current password is wrong','error');
+  if(newPw!==conf)return T('Passwords do not match','error');
+  if(newPw.length<4)return T('Password too short','error');
+  try{
+    await updateDoc(doc(db,'players',S.user.id),{password:newPw});
+    S.user.password=newPw;
+    closeModal('changePwModal');
+    T('Password updated successfully','success');
+    ['cpOld','cpNew','cpConfirm'].forEach(id=>$(id).value='');
+  }catch(e){T('Error: '+e.message,'error');}
 }
 
 // ===== HOME =====
@@ -935,39 +1074,38 @@ async function loadHome(){
     S.matches=mSnap.docs.map(d=>({id:d.id,...d.data()}));
     buildNews(S.matches);
     const now=Date.now();
-    const todayMs=S.matches.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<86400000);
     $('statPlayers').textContent=S.players.length;
     $('statMatches').textContent=S.matches.filter(m=>m.status==='confirmed').length;
-    $('statToday').textContent=todayMs.length;
+    $('statToday').textContent=S.matches.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<86400000).length;
     $('statPending').textContent=S.matches.filter(m=>m.status==='pending').length;
 
-    // Top 5 with computed rating
-    const sorted=[...S.players].map(p=>{
-      const r=calcRatingFromStats(p.wins||0,p.draws||0,p.losses||0,p.goalsFor||0,p.goalsAgainst||0,p.cleanSheets||0);
-      return {...p,computedRating:r};
-    }).sort((a,b)=>b.computedRating-a.computedRating).slice(0,5);
+    const sorted=[...S.players].map(p=>({
+      ...p,
+      rating:calcRating(p.wins||0,p.draws||0,p.losses||0,p.goalsFor||0,p.goalsAgainst||0,p.cleanSheets||0)
+    })).sort((a,b)=>b.rating-a.rating).slice(0,5);
 
     $('homeTopPlayers').innerHTML=sorted.length?sorted.map((p,i)=>`
       <div class="pending-item" style="cursor:pointer" onclick="viewProfile('${p.id}')">
-        <span class="rank-num rank-${i+1}" style="font-size:20px;width:26px">${i+1}</span>
+        <span class="rank-num rank-${i+1}" style="font-size:22px;width:28px">${i+1}</span>
         ${divBadge(p.division)}
         <div class="pending-info">
-          <div class="pending-name">${p.name}</div>
+          <div class="pending-name">${p.name} <span class="${catClass(p.category||'Main')}" style="font-size:11px">${p.category||'Main'}</span></div>
           <div class="pending-meta">${p.wins||0}W ${p.draws||0}D ${p.losses||0}L</div>
         </div>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#FF4444">${p.computedRating}</span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ucl-star)">${p.rating}</span>
       </div>`).join(''):'<div class="empty-state"><div class="empty-text">No players yet</div></div>';
 
     const recent=S.matches.filter(m=>m.status==='confirmed').slice(0,6);
     $('homeRecentMatches').innerHTML=recent.length?recent.map(m=>{
-      const hi=isHigh(m.scoreA,m.scoreB);
+      const hi=isHigh(m.scoreA,m.scoreB),x2=m.is2x;
       return `<div class="match-card${hi?' high-score':''}">
         <div class="match-info">
           <div class="match-vs">
             <span class="player-link" style="display:inline" onclick="viewProfile('${m.playerAId}')">${m.playerAName}</span>
             <span class="text-gray"> vs </span>
             <span class="player-link" style="display:inline" onclick="viewProfile('${m.playerBId}')">${m.playerBName}</span>
-            ${hi?'&nbsp;<span class="high-score-badge">GOAL FEST</span>':''}
+            ${hi?' <span class="high-score-badge">GOAL FEST</span>':''}
+            ${x2?' <span class="x2-badge">2X RATING</span>':''}
           </div>
           <div class="match-meta">${fmtDate(m.createdAt)}</div>
         </div>
@@ -975,64 +1113,78 @@ async function loadHome(){
       </div>`;
     }).join(''):'<div class="empty-state"><div class="empty-text">No matches yet</div></div>';
 
+    // Division Guide - bigger, green
     const divInfo=[
-      {d:1,name:'Elite',pts:999,desc:'Top division. Defend your spot.'},
-      {d:2,name:'Premier',pts:33,desc:'Promote: 33 pts in 10 matches.'},
-      {d:3,name:'Championship',pts:30,desc:'Promote: 30 pts in 10 matches.'},
-      {d:4,name:'League One',pts:27,desc:'Promote: 27 pts in 10 matches.'},
-      {d:5,name:'League Two',pts:24,desc:'Promote: 24 pts in 10 matches.'},
-      {d:6,name:'National',pts:21,desc:'Promote: 21 pts in 10 matches.'},
-      {d:7,name:'Regional',pts:18,desc:'Promote: 18 pts in 10 matches.'},
-      {d:8,name:'Amateur',pts:15,desc:'Promote: 15 pts in 10 matches.'},
-      {d:9,name:'Rookie',pts:12,desc:'Promote: 12 pts in 10 matches. Easy start!'},
+      {d:1,name:'Elite',promo:'Top Division - Defend your title',relo:'Relegate if <=10 pts'},
+      {d:2,name:'Premier',promo:'33 pts in 10 matches to promote',relo:'Relo if <=9 pts'},
+      {d:3,name:'Championship',promo:'30 pts in 10 matches',relo:'Relo if <=8 pts'},
+      {d:4,name:'League One',promo:'27 pts in 10 matches',relo:'Relo if <=7 pts'},
+      {d:5,name:'League Two',promo:'24 pts in 10 matches',relo:'Relo if <=6 pts'},
+      {d:6,name:'National',promo:'21 pts in 10 matches',relo:'Relo if <=5 pts'},
+      {d:7,name:'Regional',promo:'18 pts in 10 matches',relo:'Relo if <=4 pts'},
+      {d:8,name:'Amateur',promo:'15 pts in 10 matches',relo:'Relo if <=3 pts'},
+      {d:9,name:'Rookie',promo:'12 pts in 10 matches',relo:'Entry level - no relegation'},
     ];
     $('divisionGuide').innerHTML=divInfo.map(di=>`
-      <div class="stat-card" style="text-align:left;border-color:${di.d<=3?'rgba(204,0,0,.4)':'rgba(204,0,0,.15)'}">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <div class="div-guide-card">
+        <div style="display:flex;align-items:center;gap:10px">
           ${divBadge(di.d)}
-          <span style="font-family:'Bebas Neue',sans-serif;font-size:15px">${di.name}</span>
+          <div class="div-guide-name">${di.name}</div>
         </div>
-        <div class="text-gray text-sm">${di.desc}</div>
-        ${di.d<=3?'<div style="font-size:10px;color:var(--red-bright);margin-top:4px;letter-spacing:1px">TOP TIER</div>':''}
+        <div class="div-guide-pts">Promotion: ${di.promo}</div>
+        <div class="div-guide-desc">${di.relo}</div>
+        ${di.d<=3?'<div class="div-guide-badge">TOP TIER DIVISION</div>':''}
       </div>`).join('');
   }catch(e){console.error(e);T('Error loading home','error');}
 }
 
-// ===== LEADERBOARD =====
+// ===== LEADERBOARD - COMPUTED FROM MATCH HISTORY ONLY =====
 async function loadLeaderboard(tab='overall'){
   S.lbTab=tab;
-  $('lbTableBody').innerHTML='<tr><td colspan="10" style="text-align:center;padding:30px"><div class="spinner" style="margin:0 auto"></div></td></tr>';
+  $('lbTableBody').innerHTML='<tr><td colspan="11" style="text-align:center;padding:30px"><div class="spinner" style="margin:0 auto"></div></td></tr>';
   try{
     const [pSnap,mSnap]=await Promise.all([
       getDocs(collection(db,'players')),
-      getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(500)))
+      getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(1000)))
     ]);
     S.players=pSnap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
     S.matches=mSnap.docs.map(d=>({id:d.id,...d.data()}));
+
     const now=Date.now();
     const timeFilter={daily:86400000,weekly:604800000,monthly:2592000000,overall:Infinity}[tab];
 
+    // Build a player lookup for category
+    const playerCatMap={};
+    S.players.forEach(p=>playerCatMap[p.id]=p.category||'Main');
+
     let players=S.players.map(p=>{
+      // Filter confirmed matches in the time window
       let pm=S.matches.filter(m=>(m.playerAId===p.id||m.playerBId===p.id)&&m.status==='confirmed');
       if(tab!=='overall') pm=pm.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<timeFilter);
-      
+
       let w=0,d=0,l=0,gf=0,ga=0,cs=0;
       pm.forEach(m=>{
         const side=m.playerAId===p.id?'A':'B';
-        const r=getRC(m.scoreA,m.scoreB,side);
-        const my=side==='A'?m.scoreA:m.scoreB,op=side==='A'?m.scoreB:m.scoreA;
-        if(r==='W')w++;else if(r==='D')d++;else l++;
-        gf+=my; ga+=op;
-        if(op===0)cs++;
+        const result=getRC(m.scoreA,m.scoreB,side);
+        const myG=side==='A'?m.scoreA:m.scoreB, opG=side==='A'?m.scoreB:m.scoreA;
+        const oppCat=playerCatMap[side==='A'?m.playerBId:m.playerAId]||'Main';
+        const mult=getRatingMultiplier(p.category||'Main',oppCat,result);
+        
+        if(result==='W'){w+=mult;} // count weighted wins for rating
+        else if(result==='D'){d+=1;}
+        else{l+=mult;} // count weighted losses
+        gf+=myG; ga+=opG;
+        if(opG===0)cs++;
       });
-      
-      const total=w+d+l;
-      const wr=total>0?Math.round(w/total*100):0;
+
+      const total=pm.length; // actual match count
+      const wr=total>0?Math.round((w/(w+d+l||1))*100):0; // use weighted w for display
       const gd=gf-ga;
-      // Rating computed from these filtered stats
-      const rating=calcRatingFromStats(w,d,l,gf,ga,cs);
-      
-      return {...p,tw:w,td:d,tl:l,tgf:gf,tga:ga,tcs:cs,tgd:gd,twr:wr,total,rating};
+      // Rating = weighted_w*10 + d*5 + weighted_l*(-5) + gd + cs*2
+      const rating=Math.max(0,w*10+d*5+l*(-5)+gd+cs*2);
+      const cyclePts=p.cyclePts||0, cycleMP=p.cycleMP||0;
+
+      return {...p,tw:Math.round(w),td:d,tl:Math.round(l),tgf:gf,tga:ga,tcs:cs,tgd:gd,twr:wr,total,rating,cyclePts,cycleMP};
     });
 
     if(tab!=='overall') players=players.filter(p=>p.total>0);
@@ -1040,7 +1192,7 @@ async function loadLeaderboard(tab='overall'){
     S.lbPlayers=players;
     renderLbTable(players);
   }catch(e){
-    $('lbTableBody').innerHTML='<tr><td colspan="10" style="text-align:center;color:var(--red)">Error loading</td></tr>';
+    $('lbTableBody').innerHTML='<tr><td colspan="11" style="text-align:center;color:#FF5555">Error loading</td></tr>';
     console.error(e);
   }
 }
@@ -1050,23 +1202,25 @@ function renderLbTable(players){
   const divF=$('lbDivFilter')?.value||'';
   const filtered=players.filter(p=>p.name.toLowerCase().includes(search)&&(!divF||String(p.division||9)===divF));
   const tbody=$('lbTableBody');
-  if(!filtered.length){tbody.innerHTML='<tr><td colspan="10"><div class="empty-state"><div class="empty-icon">&#127942;</div><div class="empty-text">No players found</div></div></td></tr>';return;}
+  if(!filtered.length){
+    tbody.innerHTML='<tr><td colspan="11"><div class="empty-state"><div class="empty-text">No players found</div></div></td></tr>';return;
+  }
   tbody.innerHTML=filtered.map((p,i)=>{
     const r=i+1,rc=r===1?'top-1':r===2?'top-2':r===3?'top-3':'';
     const form=(p.form||[]).slice(-5);
-    const rules=DIV_RULES[p.division||9];
-    const cmp=p.cycleMP||0, cpts=p.cyclePts||0;
-    const pct=Math.min(100,Math.round(cpts/rules.promoPoints*100));
+    const rules=DIV_RULES[p.division||9]||DIV_RULES[9];
+    const pct=Math.min(100,Math.round((p.cyclePts||0)/(rules.promo||1)*100));
     return `<tr class="${rc}">
       <td><span class="rank-num rank-${r}">${r}</span></td>
       <td>
         <span class="player-link" onclick="viewProfile('${p.id}')">
-          <div class="user-avatar" style="width:26px;height:26px;font-size:11px;background:#CC0000">${p.name[0].toUpperCase()}</div>
-          ${p.name}${p.isModerator?'&nbsp;<span class="mod-badge-hdr">MOD</span>':''}
+          <div class="user-avatar" style="width:28px;height:28px;font-size:11px">${p.name[0].toUpperCase()}</div>
+          ${p.name}&nbsp;<span class="${catClass(p.category||'Main')}" style="font-size:10px;font-weight:700">${p.category||'Main'}</span>
+          ${p.isModerator?'&nbsp;<span class="mod-badge-hdr">MOD</span>':''}
         </span>
       </td>
       <td>${divBadge(p.division)}</td>
-      <td><span style="font-family:'Bebas Neue',sans-serif;font-size:19px;color:#FF4444">${p.rating}</span></td>
+      <td><span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ucl-star)">${p.rating}</span></td>
       <td>
         <div class="wdl-row">
           <span class="wdl-pill wdl-w"><span class="wdl-num">${p.tw}</span>&nbsp;W</span>
@@ -1074,19 +1228,20 @@ function renderLbTable(players){
           <span class="wdl-pill wdl-l"><span class="wdl-num">${p.tl}</span>&nbsp;L</span>
         </div>
       </td>
-      <td style="color:#C0A0A0">${p.total}</td>
+      <td style="color:#82B1FF">${p.total}</td>
       <td>
         <div class="winrate-wrap">
           <div class="winrate-bar"><div class="winrate-fill" style="width:${p.twr}%"></div></div>
           <span class="winrate-pct">${p.twr}%</span>
         </div>
       </td>
-      <td><span style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:${p.tgd>=0?'#44FF88':'#FF6666'}">${p.tgd>=0?'+':''}${p.tgd}</span></td>
+      <td><span style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:${p.tgd>=0?'#00E676':'#FF5555'}">${p.tgd>=0?'+':''}${p.tgd}</span></td>
+      <td><span style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#82B1FF">${p.tcs}</span></td>
       <td><div class="form-dots">${form.map(r=>formBadge(r)).join('')}</div></td>
       <td>
-        <div style="font-size:11px;color:#906060">${cmp}/10</div>
-        <div style="background:rgba(255,255,255,.07);border-radius:4px;height:4px;width:50px;margin-top:3px;overflow:hidden">
-          <div style="height:100%;width:${pct}%;background:var(--red);border-radius:4px"></div>
+        <div style="font-size:10px;color:#4472C4">${p.cycleMP||0}/10</div>
+        <div style="background:rgba(255,255,255,.06);border-radius:3px;height:4px;width:48px;margin-top:3px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#00A550,#00E676);border-radius:3px"></div>
         </div>
       </td>
     </tr>`;
@@ -1094,121 +1249,87 @@ function renderLbTable(players){
 }
 
 function filterLeaderboard(){if(S.lbPlayers.length)renderLbTable(S.lbPlayers);}
-function switchLbTab(tab,btn){document.querySelectorAll('.lb-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadLeaderboard(tab);}
-
-// ===== RANKING CARD (JPG Download) =====
-function openRankingCardPreview(){
-  buildRankingCard();
-  $('rankingCardPreview').classList.add('open');
+function switchLbTab(tab,btn){
+  document.querySelectorAll('.lb-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');loadLeaderboard(tab);
 }
+
+// ===== RANKING CARD =====
+function openRankingCardPreview(){buildRankingCard();$('rankingCardPreview').classList.add('open');}
 function closeRankingPreview(){$('rankingCardPreview').classList.remove('open');}
 
 function buildRankingCard(){
   const top10=S.lbPlayers.slice(0,10);
-  const tabLabels={overall:'Overall Season',daily:'Daily',weekly:'Weekly',monthly:'Monthly'};
+  const labels={overall:'Overall Season',daily:'Daily',weekly:'Weekly',monthly:'Monthly'};
   const now=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-  
   if(!top10.length){$('rcCardContainer').innerHTML='<div style="color:#666;padding:20px">Load leaderboard first</div>';return;}
-  
+  const divNames=['','Elite','Premier','Championship','League One','League Two','National','Regional','Amateur','Rookie'];
   const rows=top10.map((p,i)=>{
-    const rank=i+1;
-    const rowCls=rank===1?'rank-1-row':rank===2?'rank-2-row':rank===3?'rank-3-row':'';
-    const rankCls=rank===1?'r1':rank===2?'r2':rank===3?'r3':'';
-    const divNames=['','Elite','Premier','Championship','League One','League Two','National','Regional','Amateur','Rookie'];
-    return `<div class="rc-row ${rowCls}">
-      <div class="rc-rank ${rankCls}">${rank}</div>
+    const r=i+1,rc=r===1?'rank-1-row':r===2?'rank-2-row':r===3?'rank-3-row':'';
+    const rankCls=r===1?'r1':r===2?'r2':r===3?'r3':'';
+    return `<div class="rc-row ${rc}">
+      <div class="rc-rank ${rankCls}">${r}</div>
       <div class="rc-player-info">
         <div class="rc-avatar">${p.name[0].toUpperCase()}</div>
         <div>
           <div class="rc-name">${p.name}</div>
-          <div class="rc-div-small">DIV ${p.division||9} - ${divNames[p.division||9]||'Rookie'}</div>
+          <div class="rc-div-small">DIV ${p.division||9} - ${divNames[p.division||9]||''} | ${p.category||'Main'}</div>
         </div>
       </div>
       <div class="rc-rating">${p.rating}</div>
-      <div class="rc-wdl">
-        <div class="rc-wdl-num"><span class="rc-w">${p.tw}W</span><span class="rc-d">${p.td}D</span><span class="rc-l">${p.tl}L</span></div>
-      </div>
+      <div class="rc-wdl-nums"><span class="rc-w">${p.tw}W</span><span class="rc-d">&nbsp;${p.td}D</span><span class="rc-l">&nbsp;${p.tl}L</span></div>
       <div style="display:flex;gap:5px;align-items:center">
-        <div style="background:rgba(255,255,255,.07);border-radius:4px;height:5px;width:60px;overflow:hidden">
-          <div style="height:100%;width:${p.twr}%;background:#CC0000;border-radius:4px"></div>
+        <div style="background:rgba(255,255,255,.06);border-radius:4px;height:5px;width:58px;overflow:hidden">
+          <div style="height:100%;width:${p.twr}%;background:linear-gradient(90deg,#1B3A6B,#4472C4);border-radius:4px"></div>
         </div>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#906060">${p.twr}%</span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:#4472C4">${p.twr}%</span>
       </div>
-      <div class="rc-winpct">${p.tgd>=0?'+':''}${p.tgd}</div>
+      <div class="rc-winpct" style="color:${p.tgd>=0?'#00E676':'#FF5555'}">${p.tgd>=0?'+':''}${p.tgd}</div>
     </div>`;
   }).join('');
-  
   $('rcCardContainer').innerHTML=`
     <div class="rc-card" id="theRankingCard">
       <div class="rc-header">
         <div class="rc-header-top">
-          <div>
-            <div class="rc-title">LLFC EFOOT DIVISION</div>
-            <div class="rc-subtitle">PLAYER RANKING - TOP 10</div>
-          </div>
-          <div class="rc-period">${tabLabels[S.lbTab]||'Overall'}</div>
+          <div><div class="rc-title">LLFC EFOOTBALL DIVISION</div><div class="rc-subtitle">PLAYER RANKING - TOP 10</div></div>
+          <div class="rc-period">${labels[S.lbTab]||'Overall'}</div>
         </div>
       </div>
       <div class="rc-body">
-        <div class="rc-row header-row">
-          <span>Rank</span><span>Player</span><span style="text-align:right">Rating</span>
-          <span>W/D/L</span><span>Win%</span><span style="text-align:right">GD</span>
+        <div class="rc-row rc-header-row">
+          <span>Rank</span><span>Player</span><span>Rating</span><span>W/D/L</span><span>Win%</span><span>GD</span>
         </div>
         ${rows}
       </div>
       <div class="rc-footer">
-        <div class="rc-footer-brand">LLFC JUVENILE DIVISION SYSTEM</div>
-        <div class="rc-footer-date">Generated: ${now}</div>
+        <div class="rc-footer-brand">LLFC EFOOTBALL DIVISION SYSTEM</div>
+        <div class="rc-footer-date">GENERATED: ${now}</div>
       </div>
     </div>`;
 }
 
 async function downloadRankingCard(){
   const card=$('theRankingCard');
-  if(!card){T('No card to download','error');return;}
+  if(!card)return T('No card to download','error');
   try{
-    T('Generating image...','info');
-    const canvas=await html2canvas(card,{
-      backgroundColor:'#0a0000',scale:2,useCORS:true,logging:false
-    });
+    T('Generating...','info');
+    const canvas=await html2canvas(card,{backgroundColor:'#060E1C',scale:2,useCORS:true,logging:false});
     const link=document.createElement('a');
     link.download=`LLFC-Ranking-${S.lbTab}-${new Date().toISOString().split('T')[0]}.jpg`;
-    link.href=canvas.toDataURL('image/jpeg',0.95);
-    link.click();
-    T('Ranking card downloaded!','success');
-  }catch(e){T('Download failed: '+e.message,'error');console.error(e);}
+    link.href=canvas.toDataURL('image/jpeg',0.95);link.click();
+    T('Downloaded!','success');
+  }catch(e){T('Download failed: '+e.message,'error');}
 }
 
 // ===== MATCHES =====
 async function loadMatches(){
   try{
-    const mSnap=await getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(150)));
+    const mSnap=await getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(200)));
     S.matches=mSnap.docs.map(d=>({id:d.id,...d.data()}));
     S.allMatchesData=S.matches;
     renderMatchesList(S.matches);
-    const section=$('pendingConfirmSection'),list=$('pendingConfirmList');
-    if(S.user){
-      const isMod=S.user.isModerator;
-      const pending=S.matches.filter(m=>m.status==='pending'&&(isMod||m.playerBId===S.user.id));
-      if(pending.length){
-        section.style.display='block';
-        list.innerHTML=pending.map(m=>`
-          <div class="confirm-card">
-            ${isMod&&m.playerBId!==S.user.id?'<div class="text-purple text-sm mb-8">Moderator review</div>':''}
-            <div class="confirm-vs">
-              <div class="confirm-player"><div class="confirm-player-name">${m.playerAName}</div><div class="text-gray text-sm">Submitted by</div></div>
-              <div class="confirm-score-display">${m.scoreA}-${m.scoreB}</div>
-              <div class="confirm-player"><div class="confirm-player-name">${m.playerBName}</div><div class="text-gray text-sm">Opponent</div></div>
-            </div>
-            <div class="text-gray text-sm mb-8">${fmtDate(m.createdAt)} - ${timeAgo(m.createdAt)}</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn-approve btn-sm" onclick="confirmMatch('${m.id}',true)">Confirm</button>
-              <button class="btn-reject btn-sm" onclick="confirmMatch('${m.id}',false)">Dispute</button>
-            </div>
-          </div>`).join('');
-      }else section.style.display='none';
-    }else section.style.display='none';
-  }catch(e){$('matchesList').innerHTML='<div class="empty-state"><div class="empty-text">Error loading matches</div></div>';console.error(e);}
+    renderPendingConfirms();
+  }catch(e){$('matchesList').innerHTML='<div class="empty-state"><div class="empty-text">Error loading</div></div>';console.error(e);}
 }
 
 function renderMatchesList(matches){
@@ -1220,20 +1341,44 @@ function renderMatchesList(matches){
   const el=$('matchesList');
   if(!f.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">&#9917;</div><div class="empty-text">No matches found</div></div>';return;}
   el.innerHTML=f.map(m=>{
-    const hi=isHigh(m.scoreA,m.scoreB);
+    const hi=isHigh(m.scoreA,m.scoreB),x2=m.is2x;
     return `<div class="match-card${hi?' high-score':''}">
       <div class="match-info">
         <div class="match-vs">
           <span class="player-link" style="display:inline" onclick="viewProfile('${m.playerAId}')">${m.playerAName}</span>
           <span class="text-gray"> vs </span>
           <span class="player-link" style="display:inline" onclick="viewProfile('${m.playerBId}')">${m.playerBName}</span>
-          ${hi?' &nbsp;<span class="high-score-badge">GOAL FEST</span>':''}
+          ${hi?' <span class="high-score-badge">GOAL FEST</span>':''}
+          ${x2?' <span class="x2-badge">2X RATING</span>':''}
         </div>
         <div class="match-meta">${fmtDate(m.createdAt||m.matchDate)} - ${statusBadge(m.status)}</div>
       </div>
       <div class="match-score">${m.scoreA}-${m.scoreB}</div>
     </div>`;
   }).join('');
+}
+
+function renderPendingConfirms(){
+  const section=$('pendingConfirmSection'),list=$('pendingConfirmList');
+  if(!S.user){section.style.display='none';return;}
+  const isMod=S.user.isModerator;
+  const pending=S.allMatchesData.filter(m=>m.status==='pending'&&(isMod||m.playerBId===S.user.id));
+  if(!pending.length){section.style.display='none';return;}
+  section.style.display='block';
+  list.innerHTML=pending.map(m=>`
+    <div class="confirm-card">
+      ${isMod&&m.playerBId!==S.user.id?'<div style="font-size:11px;color:#CE93D8;font-weight:700;margin-bottom:8px;letter-spacing:1px">MODERATOR REVIEW</div>':''}
+      <div class="confirm-vs">
+        <div class="confirm-player"><div class="confirm-player-name">${m.playerAName}</div><div class="text-gray text-sm">${m.playerACat||''}</div></div>
+        <div class="confirm-score-display">${m.scoreA}-${m.scoreB}</div>
+        <div class="confirm-player"><div class="confirm-player-name">${m.playerBName}</div><div class="text-gray text-sm">${m.playerBCat||''}</div></div>
+      </div>
+      <div class="text-gray text-sm mb-8">${fmtDate(m.createdAt)} - ${timeAgo(m.createdAt)}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-approve btn-sm" onclick="confirmMatch('${m.id}',true)">Confirm</button>
+        <button class="btn-reject btn-sm" onclick="confirmMatch('${m.id}',false)">Dispute</button>
+      </div>
+    </div>`).join('');
 }
 
 function filterMatches(){if(S.allMatchesData.length)renderMatchesList(S.allMatchesData);}
@@ -1252,46 +1397,82 @@ async function confirmMatch(matchId,confirmed){
       await updateDoc(mRef,{status:'disputed'});
       T('Match disputed. Admin will review.','info');
     }
-    S.matches=[];loadMatches();
+    S.matches=[];S.allMatchesData=[];
+    loadMatches();
   }catch(e){T('Error: '+e.message,'error');}
 }
 
 async function applyMatchStats(m){
-  async function upd(pid,side){
-    const ref=doc(db,'players',pid),snap=await getDoc(ref);
-    if(!snap.exists())return;
-    const p=snap.data();
+  // Get both player categories
+  const [aSnap,bSnap]=await Promise.all([
+    getDoc(doc(db,'players',m.playerAId)),
+    getDoc(doc(db,'players',m.playerBId))
+  ]);
+  if(!aSnap.exists()||!bSnap.exists())return;
+  const aData=aSnap.data(), bData=bSnap.data();
+  const aCat=aData.category||'Main', bCat=bData.category||'Main';
+
+  async function upd(pid,pData,side,oppCat){
+    const ref=doc(db,'players',pid);
     const result=getRC(m.scoreA,m.scoreB,side);
-    const my=side==='A'?m.scoreA:m.scoreB, op=side==='A'?m.scoreB:m.scoreA;
-    const isCS=op===0;
-    const form=[...(p.form||[]).slice(-19),result]; // keep last 20
-    
-    // Cycle points: W=3, D=1, L=0
+    const myG=side==='A'?m.scoreA:m.scoreB, opG=side==='A'?m.scoreB:m.scoreA;
+    const isCS=opG===0;
+    const form=[...(pData.form||[]).slice(-19),result];
     const cyclePtsGain=result==='W'?3:result==='D'?1:0;
-    const newCycleMP=(p.cycleMP||0)+1;
-    const newCyclePts=(p.cyclePts||0)+cyclePtsGain;
+    const newCycleMP=(pData.cycleMP||0)+1;
+    const newCyclePts=(pData.cyclePts||0)+cyclePtsGain;
     
+    // 2x multiplier: for division cycle points, no 2x (fair play)
+    // for actual wins/losses stored, we track the multiplied version
+    const mult=getRatingMultiplier(pData.category||'Main',oppCat,result);
+    // Effective stats stored: wins/losses get multiplied for rating purposes
+    const wInc=result==='W'?mult:0;
+    const lInc=result==='L'?mult:0;
+    const dInc=result==='D'?1:0;
+
     const updates={
-      wins:(p.wins||0)+(result==='W'?1:0),
-      draws:(p.draws||0)+(result==='D'?1:0),
-      losses:(p.losses||0)+(result==='L'?1:0),
-      goalsFor:(p.goalsFor||0)+my,
-      goalsAgainst:(p.goalsAgainst||0)+op,
-      cleanSheets:(p.cleanSheets||0)+(isCS?1:0),
-      form,
-      cycleMP:newCycleMP,
-      cyclePts:newCyclePts,
+      wins:(pData.wins||0)+wInc,
+      draws:(pData.draws||0)+dInc,
+      losses:(pData.losses||0)+lInc,
+      goalsFor:(pData.goalsFor||0)+myG,
+      goalsAgainst:(pData.goalsAgainst||0)+opG,
+      cleanSheets:(pData.cleanSheets||0)+(isCS?1:0),
+      form,cycleMP:newCycleMP,cyclePts:newCyclePts,
     };
     await updateDoc(ref,updates);
     
-    // Check division status
-    const updatedPlayer={...p,...updates};
-    const divResult=await applyDivisionCheck(pid,updatedPlayer);
-    if(divResult==='promote'){T(p.name+' promoted to Division '+(Math.max(1,(p.division||9)-1))+'!','success');}
-    else if(divResult==='relegate'){T(p.name+' relegated to Division '+(Math.min(9,(p.division||9)+1))+'.','info');}
-    else if(divResult==='stay'){T(p.name+' cycle complete. Division maintained.','info');}
+    // Check division
+    const upd2={...pData,...updates};
+    await checkAndApplyDivision(pid,upd2,result,mult);
   }
-  await Promise.all([upd(m.playerAId,'A'),upd(m.playerBId,'B')]);
+  
+  // Store category on match for display
+  await updateDoc(doc(db,'matches',m.id||'x'),{playerACat:aCat,playerBCat:bCat,is2x:
+    getRatingMultiplier(aCat,bCat,getRC(m.scoreA,m.scoreB,'A'))>1||
+    getRatingMultiplier(bCat,aCat,getRC(m.scoreA,m.scoreB,'B'))>1
+  }).catch(()=>{});
+
+  await Promise.all([upd(m.playerAId,aData,'A',bCat),upd(m.playerBId,bData,'B',aCat)]);
+}
+
+async function checkAndApplyDivision(pid,p){
+  const div=p.division||9;
+  const rules=DIV_RULES[div]||DIV_RULES[9];
+  const cmp=p.cycleMP||0, cpts=p.cyclePts||0;
+  let newDiv=div, action=null;
+  if(cpts>=rules.promo&&div>1){newDiv=Math.max(1,div-1);action='promote';}
+  else if(cmp>=rules.cycle){
+    if(cpts<=rules.relo&&div<9){newDiv=Math.min(9,div+1);action='relegate';}
+    else if(cmp>=rules.cycle){action='stay';}
+  }
+  if(action){
+    await updateDoc(doc(db,'players',pid),{
+      division:newDiv,cycleMP:0,cyclePts:0,
+      highestDivision:Math.min(newDiv,p.highestDivision||9)
+    });
+    if(action==='promote')T(p.name+' promoted to Division '+newDiv+'!','success');
+    else if(action==='relegate')T(p.name+' relegated to Division '+newDiv+'.','info');
+  }
 }
 
 // ===== SUBMIT =====
@@ -1304,7 +1485,7 @@ async function loadSubmitPage(){
   S.players=snap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
   const sel=$('submitOpponent');
   sel.innerHTML='<option value="">-- Select Opponent --</option>'+
-    S.players.filter(p=>p.id!==S.user.id).map(p=>`<option value="${p.id}">${p.name} (Div ${p.division||9})</option>`).join('');
+    S.players.filter(p=>p.id!==S.user.id).map(p=>`<option value="${p.id}">${p.name} (Div ${p.division||9} - ${p.category||'Main'})</option>`).join('');
 }
 
 async function submitMatchResult(){
@@ -1317,25 +1498,24 @@ async function submitMatchResult(){
   if(!opp)return T('Opponent not found','error');
   try{
     await addDoc(collection(db,'matches'),{
-      playerAId:S.user.id,playerAName:S.user.name,
-      playerBId:oppId,playerBName:opp.name,
+      playerAId:S.user.id,playerAName:S.user.name,playerACat:S.user.category||'Main',
+      playerBId:oppId,playerBName:opp.name,playerBCat:opp.category||'Main',
       scoreA:sA,scoreB:sB,status:'pending',matchDate,
       createdAt:serverTimestamp(),submittedBy:S.user.id
     });
-    const msg=isHigh(sA,sB)?`GOAL FEST! ${sA+sB} goals. Waiting for ${opp.name} to confirm.`:`Result submitted! Waiting for ${opp.name} to confirm.`;
+    const msg=isHigh(sA,sB)?`GOAL FEST! ${sA+sB} goals submitted. Waiting for ${opp.name}.`:`Result submitted. Waiting for ${opp.name} to confirm.`;
     T(msg,'success');
-    $('scoreA').value='';$('scoreB').value='';
-    S.matches=[];
+    $('scoreA').value='';$('scoreB').value='';S.matches=[];
   }catch(e){T('Submit failed: '+e.message,'error');}
 }
 
 // ===== MOD PANEL =====
 async function loadModPanel(){
   if(!S.user||!S.user.isModerator){
-    $('modPendingMatches').innerHTML='<div class="empty-state"><div class="empty-icon">&#128683;</div><div class="empty-text">Moderator access required</div></div>';
-    return;
+    $('modPendingMatches').innerHTML='<div class="empty-state"><div class="empty-text">Moderator access required</div></div>';return;
   }
   try{
+    // Query all pending matches
     const mSnap=await getDocs(query(collection(db,'matches'),where('status','==','pending'),orderBy('createdAt','desc'),limit(100)));
     const pending=mSnap.docs.map(d=>({id:d.id,...d.data()}));
     const el=$('modPendingMatches');
@@ -1343,9 +1523,15 @@ async function loadModPanel(){
     el.innerHTML=pending.map(m=>`
       <div class="confirm-card">
         <div class="confirm-vs">
-          <div class="confirm-player"><div class="confirm-player-name">${m.playerAName}</div><div class="text-gray text-sm">Player A</div></div>
+          <div class="confirm-player">
+            <div class="confirm-player-name">${m.playerAName}</div>
+            <div class="text-gray text-sm">${m.playerACat||''}</div>
+          </div>
           <div class="confirm-score-display">${m.scoreA}-${m.scoreB}</div>
-          <div class="confirm-player"><div class="confirm-player-name">${m.playerBName}</div><div class="text-gray text-sm">Player B</div></div>
+          <div class="confirm-player">
+            <div class="confirm-player-name">${m.playerBName}</div>
+            <div class="text-gray text-sm">${m.playerBCat||''}</div>
+          </div>
         </div>
         <div class="text-gray text-sm mb-8">${fmtDate(m.createdAt)} - ${timeAgo(m.createdAt)}</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -1353,7 +1539,7 @@ async function loadModPanel(){
           <button class="btn-reject btn-sm" onclick="confirmMatch('${m.id}',false)">Dispute</button>
         </div>
       </div>`).join('');
-  }catch(e){T('Error: '+e.message,'error');}
+  }catch(e){T('Error loading mod panel: '+e.message,'error');console.error(e);}
 }
 
 // ===== PROFILE =====
@@ -1363,94 +1549,118 @@ async function viewProfile(playerId){
   try{
     const [snap,mSnap]=await Promise.all([
       getDoc(doc(db,'players',playerId)),
-      getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(300)))
+      getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(500)))
     ]);
     if(!snap.exists()){$('profileContent').innerHTML='<div class="empty-state"><div class="empty-text">Player not found</div></div>';return;}
     const p={id:snap.id,...snap.data()};
     const allM=mSnap.docs.map(d=>({id:d.id,...d.data()}));
-    const myMatches=allM.filter(m=>(m.playerAId===playerId||m.playerBId===playerId)&&m.status==='confirmed');
-    const recent=myMatches.slice(0,10);
     
-    // Compute stats from match history
-    let gf=0,ga=0,cs=0;
-    myMatches.forEach(m=>{
+    // Compute stats strictly from match history
+    const myConfirmed=allM.filter(m=>(m.playerAId===playerId||m.playerBId===playerId)&&m.status==='confirmed');
+    const recent=myConfirmed.slice(0,10);
+    
+    // Build player category map for 2x calc
+    const playerCatMap={};
+    S.players.forEach(pp=>playerCatMap[pp.id]=pp.category||'Main');
+    
+    let w=0,d=0,l=0,gf=0,ga=0,cs=0,x2Count=0;
+    myConfirmed.forEach(m=>{
       const side=m.playerAId===playerId?'A':'B';
-      const my=side==='A'?m.scoreA:m.scoreB, op=side==='A'?m.scoreB:m.scoreA;
-      gf+=my; ga+=op; if(op===0)cs++;
+      const result=getRC(m.scoreA,m.scoreB,side);
+      const myG=side==='A'?m.scoreA:m.scoreB, opG=side==='A'?m.scoreB:m.scoreA;
+      const oppId=side==='A'?m.playerBId:m.playerAId;
+      const oppCat=playerCatMap[oppId]||(side==='A'?m.playerBCat:m.playerACat)||'Main';
+      const mult=getRatingMultiplier(p.category||'Main',oppCat,result);
+      if(mult>1)x2Count++;
+      if(result==='W')w+=mult;
+      else if(result==='D')d+=1;
+      else l+=mult;
+      gf+=myG;ga+=opG;if(opG===0)cs++;
     });
-    
-    const w=p.wins||0,d=p.draws||0,l=p.losses||0;
-    const total=w+d+l;
-    const wr=total>0?Math.round(w/total*100):0;
+    const total=myConfirmed.length,wr=total>0?Math.round((w/(w+d+l||1))*100):0;
     const gd=gf-ga;
-    const rating=calcRatingFromStats(w,d,l,gf,ga,cs);
+    const rating=Math.max(0,Math.round(w*10+d*5+l*(-5)+gd+cs*2));
     
-    const div=p.division||9;
-    const rules=DIV_RULES[div];
-    const cmp=p.cycleMP||0, cpts=p.cyclePts||0;
-    const pct=Math.min(100,Math.round(cpts/(rules.promoPoints||1)*100));
-    const remaining=Math.max(0,rules.cycle-cmp);
-    
-    const isRival=S.user&&(S.user.rivals||[]).includes(playerId);
-    const isMe=S.user&&S.user.id===playerId;
-    const badges=calcBadges(p,myMatches);
-    const highest=p.highestDivision||div;
-    
+    const div=p.division||9,rules=DIV_RULES[div]||DIV_RULES[9];
+    const cmp=p.cycleMP||0,cpts=p.cyclePts||0;
+    const pct=Math.min(100,Math.round(cpts/(rules.promo||1)*100));
     const form=(p.form||[]).slice(-5);
+    const isMe=S.user&&S.user.id===playerId,isRival=S.user&&(S.user.rivals||[]).includes(playerId);
     
+    // Badges
+    const badges=[];
+    if(div===1)badges.push({t:'Elite Division',c:'badge-star'});
+    else if(div===2)badges.push({t:'Premier Division',c:'badge-silver'});
+    else if(div===3)badges.push({t:'Championship',c:'badge-gold'});
+    const highest=p.highestDivision||div;
+    if(highest<div)badges.push({t:'Peak: Div '+highest,c:'badge-blue'});
+    const wrPct=wr;
+    if(wrPct>=80&&total>=5)badges.push({t:'Win Machine 80%+',c:'badge-gold'});
+    else if(wrPct>=70&&total>=5)badges.push({t:'Sharp 70%+',c:'badge-green'});
+    let streak=0;const fm=p.form||[];for(let i=fm.length-1;i>=0;i--){if(fm[i]==='W')streak++;else break;}
+    if(streak>=5)badges.push({t:'On Fire '+streak+' Streak',c:'badge-red'});
+    else if(streak>=3)badges.push({t:streak+' Win Streak',c:'badge-green'});
+    if(x2Count>0)badges.push({t:'2x Upsets: '+x2Count,c:'badge-purple'});
+    if(p.isPOTD)badges.push({t:'Player of the Day',c:'badge-star'});
+    if(p.isPOTW)badges.push({t:'Player of the Week',c:'badge-gold'});
+    if(p.isPOTM)badges.push({t:'Player of the Month',c:'badge-purple'});
+    if(p.isPOTS)badges.push({t:'Player of the Season',c:'badge-star'});
+    if(p.isModerator)badges.push({t:'Moderator',c:'badge-blue'});
+
     $('profileContent').innerHTML=`
       <div class="profile-header">
         <div class="profile-avatar">${p.name[0].toUpperCase()}</div>
         <div class="profile-info">
           <div class="profile-name">${p.name}</div>
-          <span class="profile-cat">${p.category||'Youth'}</span>
+          <span class="profile-cat ${catClass(p.category||'Main')}">${p.category||'Main'}</span>
           <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap">
-            ${divBadge(div)}
-            <span class="text-gray text-sm">Division ${div} - ${rules.name}</span>
-            ${highest<div?`<span style="font-size:11px;color:#88CCFF">Best: Div ${highest}</span>`:''}
+            ${divBadge(div)} <span class="text-gray text-sm">Division ${div} - ${rules.name}</span>
+            ${highest<div?`<span class="text-blue text-sm">Best Div: ${highest}</span>`:''}
           </div>
-          <div style="display:flex;gap:4px;margin-top:8px">
-            ${form.map(r=>formBadge(r)).join('')}
+          <div class="form-dots mt-8">${form.map(r=>formBadge(r)).join('')}</div>
+          <div class="badges-row">${badges.map(b=>`<span class="player-badge ${b.c}">${b.t}</span>`).join('')}</div>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+            ${!isMe&&S.user?`<button class="btn-sm ${isRival?'btn-reject':'btn-edit'}" onclick="toggleRival('${playerId}','${p.name}')">
+              ${isRival?'Remove Rival':'Add Rival'}</button>`:''}
+            ${isMe?`<button class="btn-sm btn-edit" onclick="openModal('changePwModal')">Change Password</button>`:''}
           </div>
-          <div class="badges-row">${badges.map(b=>`<span class="player-badge ${b.cls}">${b.text}</span>`).join('')}</div>
-          ${!isMe&&S.user?`<button class="btn-sm ${isRival?'btn-reject':'btn-edit'} mt-8" onclick="toggleRival('${playerId}','${p.name}')">
-            ${isRival?'Remove Rival':'Add Rival'}</button>`:''}
         </div>
       </div>
-      
       <div class="profile-stats">
-        <div class="p-stat"><div class="p-stat-val" style="color:#FF4444">${rating}</div><div class="p-stat-lbl">Rating</div></div>
-        <div class="p-stat"><div class="p-stat-val text-green">${w}</div><div class="p-stat-lbl">Wins</div></div>
+        <div class="p-stat"><div class="p-stat-val" style="color:var(--ucl-star)">${rating}</div><div class="p-stat-lbl">Rating</div></div>
+        <div class="p-stat"><div class="p-stat-val text-green">${Math.round(w)}</div><div class="p-stat-lbl">Wins</div></div>
         <div class="p-stat"><div class="p-stat-val text-yellow">${d}</div><div class="p-stat-lbl">Draws</div></div>
-        <div class="p-stat"><div class="p-stat-val text-red">${l}</div><div class="p-stat-lbl">Losses</div></div>
-        <div class="p-stat"><div class="p-stat-val">${total}</div><div class="p-stat-lbl">Matches</div></div>
+        <div class="p-stat"><div class="p-stat-val text-red">${Math.round(l)}</div><div class="p-stat-lbl">Losses</div></div>
+        <div class="p-stat"><div class="p-stat-val" style="color:#82B1FF">${total}</div><div class="p-stat-lbl">Matches</div></div>
         <div class="p-stat"><div class="p-stat-val">${wr}%</div><div class="p-stat-lbl">Win Rate</div></div>
-        <div class="p-stat"><div class="p-stat-val" style="color:${gd>=0?'#44FF88':'#FF6666'}">${gd>=0?'+':''}${gd}</div><div class="p-stat-lbl">Goal Diff</div></div>
-        <div class="p-stat"><div class="p-stat-val">${cs}</div><div class="p-stat-lbl">Clean Sheets</div></div>
+        <div class="p-stat"><div class="p-stat-val" style="color:${gd>=0?'#00E676':'#FF5555'}">${gd>=0?'+':''}${gd}</div><div class="p-stat-lbl">Goal Diff</div></div>
+        <div class="p-stat"><div class="p-stat-val" style="color:#82B1FF">${cs}</div><div class="p-stat-lbl">Clean Sheets</div></div>
       </div>
-      
       <div class="promo-tracker">
         <div class="promo-title">Division ${div} Cycle - Promotion Progress</div>
         <div class="promo-bar-wrap"><div class="promo-bar-fill" style="width:${pct}%"></div></div>
-        <div class="promo-label"><span>${cpts} pts / ${rules.promoPoints} needed</span><span>${cmp}/10 matches</span></div>
-        ${remaining>0?`<div class="promo-cycle-info">${remaining} matches remaining in this cycle</div>`:'<div class="promo-cycle-info" style="color:var(--green)">Cycle complete!</div>'}
+        <div class="promo-label"><span>${cpts} pts / ${rules.promo} needed</span><span>${cmp}/10 matches</span></div>
+        ${cmp>=rules.cycle?'<div class="promo-cycle-info" style="color:#00E676">Cycle complete!</div>':
+        `<div class="promo-cycle-info">${Math.max(0,rules.cycle-cmp)} matches remaining in this cycle</div>`}
       </div>
-      
       <div class="section-title mt-16">Recent Matches</div>
       ${recent.length?recent.map(m=>{
         const side=m.playerAId===playerId?'A':'B';
         const res=getRC(m.scoreA,m.scoreB,side);
         const oppName=side==='A'?m.playerBName:m.playerAName;
-        const oppId=side==='A'?m.playerBId:m.playerAId;
-        const my=side==='A'?m.scoreA:m.scoreB, op=side==='A'?m.scoreB:m.scoreA;
-        const hi=isHigh(m.scoreA,m.scoreB);
+        const oppId2=side==='A'?m.playerBId:m.playerAId;
+        const myG=side==='A'?m.scoreA:m.scoreB,opG=side==='A'?m.scoreB:m.scoreA;
+        const hi=isHigh(m.scoreA,m.scoreB),x2=m.is2x;
         return `<div class="match-card${hi?' high-score':''}">
           <div class="match-result-badge result-${res}">${res}</div>
           <div class="match-info">
-            <div class="match-vs">vs <span class="player-link" style="display:inline" onclick="viewProfile('${oppId}')">${oppName}</span>${hi?' <span class="high-score-badge">GOAL FEST</span>':''}</div>
+            <div class="match-vs">vs <span class="player-link" style="display:inline" onclick="viewProfile('${oppId2}')">${oppName}</span>
+              ${hi?' <span class="high-score-badge">GOAL FEST</span>':''}
+              ${x2?' <span class="x2-badge">2X</span>':''}
+            </div>
             <div class="match-meta">${fmtDate(m.createdAt||m.matchDate)} - ${statusBadge(m.status)}</div>
           </div>
-          <div class="match-score">${my}-${op}</div>
+          <div class="match-score">${myG}-${opG}</div>
         </div>`;
       }).join(''):'<div class="empty-state"><div class="empty-text">No matches yet</div></div>'}
     `;
@@ -1459,9 +1669,13 @@ async function viewProfile(playerId){
 
 async function loadMyProfile(){
   if(!S.user){
-    $('myProfileContent').innerHTML='<div class="empty-state"><div class="empty-icon">&#128274;</div><div class="empty-text">Not logged in</div><button class="btn-primary mt-12" onclick="openModal(\'loginModal\')">Login</button></div>';
-    return;
+    $('myProfileContent').innerHTML='<div class="empty-state"><div class="empty-icon">&#128274;</div><div class="empty-text">Not logged in</div><button class="btn-primary mt-12" onclick="openModal(\'loginModal\')">Login</button></div>';return;
   }
+  // Refresh user data
+  try{
+    const snap=await getDoc(doc(db,'players',S.user.id));
+    if(snap.exists())S.user={...S.user,...snap.data()};
+  }catch{}
   await viewProfile(S.user.id);
   $('myProfileContent').innerHTML=$('profileContent').innerHTML;
 }
@@ -1480,7 +1694,7 @@ async function toggleRival(playerId,playerName){
 async function adminLogin(){
   const pw=$('adminPwInput').value;
   let stored=S.adminPw;
-  try{const snap=await getDoc(doc(db,'settings','admin'));if(snap.exists()&&snap.data().password)stored=snap.data().password;}catch{}
+  try{const s=await getDoc(doc(db,'settings','admin'));if(s.exists()&&s.data().password)stored=s.data().password;}catch{}
   if(pw===stored){
     $('adminLoginWrap').style.display='none';$('adminPanelWrap').style.display='block';
     loadAdminPanel('pending');T('Admin access granted','success');
@@ -1492,7 +1706,7 @@ async function loadAdminPanel(tab){
     const snap=await getDocs(query(collection(db,'players'),where('status','==','pending')));
     const pending=snap.docs.map(d=>({id:d.id,...d.data()}));
     const el=$('adminPendingList');
-    if(!pending.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">&#10003;</div><div class="empty-text">No pending registrations</div></div>';return;}
+    if(!pending.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">&#10003;</div><div class="empty-text">No pending</div></div>';return;}
     el.innerHTML=pending.map(p=>`
       <div class="pending-item">
         <div class="pending-info"><div class="pending-name">${p.name}</div><div class="pending-meta">${p.category} - ${fmtDate(p.createdAt)}</div></div>
@@ -1513,10 +1727,10 @@ async function loadAdminPanel(tab){
     const el=$('adminMatchesList');
     if(!matches.length){el.innerHTML='<div class="empty-state"><div class="empty-text">No matches</div></div>';return;}
     el.innerHTML=matches.map(m=>{
-      const hi=isHigh(m.scoreA,m.scoreB);
+      const hi=isHigh(m.scoreA,m.scoreB),x2=m.is2x;
       return `<div class="pending-item${hi?' high-score':''}">
         <div class="pending-info">
-          <div class="pending-name">${m.playerAName} ${m.scoreA}-${m.scoreB} ${m.playerBName}${hi?' [GOAL FEST]':''}</div>
+          <div class="pending-name">${m.playerAName} ${m.scoreA}-${m.scoreB} ${m.playerBName}${hi?' [GOAL FEST]':''}${x2?' [2X]':''}</div>
           <div class="pending-meta">${fmtDate(m.createdAt)} - ${statusBadge(m.status)}</div>
         </div>
         <div style="display:flex;gap:5px;flex-wrap:wrap">
@@ -1533,49 +1747,29 @@ async function loadAdminPanel(tab){
     renderModPlayers(S.adminPlayers);
   }
   if(tab==='season'){
-    // Load season settings
-    try{
-      const snap=await getDoc(doc(db,'settings','season'));
-      if(snap.exists()){
-        const sd=snap.data();
-        if(sd.duration)$('seasonDuration').value=sd.duration;
-        if(sd.startDate)$('seasonStart').value=sd.startDate;
-      }
-    }catch{}
+    try{const s=await getDoc(doc(db,'settings','season'));if(s.exists()){if(s.data().duration)$('seasonDuration').value=s.data().duration;if(s.data().startDate)$('seasonStart').value=s.data().startDate;}}catch{}
   }
-}
-
-async function saveSeasonSettings(){
-  const duration=parseInt($('seasonDuration').value)||30;
-  const startDate=$('seasonStart').value;
-  try{
-    await setDoc(doc(db,'settings','season'),{duration,startDate},{merge:true});
-    T('Season settings saved','success');
-  }catch(e){T('Error: '+e.message,'error');}
 }
 
 function renderAdminPlayers(players){
   const search=($('adminPlayerSearch')?.value||'').toLowerCase();
   const filtered=players.filter(p=>p.name?.toLowerCase().includes(search));
+  const rating=p=>calcRating(p.wins||0,p.draws||0,p.losses||0,p.goalsFor||0,p.goalsAgainst||0,p.cleanSheets||0);
   $('adminPlayersList').innerHTML=filtered.length?filtered.map(p=>`
     <div class="pending-item">
       ${divBadge(p.division)}
       <div class="pending-info">
-        <div class="pending-name">${p.name}${p.status==='banned'?' [BANNED]':p.status==='pending'?' [PENDING]':''}${p.isModerator?' [MOD]':''}</div>
-        <div class="pending-meta">${p.category||'Youth'} - Div${p.division||9} - Rating:${calcRatingFromStats(p.wins||0,p.draws||0,p.losses||0,p.goalsFor||0,p.goalsAgainst||0,p.cleanSheets||0)} - ${p.wins||0}W ${p.draws||0}D ${p.losses||0}L - Cycle:${p.cycleMP||0}/10 (${p.cyclePts||0}pts) - ${statusBadge(p.status||'active')}</div>
+        <div class="pending-name">${p.name} <span class="${catClass(p.category||'Main')}" style="font-size:11px">${p.category||'Main'}</span>${p.status==='banned'?' [BANNED]':''}${p.isModerator?' [MOD]':''}</div>
+        <div class="pending-meta">Div${p.division||9} - Rating:${rating(p)} - ${p.wins||0}W ${p.draws||0}D ${p.losses||0}L - Cycle:${p.cycleMP||0}/10 (${p.cyclePts||0}pts) - ${statusBadge(p.status||'active')}</div>
       </div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap">
-        <button class="btn-sm btn-edit" onclick="adminEditPlayer('${p.id}',${p.division||9},0,${p.wins||0},${p.draws||0},${p.losses||0},${p.goalsFor||0},${p.goalsAgainst||0},${p.cycleMP||0},${p.cyclePts||0},'${p.status||'active'}')">Edit</button>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <button class="btn-sm btn-edit" onclick="adminEditPlayer('${p.id}',${p.division||9},'${p.category||'Main'}',${p.wins||0},${p.draws||0},${p.losses||0},${p.goalsFor||0},${p.goalsAgainst||0},${p.cleanSheets||0},${p.cycleMP||0},${p.cyclePts||0},'${p.status||'active'}')">Edit</button>
         <button class="btn-sm btn-ban" onclick="adminToggleBan('${p.id}','${p.name}','${p.status||'active'}')">
           ${p.status==='banned'?'Unban':'Ban'}</button>
-        <button class="btn-sm ${p.isPOTW?'btn-reject':'btn-edit'}" onclick="adminTogglePOTW('${p.id}','${p.name}',${!!p.isPOTW})" style="${p.isPOTW?'':''}">
-          ${p.isPOTW?'Remove POTW':'Set POTW'}</button>
-        <button class="btn-sm ${p.isPOTM?'btn-reject':'btn-mod'}" onclick="adminTogglePOTM('${p.id}','${p.name}',${!!p.isPOTM})">
-          ${p.isPOTM?'Remove POTM':'Set POTM'}</button>
-        <button class="btn-sm ${p.isPOTD?'btn-reject':'btn-approve'}" onclick="adminTogglePOTD('${p.id}','${p.name}',${!!p.isPOTD})">
-          ${p.isPOTD?'Remove POTD':'Set POTD'}</button>
-        <button class="btn-sm ${p.isPOTS?'btn-reject':'btn-ban'}" onclick="adminTogglePOTS('${p.id}','${p.name}',${!!p.isPOTS})">
-          ${p.isPOTS?'Remove POTS':'Set POTS'}</button>
+        <button class="btn-sm ${p.isPOTD?'btn-reject':'btn-approve'}" onclick="adminTogglePOTD('${p.id}','${p.name}',${!!p.isPOTD})">${p.isPOTD?'Rem POTD':'POTD'}</button>
+        <button class="btn-sm ${p.isPOTW?'btn-reject':'btn-edit'}" onclick="adminTogglePOTW('${p.id}','${p.name}',${!!p.isPOTW})">${p.isPOTW?'Rem POTW':'POTW'}</button>
+        <button class="btn-sm ${p.isPOTM?'btn-reject':'btn-mod'}" onclick="adminTogglePOTM('${p.id}','${p.name}',${!!p.isPOTM})">${p.isPOTM?'Rem POTM':'POTM'}</button>
+        <button class="btn-sm ${p.isPOTS?'btn-reject':'btn-ban'}" onclick="adminTogglePOTS('${p.id}','${p.name}',${!!p.isPOTS})">${p.isPOTS?'Rem POTS':'POTS'}</button>
       </div>
     </div>`).join(''):'<div class="empty-state"><div class="empty-text">No players</div></div>';
 }
@@ -1589,8 +1783,8 @@ function renderModPlayers(players){
     <div class="pending-item">
       ${divBadge(p.division)}
       <div class="pending-info">
-        <div class="pending-name">${p.name}${p.isModerator?' [MODERATOR]':''}</div>
-        <div class="pending-meta">${p.category||'Youth'} - ${p.wins||0}W ${p.draws||0}D ${p.losses||0}L</div>
+        <div class="pending-name">${p.name} <span class="${catClass(p.category||'Main')}" style="font-size:11px">${p.category||'Main'}</span>${p.isModerator?' [MODERATOR]':''}</div>
+        <div class="pending-meta">${p.wins||0}W ${p.draws||0}D ${p.losses||0}L</div>
       </div>
       <button class="btn-sm ${p.isModerator?'btn-reject':'btn-mod'}" onclick="adminToggleMod('${p.id}','${p.name}',${!!p.isModerator})">
         ${p.isModerator?'Remove Mod':'Give Mod'}</button>
@@ -1607,45 +1801,36 @@ async function adminToggleMod(id,name,isMod){
   loadAdminPanel('moderators');
 }
 
-async function adminTogglePOTW(id,name,cur){await updateDoc(doc(db,'players',id),{isPOTW:!cur});T(name+(!cur?' is now POTW':'POTW removed'),'success');loadAdminPanel('players');}
-async function adminTogglePOTM(id,name,cur){await updateDoc(doc(db,'players',id),{isPOTM:!cur});T(name+(!cur?' is now POTM':'POTM removed'),'success');loadAdminPanel('players');}
-async function adminTogglePOTD(id,name,cur){await updateDoc(doc(db,'players',id),{isPOTD:!cur});T(name+(!cur?' is now POTD':'POTD removed'),'success');loadAdminPanel('players');}
-async function adminTogglePOTS(id,name,cur){await updateDoc(doc(db,'players',id),{isPOTS:!cur});T(name+(!cur?' is now Player of the Season':'POTS removed'),'success');loadAdminPanel('players');}
+async function adminApprove(id){await updateDoc(doc(db,'players',id),{status:'active'});T('Player approved','success');loadAdminPanel('pending');}
+async function adminReject(id){if(!confirm('Reject and delete this registration?'))return;await deleteDoc(doc(db,'players',id));T('Rejected','info');loadAdminPanel('pending');}
 
-async function adminApprove(id){
-  await updateDoc(doc(db,'players',id),{status:'active'});
-  T('Player approved','success');loadAdminPanel('pending');
-}
-async function adminReject(id){
-  if(!confirm('Reject and delete this registration?'))return;
-  await deleteDoc(doc(db,'players',id));T('Rejected','info');loadAdminPanel('pending');
-}
-
-function adminEditPlayer(id,div,pts,wins,draws,losses,gf,ga,cmp,cpts,status){
-  $('editPlayerId').value=id;$('editDivision').value=div;$('editPoints').value=pts;
+function adminEditPlayer(id,div,cat,wins,draws,losses,gf,ga,cs,cmp,cpts,status){
+  $('editPlayerId').value=id;$('editDivision').value=div;$('editCategory').value=cat;
   $('editWins').value=wins;$('editDraws').value=draws;$('editLosses').value=losses;
-  $('editGF').value=gf;$('editGA').value=ga;$('editCycleMP').value=cmp;$('editCyclePts').value=cpts;
-  $('editStatus').value=status;openModal('editPlayerModal');
+  $('editGF').value=gf;$('editGA').value=ga;$('editCS').value=cs;
+  $('editCycleMP').value=cmp;$('editCyclePts').value=cpts;$('editStatus').value=status;
+  openModal('editPlayerModal');
 }
 
 async function savePlayerEdit(){
   const id=$('editPlayerId').value,div=parseInt($('editDivision').value);
+  const cat=$('editCategory').value;
   const wins=parseInt($('editWins').value),draws=parseInt($('editDraws').value),losses=parseInt($('editLosses').value);
-  const gf=parseInt($('editGF').value),ga=parseInt($('editGA').value);
+  const gf=parseInt($('editGF').value),ga=parseInt($('editGA').value),cs=parseInt($('editCS').value);
   const cmp=parseInt($('editCycleMP').value),cpts=parseInt($('editCyclePts').value);
   const status=$('editStatus').value;
   if(div<1||div>9)return T('Division 1-9 only','error');
   try{
-    await updateDoc(doc(db,'players',id),{division:div,wins,draws,losses,goalsFor:gf,goalsAgainst:ga,cycleMP:cmp,cyclePts:cpts,status});
+    await updateDoc(doc(db,'players',id),{division:div,category:cat,wins,draws,losses,goalsFor:gf,goalsAgainst:ga,cleanSheets:cs,cycleMP:cmp,cyclePts:cpts,status});
     T('Player updated','success');closeModal('editPlayerModal');loadAdminPanel('players');
   }catch(e){T('Error: '+e.message,'error');}
 }
 
-async function adminToggleBan(id,name,cs){
-  const ns=cs==='banned'?'active':'banned';
-  await updateDoc(doc(db,'players',id),{status:ns});
-  T(name+' '+ns,'info');loadAdminPanel('players');
-}
+async function adminToggleBan(id,name,cs){const ns=cs==='banned'?'active':'banned';await updateDoc(doc(db,'players',id),{status:ns});T(name+' '+ns,'info');loadAdminPanel('players');}
+async function adminTogglePOTD(id,n,c){await updateDoc(doc(db,'players',id),{isPOTD:!c});T(n+(!c?' POTD set':'POTD removed'),'success');loadAdminPanel('players');}
+async function adminTogglePOTW(id,n,c){await updateDoc(doc(db,'players',id),{isPOTW:!c});T(n+(!c?' POTW set':'POTW removed'),'success');loadAdminPanel('players');}
+async function adminTogglePOTM(id,n,c){await updateDoc(doc(db,'players',id),{isPOTM:!c});T(n+(!c?' POTM set':'POTM removed'),'success');loadAdminPanel('players');}
+async function adminTogglePOTS(id,n,c){await updateDoc(doc(db,'players',id),{isPOTS:!c});T(n+(!c?' POTS set':'POTS removed'),'success');loadAdminPanel('players');}
 
 function adminEditMatch(id,nA,nB,sA,sB,status){
   $('editMatchId').value=id;$('editMatchInfo').textContent=`${nA} vs ${nB}`;
@@ -1665,7 +1850,14 @@ async function saveMatchEdit(){
   const id=$('editMatchId').value,sA=parseInt($('editScoreA').value),sB=parseInt($('editScoreB').value);
   const status=$('editMatchStatus').value;
   try{
-    await updateDoc(doc(db,'matches',id),{scoreA:sA,scoreB:sB,status});
+    // If changing to confirmed from pending, also apply stats
+    const mRef=doc(db,'matches',id);
+    const old=await getDoc(mRef);
+    await updateDoc(mRef,{scoreA:sA,scoreB:sB,status});
+    if(status==='confirmed'&&old.data().status!=='confirmed'){
+      const m={...old.data(),scoreA:sA,scoreB:sB};
+      await applyMatchStats(m);
+    }
     T('Match updated','success');closeModal('editMatchModal');S.matches=[];loadAdminPanel('adminMatches');
   }catch(e){T('Error: '+e.message,'error');}
 }
@@ -1680,18 +1872,22 @@ async function adminDeleteMatch(){
 async function adminDeleteMatchDirect(id){
   if(!confirm('Delete this match?'))return;
   await deleteDoc(doc(db,'matches',id));
-  T('Match deleted','info');S.matches=[];loadAdminPanel('adminMatches');
+  // NOTE: Since stats are computed live from history, no need to reverse stats
+  T('Match deleted. Ranking will update automatically.','info');
+  S.matches=[];loadAdminPanel('adminMatches');
+}
+
+async function saveSeasonSettings(){
+  const dur=parseInt($('seasonDuration').value)||30,sd=$('seasonStart').value;
+  try{await setDoc(doc(db,'settings','season'),{duration:dur,startDate:sd},{merge:true});T('Season settings saved','success');}catch(e){T('Error','error');}
 }
 
 async function confirmSeasonReset(){
-  if(!confirm('RESET ENTIRE SEASON?\n\nAll matches deleted, all stats reset. Player accounts remain.\n\nPress OK to confirm.'))return;
+  if(!confirm('RESET ENTIRE SEASON?\n\nAll matches deleted, all stats reset. Player accounts remain.\n\nOK to confirm.'))return;
   try{
     const [pSnap,mSnap]=await Promise.all([getDocs(collection(db,'players')),getDocs(collection(db,'matches'))]);
     await Promise.all([
-      ...pSnap.docs.map(d=>updateDoc(doc(db,'players',d.id),{
-        wins:0,draws:0,losses:0,goalsFor:0,goalsAgainst:0,cleanSheets:0,
-        form:[],division:9,cycleMP:0,cyclePts:0,highestDivision:9
-      })),
+      ...pSnap.docs.map(d=>updateDoc(doc(db,'players',d.id),{wins:0,draws:0,losses:0,goalsFor:0,goalsAgainst:0,cleanSheets:0,form:[],division:9,cycleMP:0,cyclePts:0,highestDivision:9})),
       ...mSnap.docs.map(d=>deleteDoc(doc(db,'matches',d.id)))
     ]);
     S.players=[];S.matches=[];T('Season reset complete!','success');
@@ -1702,11 +1898,7 @@ async function changeAdminPassword(){
   const pw=$('newAdminPw').value,pw2=$('confirmAdminPw').value;
   if(!pw||pw.length<4)return T('Password too short','error');
   if(pw!==pw2)return T('Passwords do not match','error');
-  try{
-    await setDoc(doc(db,'settings','admin'),{password:pw},{merge:true});
-    S.adminPw=pw;T('Admin password updated','success');
-    $('newAdminPw').value='';$('confirmAdminPw').value='';
-  }catch(e){T('Error: '+e.message,'error');}
+  try{await setDoc(doc(db,'settings','admin'),{password:pw},{merge:true});S.adminPw=pw;T('Admin password updated','success');$('newAdminPw').value='';$('confirmAdminPw').value='';}catch(e){T('Error','error');}
 }
 
 function switchAdminTab(tab,btn){
@@ -1719,26 +1911,21 @@ function switchAdminTab(tab,btn){
 
 // ===== EXPOSE =====
 Object.assign(window,{
-  navTo,navBack,setNavActive,setMobActive,
-  openModal,closeModal,
-  doLogin,doRegister,doLogout,
-  switchLbTab,filterLeaderboard,
-  filterMatches,confirmMatch,
-  submitMatchResult,loadSubmitPage,
-  viewProfile,toggleRival,loadMyProfile,
+  navTo,navBack,setNavActive,setMobActive,openModal,closeModal,
+  doLogin,doRegister,doLogout,changeMyPassword,
+  switchLbTab,filterLeaderboard,filterMatches,confirmMatch,
+  submitMatchResult,loadSubmitPage,viewProfile,toggleRival,loadMyProfile,
   openRankingCardPreview,closeRankingPreview,downloadRankingCard,
-  adminLogin,loadAdminPanel,switchAdminTab,
-  adminApprove,adminReject,adminEditPlayer,savePlayerEdit,
-  adminToggleBan,adminToggleMod,
-  adminTogglePOTW,adminTogglePOTM,adminTogglePOTD,adminTogglePOTS,
+  adminLogin,loadAdminPanel,switchAdminTab,adminApprove,adminReject,
+  adminEditPlayer,savePlayerEdit,adminToggleBan,adminToggleMod,
+  adminTogglePOTD,adminTogglePOTW,adminTogglePOTM,adminTogglePOTS,
   adminEditMatch,saveMatchEdit,adminDeleteMatch,adminDeleteMatchDirect,
   adminConfirmMatch,filterAdminPlayers,filterModPlayers,
   confirmSeasonReset,changeAdminPassword,loadModPanel,saveSeasonSettings
 });
 
-// ===== INIT =====
-updateHeaderAuth();
-loadHome();
+// INIT
+updateHeaderAuth();loadHome();
 document.querySelectorAll('.modal-overlay').forEach(m=>{
   m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
 });
