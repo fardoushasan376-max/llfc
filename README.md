@@ -3,1705 +3,1425 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Llfc Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLFC Juvenile Division System</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Montserrat:wght@500;700&display=swap');
-
-body {
-  font-family: 'Montserrat', sans-serif;
-  background: #1a1a1a;
-  background-image: linear-gradient(45deg, #1a1a1a 25%, #2c2c2c 25%, #2c2c2c 50%, #1a1a1a 50%, #1a1a1a 75%, #2c2c2c 75%, #2c2c2c);
-  background-size: 20px 20px;
-  color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  min-height: 100vh;
+:root {
+  --red:#CC0000; --red-bright:#FF1A1A; --red-dark:#8B0000; --red-deeper:#5C0000;
+  --white:#FFFFFF; --gray-mid:#C8B0B0; --gray-dark:#4A3535;
+  --black:#0A0000; --card-bg:#1A0A0A; --card-border:rgba(204,0,0,0.3);
+  --gold:#FFD700; --silver:#C0C0C0; --bronze:#CD7F32;
+  --green:#00CC44; --yellow:#FFAA00; --blue:#4499FF; --purple:#AA44FF;
 }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Rajdhani',sans-serif;background:var(--black);color:var(--white);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 80px,rgba(204,0,0,0.025) 80px,rgba(204,0,0,0.025) 81px),repeating-linear-gradient(90deg,transparent,transparent 80px,rgba(204,0,0,0.025) 80px,rgba(204,0,0,0.025) 81px);pointer-events:none;z-index:0;}
 
-h1, h2, h3 {
-  font-family: 'Orbitron', sans-serif;
-  color: #d4af37;
-  text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
-}
+/* HEADER */
+header{position:sticky;top:0;z-index:1000;background:rgba(10,0,0,0.97);backdrop-filter:blur(10px);border-bottom:2px solid var(--red);box-shadow:0 4px 30px rgba(204,0,0,0.3);}
+.header-inner{max-width:1400px;margin:0 auto;padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:60px;gap:8px;}
+.logo-area{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;}
+.logo-badge{width:42px;height:42px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 15px rgba(204,0,0,0.6);flex-shrink:0;}
+.logo-text{display:flex;flex-direction:column;line-height:1;}
+.logo-main{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;}
+.logo-sub{font-size:10px;color:var(--red-bright);letter-spacing:3px;text-transform:uppercase;font-weight:600;}
+.header-nav{display:flex;gap:4px;align-items:center;}
+.nav-btn{background:none;border:1px solid transparent;color:var(--gray-mid);padding:6px 12px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13px;letter-spacing:1px;cursor:pointer;border-radius:4px;transition:all 0.2s;text-transform:uppercase;}
+.nav-btn:hover,.nav-btn.active{color:var(--white);border-color:var(--red);background:rgba(204,0,0,0.15);}
+.header-auth{display:flex;gap:6px;align-items:center;flex-shrink:0;}
+.btn-login{background:transparent;border:1px solid var(--red);color:var(--red-bright);padding:6px 14px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;cursor:pointer;border-radius:3px;transition:all 0.2s;text-transform:uppercase;}
+.btn-login:hover{background:var(--red);color:white;}
+.btn-register{background:var(--red);border:1px solid var(--red);color:white;padding:6px 14px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;cursor:pointer;border-radius:3px;transition:all 0.2s;text-transform:uppercase;}
+.btn-register:hover{background:var(--red-bright);}
+.user-pill{display:flex;align-items:center;gap:8px;background:rgba(204,0,0,0.15);border:1px solid var(--red);border-radius:20px;padding:4px 12px 4px 4px;cursor:pointer;}
+.user-avatar{width:28px;height:28px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.user-name{font-size:13px;font-weight:600;}
+.mod-badge{font-size:9px;background:rgba(170,68,255,0.3);border:1px solid var(--purple);color:var(--purple);padding:1px 5px;border-radius:3px;letter-spacing:1px;}
 
-.tabs {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-}
+/* MAIN */
+main{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:20px 16px;min-height:calc(100vh - 60px);}
+.page{display:none;}.page.active{display:block;}
 
-.tab-btn {
-  padding: 12px 25px;
-  background: #2c2c2c;
-  border: 2px solid #d4af37;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 700;
-  color: #ffffff;
-  transition: all 0.3s ease;
-  font-family: 'Orbitron', sans-serif;
-}
+/* CARDS */
+.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;padding:20px;}
+.card-red{background:linear-gradient(135deg,rgba(204,0,0,0.2),rgba(10,0,0,0.9));border:1px solid var(--red);}
 
-.tab-btn:hover {
-  background: #d4af37;
-  color: #1a1a1a;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
-}
+/* SECTION TITLE */
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:var(--white);display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.section-title::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,var(--red),transparent);}
 
-.tab-btn.active {
-  background: #d4af37;
-  color: #1a1a1a;
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
-}
+/* HERO */
+.hero{background:linear-gradient(135deg,rgba(139,0,0,0.35) 0%,rgba(10,0,0,0.85) 60%);border:1px solid var(--red);border-radius:12px;padding:36px 28px;margin-bottom:20px;position:relative;overflow:hidden;}
+.hero::before{content:'LLFC';position:absolute;right:-10px;top:-10px;font-family:'Bebas Neue',sans-serif;font-size:180px;color:rgba(204,0,0,0.05);letter-spacing:10px;line-height:1;pointer-events:none;}
+.hero-tag{display:inline-block;background:var(--red);color:white;font-size:11px;font-weight:700;letter-spacing:3px;padding:3px 10px;border-radius:2px;margin-bottom:10px;text-transform:uppercase;}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,64px);letter-spacing:4px;line-height:1;margin-bottom:10px;}
+.hero h1 span{color:var(--red-bright);}
+.hero p{color:var(--gray-mid);font-size:15px;max-width:500px;margin-bottom:20px;line-height:1.5;}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;}
 
-section {
-  display: none;
-  width: 1080px;
-  max-width: 100%;
-}
+/* BUTTONS */
+.btn-primary{background:var(--red);color:white;border:none;padding:11px 26px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;cursor:pointer;border-radius:4px;text-transform:uppercase;transition:all 0.2s;box-shadow:0 4px 15px rgba(204,0,0,0.3);}
+.btn-primary:hover{background:var(--red-bright);box-shadow:0 4px 25px rgba(255,26,26,0.5);transform:translateY(-1px);}
+.btn-secondary{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,0.25);padding:11px 26px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;cursor:pointer;border-radius:4px;text-transform:uppercase;transition:all 0.2s;}
+.btn-secondary:hover{border-color:var(--red);background:rgba(204,0,0,0.1);}
+.btn-sm{padding:5px 12px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;cursor:pointer;border-radius:3px;transition:all 0.2s;text-transform:uppercase;}
+.btn-approve{background:rgba(0,204,68,0.2);color:var(--green);border:1px solid rgba(0,204,68,0.4);}
+.btn-approve:hover{background:var(--green);color:#000;}
+.btn-reject{background:rgba(204,0,0,0.2);color:var(--red-bright);border:1px solid var(--red);}
+.btn-reject:hover{background:var(--red);color:white;}
+.btn-edit{background:rgba(255,170,0,0.15);color:var(--yellow);border:1px solid rgba(255,170,0,0.4);}
+.btn-edit:hover{background:rgba(255,170,0,0.3);}
+.btn-ban{background:rgba(80,0,80,0.3);color:#cc88ff;border:1px solid rgba(150,0,150,0.4);}
+.btn-ban:hover{background:rgba(150,0,150,0.4);}
+.btn-mod{background:rgba(68,153,255,0.15);color:var(--blue);border:1px solid rgba(68,153,255,0.4);}
+.btn-mod:hover{background:rgba(68,153,255,0.3);}
 
-section.active {
-  display: block;
-}
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px;}
+.stat-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;padding:14px;text-align:center;transition:border-color 0.2s;}
+.stat-card:hover{border-color:var(--red);}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--red-bright);line-height:1;}
+.stat-label{font-size:11px;color:var(--gray-mid);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
 
-/* Original Scorecard */
-.scorecard {
-  width: 1080px;
-  max-width: 100%;
-  background: #2c2c2c;
-  border-radius: 15px;
-  padding: 30px;
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-  border: 2px solid #d4af37;
-  margin-bottom: 20px;
-}
+/* GRID */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media(max-width:900px){.two-col{grid-template-columns:1fr;}.three-col{grid-template-columns:1fr 1fr;}.header-nav{display:none;}}
+@media(max-width:500px){.three-col{grid-template-columns:1fr;}}
 
-/* Alternative Scorecard */
-.scorecard-alt {
-  width: 1080px;
-  max-width: 100%;
-  background: #ffffff;
-  border-radius: 15px;
-  padding: 30px;
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-  border: 2px solid #87CEFA;
-  margin-bottom: 20px;
-}
+/* DIV BADGE */
+.div-badge{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;font-weight:700;font-size:13px;flex-shrink:0;}
+.div-1{background:linear-gradient(135deg,#FFD700,#FF8C00);color:#000;}
+.div-2{background:linear-gradient(135deg,#C0C0C0,#808080);color:#000;}
+.div-3{background:linear-gradient(135deg,#CD7F32,#8B4513);color:#fff;}
+.div-4{background:rgba(204,0,0,0.8);color:#fff;border:1px solid var(--red);}
+.div-5{background:rgba(204,0,0,0.55);color:#fff;border:1px solid rgba(204,0,0,0.5);}
+.div-6{background:rgba(120,0,0,0.6);color:#ddd;}
+.div-7{background:rgba(70,0,0,0.7);color:#bbb;}
+.div-8{background:rgba(40,0,0,0.7);color:#999;}
+.div-9{background:rgba(25,15,15,0.9);color:#666;border:1px solid #333;}
 
-.title-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 10px;
-}
+/* LB TABS */
+.lb-tabs{display:flex;gap:4px;margin-bottom:16px;background:rgba(204,0,0,0.05);border:1px solid var(--card-border);border-radius:8px;padding:4px;flex-wrap:wrap;}
+.lb-tab{flex:1;min-width:70px;background:none;border:none;color:var(--gray-mid);padding:8px 10px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13px;letter-spacing:1px;cursor:pointer;border-radius:5px;transition:all 0.2s;text-transform:uppercase;}
+.lb-tab.active{background:var(--red);color:white;}
 
-.tournament-logo {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid #87CEFA;
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-  object-fit: cover;
-}
+/* RANKING TABLE */
+.lb-table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--card-border);}
+table{width:100%;border-collapse:collapse;}
+thead tr{background:rgba(204,0,0,0.18);border-bottom:2px solid var(--red);}
+thead th{padding:11px 12px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-mid);font-weight:600;white-space:nowrap;}
+tbody tr{border-bottom:1px solid rgba(204,0,0,0.08);transition:background 0.15s;}
+tbody tr:hover{background:rgba(204,0,0,0.07);}
+tbody tr:last-child{border-bottom:none;}
+tbody td{padding:10px 12px;font-size:14px;font-weight:500;vertical-align:middle;}
+tbody tr.top-1{background:linear-gradient(90deg,rgba(255,215,0,0.08),transparent);}
+tbody tr.top-2{background:linear-gradient(90deg,rgba(192,192,192,0.06),transparent);}
+tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.06),transparent);}
+.rank-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gray-mid);}
+.rank-1{color:var(--gold);}.rank-2{color:var(--silver);}.rank-3{color:var(--bronze);}
 
-.scorecard .title {
-  font-size: 48px;
-  font-family: 'Orbitron', sans-serif;
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
-  border: 3px solid #87CEFA;
-  padding: 10px 20px;
-  border-radius: 10px;
-  background: #1a1a1a;
-}
+/* WDL PILLS - enhanced focus */
+.wdl-row{display:flex;align-items:center;gap:5px;}
+.wdl-pill{display:inline-flex;align-items:center;gap:3px;padding:4px 9px;border-radius:4px;font-size:12px;font-weight:700;letter-spacing:0.5px;white-space:nowrap;}
+.wdl-w{background:rgba(0,204,68,0.18);color:var(--green);border:1px solid rgba(0,204,68,0.3);}
+.wdl-d{background:rgba(255,170,0,0.18);color:var(--yellow);border:1px solid rgba(255,170,0,0.3);}
+.wdl-l{background:rgba(204,0,0,0.18);color:var(--red-bright);border:1px solid rgba(204,0,0,0.3);}
+.wdl-num{font-family:'Bebas Neue',sans-serif;font-size:17px;line-height:1;}
 
-.scorecard-alt .title {
-  font-size: 48px;
-  font-family: 'Orbitron', sans-serif;
-  color: #000000;
-  border: 3px solid #87CEFA;
-  padding: 10px 20px;
-  border-radius: 10px;
-  background: #ffffff;
-}
+/* WINRATE */
+.winrate-wrap{display:flex;align-items:center;gap:6px;}
+.winrate-bar{position:relative;background:rgba(255,255,255,0.08);border-radius:10px;height:6px;width:55px;overflow:hidden;flex-shrink:0;}
+.winrate-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--red),var(--red-bright));border-radius:10px;}
+.winrate-pct{font-size:12px;font-weight:700;color:var(--gray-mid);white-space:nowrap;}
 
-.scorecard .date {
-  font-size: 24px;
-  font-family: 'Orbitron', sans-serif;
-  color: #d4af37;
-  text-align: center;
-  margin-bottom: 25px;
-}
+/* FORM */
+.form-dots{display:flex;gap:3px;align-items:center;}
+.form-dot{width:9px;height:9px;border-radius:50%;}
+.form-w{background:var(--green);}.form-d{background:var(--yellow);}.form-l{background:var(--red);}
 
-.scorecard-alt .date {
-  font-size: 24px;
-  font-family: 'Orbitron', sans-serif;
-  color: #000000;
-  text-align: center;
-  margin-bottom: 25px;
-}
+/* PLAYER LINK */
+.player-link{cursor:pointer;color:var(--white);font-weight:600;transition:color 0.2s;display:inline-flex;align-items:center;gap:6px;}
+.player-link:hover{color:var(--red-bright);}
+.rating-val{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--red-bright);}
 
-.teams {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
+/* STATUS BADGE */
+.status-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.status-confirmed{background:rgba(0,204,68,0.2);color:var(--green);border:1px solid rgba(0,204,68,0.3);}
+.status-pending{background:rgba(255,170,0,0.2);color:var(--yellow);border:1px solid rgba(255,170,0,0.3);}
+.status-disputed{background:rgba(204,0,0,0.2);color:var(--red-bright);border:1px solid rgba(204,0,0,0.3);}
 
-.scorecard .team-panel {
-  flex: 1;
-  text-align: center;
-  font-size: 28px;
-  font-weight: 800;
-  padding: 15px;
-  border-radius: 10px;
-  border: 3px solid #87CEFA;
-  font-family: 'Orbitron', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: #ffffff;
-  background: #2c2c2c;
-  text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
-}
+/* SEARCH */
+.search-bar{display:flex;gap:8px;margin-bottom:14px;}
+.search-input{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(204,0,0,0.3);border-radius:5px;color:var(--white);padding:9px 13px;font-family:'Rajdhani',sans-serif;font-size:14px;}
+.search-input:focus{outline:none;border-color:var(--red);}
+.search-input::placeholder{color:var(--gray-mid);}
 
-.scorecard-alt .team-panel {
-  flex: 1;
-  text-align: center;
-  font-size: 28px;
-  font-weight: 800;
-  padding: 15px;
-  border-radius: 10px;
-  border: 3px solid #87CEFA;
-  font-family: 'Orbitron', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: #000000;
-  background: #ffffff;
-}
+/* FORM INPUTS */
+.match-form{display:grid;gap:14px;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray-mid);}
+.form-input,.form-select{background:rgba(255,255,255,0.05);border:1px solid rgba(204,0,0,0.3);border-radius:5px;color:var(--white);padding:9px 13px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:500;transition:border-color 0.2s;width:100%;}
+.form-input:focus,.form-select:focus{outline:none;border-color:var(--red);background:rgba(204,0,0,0.08);}
+.form-select option{background:#1A0A0A;color:white;}
+.score-row{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;}
+.score-vs{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--red);text-align:center;}
+.score-input{text-align:center;font-size:28px;font-family:'Bebas Neue',sans-serif;padding:10px;}
 
-.team-score {
-  width: 80px;
-  height: 50px;
-  background: #ffffff;
-  color: #000000;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-  border: 3px solid #87CEFA;
-}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:#140000;border:1px solid var(--red);border-radius:10px;padding:26px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;position:relative;}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:var(--white);margin-bottom:18px;}
+.modal-close{position:absolute;top:14px;right:14px;background:rgba(204,0,0,0.2);border:1px solid var(--red);color:var(--red-bright);width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.modal-close:hover{background:var(--red);color:white;}
 
-.team-logo {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #87CEFA;
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-}
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--card-bg);border-left:4px solid var(--red);border-radius:6px;padding:12px 18px;min-width:240px;max-width:360px;box-shadow:0 8px 30px rgba(0,0,0,0.5);transform:translateX(120%);transition:transform 0.3s;font-weight:600;font-size:14px;}
+.toast.show{transform:translateX(0);}
+.toast.success{border-color:var(--green);}
+.toast.error{border-color:var(--red-bright);}
+.toast.info{border-color:var(--yellow);}
 
-.scorecard #team1panel, .scorecard #team2panel {
-  color: #ffffff;
-  text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
-}
+/* NEWS TICKER */
+.news-ticker{background:rgba(204,0,0,0.1);border:1px solid rgba(204,0,0,0.35);border-radius:6px;margin-bottom:16px;overflow:hidden;display:flex;align-items:center;}
+.news-label{background:var(--red);color:white;padding:8px 14px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;flex-shrink:0;white-space:nowrap;}
+.news-scroll-wrap{overflow:hidden;flex:1;padding:8px 14px;}
+.news-scroll-text{font-size:13px;font-weight:600;color:var(--gold);white-space:nowrap;display:inline-block;animation:scrollNews 20s linear infinite;}
+@keyframes scrollNews{0%{transform:translateX(100vw);}100%{transform:translateX(-100%);}}
 
-.scorecard-alt #team1panel-alt, .scorecard-alt #team2panel-alt {
-  color: #000000;
-}
+/* MATCH CARD */
+.match-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:6px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;transition:border-color 0.2s;}
+.match-card:hover{border-color:var(--red);}
+.match-card.high-score{border-color:rgba(255,215,0,0.5);background:linear-gradient(135deg,rgba(255,215,0,0.05),var(--card-bg));}
+.match-result-badge{width:34px;height:34px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;font-weight:700;flex-shrink:0;}
+.result-W{background:rgba(0,204,68,0.2);color:var(--green);border:1px solid var(--green);}
+.result-D{background:rgba(255,170,0,0.2);color:var(--yellow);border:1px solid var(--yellow);}
+.result-L{background:rgba(204,0,0,0.2);color:var(--red-bright);border:1px solid var(--red);}
+.match-info{flex:1;min-width:0;}
+.match-vs{font-size:14px;font-weight:600;}
+.match-meta{font-size:11px;color:var(--gray-mid);margin-top:2px;}
+.match-score{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--white);text-align:right;flex-shrink:0;}
+.high-score-badge{background:rgba(255,215,0,0.2);color:var(--gold);border:1px solid rgba(255,215,0,0.4);border-radius:3px;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:1px;white-space:nowrap;}
 
-.matches {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+/* PENDING ITEMS */
+.pending-item{background:var(--card-bg);border:1px solid var(--card-border);border-radius:6px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.pending-info{flex:1;min-width:120px;}
+.pending-name{font-size:15px;font-weight:700;}
+.pending-meta{font-size:11px;color:var(--gray-mid);}
 
-.match-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-}
+/* CONFIRM CARD */
+.confirm-card{background:linear-gradient(135deg,rgba(204,0,0,0.1),var(--card-bg));border:1px solid var(--red);border-radius:8px;padding:14px;margin-bottom:10px;}
+.confirm-vs{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.confirm-player{text-align:center;flex:1;}
+.confirm-player-name{font-size:15px;font-weight:700;}
+.confirm-score-display{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--red-bright);padding:0 12px;flex-shrink:0;}
 
-.player-container {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 5px;
-  border: 2px solid #87CEFA;
-  border-radius: 5px;
-  height: 40px;
-  box-sizing: border-box;
-  position: relative;
-}
+/* PROFILE */
+.profile-header{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;margin-bottom:20px;}
+.profile-avatar{width:76px;height:76px;background:var(--red-dark);border:3px solid var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:30px;color:white;flex-shrink:0;box-shadow:0 0 20px rgba(204,0,0,0.4);}
+.profile-info{flex:1;}
+.profile-name{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:3px;line-height:1;}
+.profile-cat{display:inline-block;background:rgba(204,0,0,0.2);border:1px solid var(--red);color:var(--red-bright);font-size:11px;font-weight:700;letter-spacing:2px;padding:2px 8px;border-radius:2px;margin-top:4px;text-transform:uppercase;}
+.profile-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:10px;margin-bottom:20px;}
+.p-stat{background:var(--card-bg);border:1px solid var(--card-border);border-radius:6px;padding:12px;text-align:center;}
+.p-stat-val{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;}
+.p-stat-lbl{font-size:10px;color:var(--gray-mid);letter-spacing:1.5px;text-transform:uppercase;}
 
-.scorecard .player-container {
-  background: #2c2c2c;
-}
+/* PROMO */
+.promo-tracker{background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;padding:14px;margin-top:14px;}
+.promo-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray-mid);margin-bottom:8px;}
+.promo-bar-wrap{background:rgba(255,255,255,0.08);border-radius:6px;height:9px;margin-bottom:5px;overflow:hidden;}
+.promo-bar-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--red-bright));border-radius:6px;transition:width 0.5s;}
+.promo-label{font-size:12px;color:var(--gray-mid);display:flex;justify-content:space-between;}
 
-.scorecard-alt .player-container {
-  background: #ffffff;
-}
+/* ADMIN TABS */
+.admin-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;border-bottom:2px solid var(--red);padding-bottom:8px;}
+.admin-tab{background:none;border:1px solid transparent;color:var(--gray-mid);padding:6px 13px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:12px;letter-spacing:1px;cursor:pointer;border-radius:4px;transition:all 0.2s;text-transform:uppercase;}
+.admin-tab.active{background:var(--red);color:white;border-color:var(--red);}
+.admin-tab:hover:not(.active){border-color:var(--red);color:white;}
 
-.scorecard .player-left, .scorecard .player-right {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 22px;
-  font-weight: 600;
-  color: #ffffff;
-  text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
-  font-style: italic;
-  text-align: center;
-  width: 100%;
-}
+/* MOD INFO */
+.mod-panel-info{background:rgba(68,153,255,0.08);border:1px solid rgba(68,153,255,0.3);border-radius:8px;padding:14px;margin-bottom:16px;}
+.mod-panel-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--blue);margin-bottom:6px;}
 
-.scorecard-alt .player-left, .scorecard-alt .player-right {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 22px;
-  font-weight: 600;
-  color: #000000;
-  font-style: italic;
-  text-align: center;
-  width: 100%;
-}
+/* MOBILE NAV */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(10,0,0,0.98);border-top:2px solid var(--red);z-index:999;padding:6px 0;}
+.mobile-nav-inner{display:flex;justify-content:space-around;}
+.mob-nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;color:var(--gray-mid);font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:600;letter-spacing:1px;padding:4px 10px;cursor:pointer;transition:color 0.2s;text-transform:uppercase;}
+.mob-nav-btn.active,.mob-nav-btn:hover{color:var(--red-bright);}
+.mob-nav-icon{font-size:18px;}
+@media(max-width:768px){.mobile-nav{display:block;}main{padding-bottom:72px;}}
 
-.motm-player {
-  border: 3px solid #00ff00;
-}
-
-.scorecard .motm-player .player-left, .scorecard .motm-player .player-right {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 26px;
-  font-weight: 800;
-  color: ##FF4500;
-  text-shadow: none;
-  font-style: normal;
-}
-
-.scorecard-alt .motm-player .player-left, .scorecard-alt .motm-player .player-right {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 26px;
-  font-weight: 800;
-  color: #FF4500;
-  font-style: normal;
-}
-
-.motm-player::before {
-  content: '👑';
-  position: absolute;
-  top: -18px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 16px;
-  border-radius: 5px;
-  padding: 0 5px;
-}
-
-.scorecard .motm-player::before {
-  background: #1a1a1a;
-}
-
-.scorecard-alt .motm-player::before {
-  background: #ffffff;
-}
-
-.score-box {
-  width: 100px;
-  height: 40px;
-  background: #ffffff;
-  color: #000000;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 20px;
-  margin: 0 15px;
-  border: 3px solid #87CEFA;
-}
-
-.results-summary {
-  margin-top: 20px;
-  text-align: center;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 22px;
-}
-
-.scorecard .results-summary {
-  color: #ffffff;
-}
-
-.scorecard-alt .results-summary {
-  color: #000000;
-}
-
-.scorecard #winner {
-  color: #d4af37;
-  font-size: 26px;
-  font-weight: 800;
-}
-
-.scorecard-alt #winner-alt {
-  color: #d4af37;
-  font-size: 26px;
-  font-weight: 800;
-}
-
-.scorecard #motmScorecard {
-  color: #ffffff;
-  font-size: 24px;
-  font-weight: 700;
-  margin-top: 10px;
-  text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
-}
-
-.scorecard-alt #motmScorecard-alt {
-  color: #000000;
-  font-size: 24px;
-  font-weight: 700;
-  margin-top: 10px;
-}
-
-textarea {
-  width: 100%;
-  height: 200px;
-  margin: 20px 0;
-  padding: 12px;
-  background: #2c2c2c;
-  border: 1px solid #87CEFA;
-  color: #ffffff;
-  border-radius: 10px;
-  font-family: 'Montserrat', sans-serif;
-}
-
-button {
-  padding: 12px 25px;
-  font-size: 16px;
-  margin: 8px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  background: #87CEFA;
-  color: #1a1a1a;
-  font-weight: 700;
-  font-family: 'Orbitron', sans-serif;
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  background: #b8972a;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
-}
-
-.delete-btn {
-  background: #ff3333;
-  color: #ffffff;
-}
-
-.delete-btn:hover {
-  background: #cc0000;
-  box-shadow: 0 0 10px rgba(255, 51, 51, 0.7);
-}
-
-.admin-panel, .invitation-panel {
-  background: #2c2c2c;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
-  border: 2px solid #d4af37;
-}
-
-.admin-panel input, .admin-panel button, .invitation-panel input, .invitation-panel button, .invitation-panel select {
-  margin: 8px 0;
-}
-
-.admin-player, .admin-team, .admin-group, .admin-matchday, .admin-archive, .admin-tournament {
-  margin: 5px 0;
-  padding: 5px;
-  background: #1a1a1a;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #ffffff;
-}
-
-.url-input, select, input[type="date"], input[type="text"], input[type="password"], input[type="number"] {
-  width: 100%;
-  padding: 8px;
-  background: #1a1a1a;
-  border: 1px solid #d4af37;
-  color: #ffffff;
-  border-radius: 5px;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.invitation-text, .archive-text {
-  background: #1a1a1a;
-  padding: 15px;
-  border: 1px solid #d4af37;
-  border-radius: 10px;
-  white-space: pre-wrap;
-  font-family: 'Montserrat', sans-serif;
-  margin-top: 10px;
-  color: #ffffff;
-}
-
-.success-message, .error-message {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 10px 15px;
-  border-radius: 5px;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 14px;
-  z-index: 1000;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-}
-
-.success-message {
-  background: #1a1a1a;
-  color: #d4af37;
-  border: 1px solid #d4af37;
-}
-
-.error-message {
-  background: #1a1a1a;
-  color: #ff3333;
-  border: 1px solid #ff3333;
-}
+/* MISC */
+.loading-spinner{display:flex;align-items:center;justify-content:center;padding:40px;gap:12px;color:var(--gray-mid);}
+.spinner{width:24px;height:24px;border:2px solid rgba(204,0,0,0.2);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty-state{text-align:center;padding:40px 20px;color:var(--gray-mid);}
+.empty-icon{font-size:44px;margin-bottom:10px;}
+.empty-text{font-size:17px;font-weight:600;}
+.empty-sub{font-size:13px;margin-top:5px;opacity:0.6;}
+.text-red{color:var(--red-bright);}.text-green{color:var(--green);}.text-yellow{color:var(--yellow);}
+.text-gold{color:var(--gold);}.text-blue{color:var(--blue);}.text-purple{color:var(--purple);}
+.text-gray{color:var(--gray-mid);}.text-sm{font-size:13px;}.font-bold{font-weight:700;}.w-full{width:100%;}
+.mt-8{margin-top:8px;}.mt-12{margin-top:12px;}.mt-16{margin-top:16px;}.mb-8{margin-bottom:8px;}.mb-16{margin-bottom:16px;}
+.flex{display:flex;}.gap-6{gap:6px;}.gap-8{gap:8px;}.items-center{align-items:center;}.justify-between{justify-content:space-between;}.flex-wrap{flex-wrap:wrap;}
 </style>
 </head>
 <body>
 
-<h1>Llfc Dashboard</h1>
-<div class="tabs">
-  <div class="tab-btn active" onclick="openTab('scorecardTab', this)">Scorecard</div>
-  <div class="tab-btn" onclick="openTab('adminTab', this)">Admin</div>
-  <div class="tab-btn" onclick="openTab('invitationTab', this)">Invitation</div>
+<header>
+  <div class="header-inner">
+    <div class="logo-area" onclick="navTo('home')">
+      <div class="logo-badge">⚽</div>
+      <div class="logo-text">
+        <span class="logo-main">LLFC</span>
+        <span class="logo-sub">Juvenile Division</span>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <button class="nav-btn active" id="navHome" onclick="navTo('home');setNavActive(this)">Home</button>
+      <button class="nav-btn" id="navLeaderboard" onclick="navTo('leaderboard');setNavActive(this)">Rankings</button>
+      <button class="nav-btn" id="navMatches" onclick="navTo('matches');setNavActive(this)">Matches</button>
+      <button class="nav-btn" id="navSubmit" onclick="navTo('submit');setNavActive(this)">Submit</button>
+    </nav>
+    <div class="header-auth" id="headerAuth">
+      <button class="btn-login" onclick="openModal('loginModal')">Login</button>
+      <button class="btn-register" onclick="openModal('registerModal')">Register</button>
+      <button class="btn-login" style="border-color:var(--yellow);color:var(--yellow);font-size:11px" onclick="navTo('admin')">Admin</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="news-ticker" id="newsTicker" style="display:none">
+    <div class="news-label">🔥 NEWS</div>
+    <div class="news-scroll-wrap"><span class="news-scroll-text" id="newsText"></span></div>
+  </div>
+  <div class="hero">
+    <div class="hero-tag">🏆 Season Active</div>
+    <h1>LLFC <span>Juvenile</span> Division</h1>
+    <p>Play freely. Submit results. Climb the ranks. From Division 9 to Division 1 — prove your worth on the pitch.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="navTo('leaderboard')">🏆 View Rankings</button>
+      <button class="btn-secondary" onclick="navTo('submit')">📝 Submit Result</button>
+    </div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-num" id="statPlayers">—</div><div class="stat-label">Active Players</div></div>
+    <div class="stat-card"><div class="stat-num" id="statMatches">—</div><div class="stat-label">Total Matches</div></div>
+    <div class="stat-card"><div class="stat-num" id="statToday">—</div><div class="stat-label">Today's Matches</div></div>
+    <div class="stat-card"><div class="stat-num" id="statPending">—</div><div class="stat-label">Pending Confirms</div></div>
+  </div>
+  <div class="two-col">
+    <div>
+      <div class="section-title">🔥 Top Players</div>
+      <div id="homeTopPlayers"><div class="loading-spinner"><div class="spinner"></div></div></div>
+    </div>
+    <div>
+      <div class="section-title">⚽ Recent Matches</div>
+      <div id="homeRecentMatches"><div class="loading-spinner"><div class="spinner"></div></div></div>
+    </div>
+  </div>
+  <div class="mt-16">
+    <div class="section-title">📋 Division Guide</div>
+    <div class="three-col" id="divisionGuide"></div>
+  </div>
 </div>
 
-<!-- Scorecard -->
-<section id="scorecardTab" class="active">
-  <!-- Original Scorecard -->
-  <h2>Original Scorecard</h2>
-  <div class="scorecard" id="scorecard">
-    <div class="title-container">
-      <img src="https://i.ibb.co/QmTqf2K/default-logo.png" class="tournament-logo" id="tournamentLogo">
-      <div class="title" id="tournamentName">Gkec Unity Cup</div>
-    </div>
-    <div class="date" id="tournamentDate">Group Stage</div>
-    <div class="teams">
-      <div class="team-panel" id="team1panel">Team 1</div>
-      <div class="team-score" id="team1score">0</div>
-      <div class="team-score" id="team2score">0</div>
-      <div class="team-panel" id="team2panel">Team 2</div>
-    </div>
-    <div class="matches" id="matches"></div>
-    <div class="results-summary">
-      <div id="winner">Winner: -</div>
-      <div id="motmScorecard">Man of the Match: -</div>
-    </div>
+<!-- LEADERBOARD -->
+<div class="page" id="page-leaderboard">
+  <div class="section-title">🏆 Leaderboards</div>
+  <div class="lb-tabs">
+    <button class="lb-tab active" onclick="switchLbTab('overall',this)">🏆 Overall</button>
+    <button class="lb-tab" onclick="switchLbTab('monthly',this)">🔵 Monthly</button>
+    <button class="lb-tab" onclick="switchLbTab('weekly',this)">🟡 Weekly</button>
+    <button class="lb-tab" onclick="switchLbTab('daily',this)">🟢 Daily</button>
   </div>
-  <!-- Alternative Scorecard -->
-  <h2>Alternative Scorecard</h2>
-  <div class="scorecard-alt" id="scorecard-alt">
-    <div class="title-container">
-      <img src="https://i.ibb.co/QmTqf2K/default-logo.png" class="tournament-logo" id="tournamentLogo-alt">
-      <div class="title" id="tournamentName-alt">Gkec Unity Cup</div>
-    </div>
-    <div class="date" id="tournamentDate-alt">Group Stage</div>
-    <div class="teams">
-      <div class="team-panel" id="team1panel-alt">Team 1</div>
-      <div class="team-score" id="team1score-alt">0</div>
-      <div class="team-score" id="team2score-alt">0</div>
-      <div class="team-panel" id="team2panel-alt">Team 2</div>
-    </div>
-    <div class="matches" id="matches-alt"></div>
-    <div class="results-summary">
-      <div id="winner-alt">Winner: -</div>
-      <div id="motmScorecard-alt">Man of the Match: -</div>
-    </div>
-  </div>
-  <textarea id="pasteText" placeholder="Paste matches here"></textarea><br>
-  <button onclick="generateScorecard()">Generate & Archive Scorecard</button>
-  <button onclick="downloadScorecard('scorecard')">Download Original Scorecard</button>
-  <button onclick="downloadScorecard('scorecard-alt')">Download Alternative Scorecard</button>
-</section>
-
-<!-- Admin -->
-<section id="adminTab">
-  <h2>Admin Section</h2>
-  <div class="admin-panel">
-    <h3>Matchday Invitation Setup (Password Protected)</h3>
-    <input type="password" id="adminPassword" placeholder="Enter Password (Fardous)">
-    <button onclick="unlockMatchdaySetup()">Unlock</button>
-    <div id="matchdaySetup" style="display: none;">
-      <h3>Add Matchday</h3>
-      <input type="date" id="matchdayDate">
-      <select id="team1Select"></select>
-      <input type="text" id="team1Manual" placeholder="Or enter Team 1 manually">
-      <select id="team2Select"></select>
-      <input type="text" id="team2Manual" placeholder="Or enter Team 2 manually">
-      <select id="groupSelect">
-        <option value="">Select Group</option>
-      </select>
-      <button onclick="addMatchday()">Add Matchday</button>
-      <h3>Saved Matchdays</h3>
-      <div id="matchdayList"></div>
-      <hr>
-      <h3>Add Group</h3>
-      <input type="text" id="groupName" placeholder="Group Name">
-      <input type="text" id="groupLink" placeholder="Group Link (e.g., https://m.me/j/...)">
-      <input type="text" id="official1" placeholder="Official 1 Name">
-      <input type="text" id="official2" placeholder="Official 2 Name">
-      <button onclick="addGroup()">Add Group</button>
-      <h3>Saved Groups</h3>
-      <div id="groupList"></div>
-      <hr>
-      <h3>Squad Submit Link</h3>
-      <input type="text" id="squadSubmitLink" placeholder="Squad Submit Link (e.g., https://forms.gle/...)">
-      <button onclick="saveSquadLink()">Save Squad Link</button>
-      <h3>Current Squad Submit Link</h3>
-      <div id="squadLinkDisplay"></div>
-      <hr>
-      <h3>Scorecard Archive</h3>
-      <div id="archiveList"></div>
-    </div>
-    <hr>
-    <h3>Tournament Date/Stage</h3>
-    <input type="text" id="tournamentStageInput" placeholder="Enter Date or Stage (e.g., 11 October 2025 or Group Stage)">
-    <button onclick="saveTournamentStage()">Save Date/Stage</button>
-    <h3>Current Date/Stage</h3>
-    <div id="tournamentStageDisplay"></div>
-    <hr>
-    <h3>Add Tournament Logo</h3>
-    <input type="text" id="tournamentNameInput" placeholder="Tournament Name">
-    <input type="file" id="tournamentLogoInput" accept="image/*">
-    <input type="text" id="tournamentLogoUrl" class="url-input" placeholder="Tournament Logo URL">
-    <button onclick="addTournamentLogo()">Add Tournament Logo</button>
-    <h3>Saved Tournament Logos</h3>
-    <div id="tournamentLogoList"></div>
-    <hr>
-    <h3>Select Current Tournament</h3>
-    <select id="currentTournamentNameSelect" onchange="updateCurrentTournament()">
-      <option value="">Select Tournament Name</option>
+  <div class="search-bar">
+    <input class="search-input" placeholder="🔍 Search player..." id="lbSearch" oninput="filterLeaderboard()">
+    <select class="form-select" style="width:130px" id="lbDivFilter" onchange="filterLeaderboard()">
+      <option value="">All Divs</option>
+      <option value="1">Div 1</option><option value="2">Div 2</option><option value="3">Div 3</option>
+      <option value="4">Div 4</option><option value="5">Div 5</option><option value="6">Div 6</option>
+      <option value="7">Div 7</option><option value="8">Div 8</option><option value="9">Div 9</option>
     </select>
-    <select id="currentTournamentLogoSelect" onchange="updateCurrentTournament()">
-      <option value="">Select Tournament Logo</option>
+  </div>
+  <div class="lb-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:42px">#</th>
+          <th>Player</th>
+          <th>Div</th>
+          <th>Rating</th>
+          <th>Pts</th>
+          <th>W / D / L</th>
+          <th>MP</th>
+          <th>Win%</th>
+          <th>Form</th>
+        </tr>
+      </thead>
+      <tbody id="lbTableBody">
+        <tr><td colspan="9" style="text-align:center;padding:30px"><div class="spinner" style="margin:0 auto"></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MATCHES -->
+<div class="page" id="page-matches">
+  <div class="section-title">⚽ Match History</div>
+  <div class="search-bar">
+    <input class="search-input" placeholder="🔍 Search by player..." id="matchSearch" oninput="filterMatches()">
+    <select class="form-select" style="width:130px" id="matchStatusFilter" onchange="filterMatches()">
+      <option value="">All</option>
+      <option value="confirmed">Confirmed</option>
+      <option value="pending">Pending</option>
+      <option value="disputed">Disputed</option>
     </select>
-    <h3>Current Tournament</h3>
-    <div id="currentTournamentDisplay"></div>
-    <hr>
-    <h3>Add Player</h3>
-    <input type="text" id="playerNameInput" placeholder="Player Name">
-    <input type="file" id="playerPhotoInput" accept="image/*">
-    <input type="text" id="playerPhotoUrl" class="url-input" placeholder="Player Photo URL">
-    <button onclick="addPlayer()">Add Player</button>
-    <h3>Saved Players</h3>
-    <div id="playerList"></div>
-    <hr>
-    <h3>Add Team</h3>
-    <input type="text" id="teamNameInput" placeholder="Team Name">
-    <input type="file" id="teamLogoInput" accept="image/*">
-    <input type="text" id="teamLogoUrl" class="url-input" placeholder="Team Logo URL">
-    <button onclick="addTeam()">Add Team</button>
-    <h3>Saved Teams</h3>
-    <div id="teamList"></div>
-    <hr>
-    <h3>Storage Management</h3>
-    <button class="delete-btn" onclick="clearStorage()">Clear All Storage</button>
   </div>
-</section>
-
-<!-- Invitation -->
-<section id="invitationTab">
-  <h2>Matchday Invitation</h2>
-  <div class="invitation-panel">
-    <h3>Select Official</h3>
-    <select id="officialSelect" onchange="displayInvitation()"></select>
-    <div id="invitationDisplay"></div>
-    <hr>
-    <h3>Overall Invitation by Date</h3>
-    <input type="date" id="overallDate" onchange="displayOverallInvitation()">
-    <div id="overallInvitationDisplay"></div>
+  <div id="matchesList"><div class="loading-spinner"><div class="spinner"></div></div></div>
+  <div id="pendingConfirmSection" style="display:none">
+    <div class="section-title mt-16">⏳ Awaiting Confirmation</div>
+    <div id="pendingConfirmList"></div>
   </div>
-</section>
+</div>
 
-<!-- Success and Error Message Overlays -->
-<div id="successMessage" class="success-message" style="display: none;"></div>
-<div id="errorMessage" class="error-message" style="display: none;"></div>
+<!-- SUBMIT -->
+<div class="page" id="page-submit">
+  <div class="section-title">📝 Submit Match Result</div>
+  <div id="submitRequireLogin" style="display:none">
+    <div class="empty-state">
+      <div class="empty-icon">🔒</div>
+      <div class="empty-text">Login Required</div>
+      <div class="empty-sub">Please login to submit match results</div>
+      <button class="btn-primary mt-12" onclick="openModal('loginModal')">Login Now</button>
+    </div>
+  </div>
+  <div id="submitForm" style="display:none">
+    <div class="card card-red" style="max-width:560px;margin:0 auto">
+      <div class="match-form">
+        <div class="form-group"><label class="form-label">Your Name</label><input class="form-input" id="submitMyName" readonly></div>
+        <div class="form-group"><label class="form-label">Opponent</label>
+          <select class="form-select" id="submitOpponent"><option value="">-- Select Opponent --</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Score</label>
+          <div class="score-row">
+            <input class="form-input score-input" type="number" min="0" max="99" id="scoreA" placeholder="0">
+            <div class="score-vs">VS</div>
+            <input class="form-input score-input" type="number" min="0" max="99" id="scoreB" placeholder="0">
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Match Date</label><input class="form-input" type="date" id="matchDate"></div>
+        <button class="btn-primary w-full" onclick="submitMatchResult()">⚽ Submit Result</button>
+        <p class="text-gray text-sm" style="text-align:center;margin-top:6px">Opponent must confirm. Multiple pending matches allowed.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-<!-- html2canvas for download -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCsZrHcpJgGoTHeW0Ex4Hv20KLtDopPq4",
-  authDomain: "llfc-4d2df.firebaseapp.com",
-  projectId: "llfc-4d2df",
-  storageBucket: "llfc-4d2df.firebasestorage.app",
-  messagingSenderId: "697058785471",
-  appId: "1:697058785471:web:7481cae8fe6b682d762e0a"
+<!-- PROFILE (others) -->
+<div class="page" id="page-profile">
+  <button class="btn-secondary mb-16" onclick="navBack()">← Back</button>
+  <div id="profileContent"><div class="loading-spinner"><div class="spinner"></div></div></div>
+</div>
+
+<!-- MY PROFILE -->
+<div class="page" id="page-myprofile">
+  <div class="section-title">👤 My Profile</div>
+  <div id="myProfileContent"><div class="loading-spinner"><div class="spinner"></div></div></div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div class="section-title">🔐 Admin Panel</div>
+  <div id="adminLoginWrap">
+    <div class="card" style="max-width:360px;margin:0 auto">
+      <div class="modal-title">Admin Access</div>
+      <div class="match-form">
+        <div class="form-group"><label class="form-label">Password</label>
+          <input class="form-input" type="password" id="adminPwInput" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')adminLogin()">
+        </div>
+        <button class="btn-primary w-full" onclick="adminLogin()">Enter Panel</button>
+      </div>
+    </div>
+  </div>
+  <div id="adminPanelWrap" style="display:none">
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchAdminTab('pending',this)">⏳ Pending</button>
+      <button class="admin-tab" onclick="switchAdminTab('players',this)">👥 Players</button>
+      <button class="admin-tab" onclick="switchAdminTab('adminMatches',this)">⚽ Matches</button>
+      <button class="admin-tab" onclick="switchAdminTab('moderators',this)">🛡️ Moderators</button>
+      <button class="admin-tab" onclick="switchAdminTab('season',this)">🔄 Season</button>
+      <button class="admin-tab" onclick="switchAdminTab('adminSettings',this)">⚙️ Settings</button>
+    </div>
+    <div id="adminTab-pending">
+      <div class="section-title">⏳ Pending Registrations</div>
+      <div id="adminPendingList"><div class="loading-spinner"><div class="spinner"></div></div></div>
+    </div>
+    <div id="adminTab-players" style="display:none">
+      <div class="section-title">👥 All Players</div>
+      <div class="search-bar"><input class="search-input" placeholder="Search..." id="adminPlayerSearch" oninput="filterAdminPlayers()"></div>
+      <div id="adminPlayersList"></div>
+    </div>
+    <div id="adminTab-adminMatches" style="display:none">
+      <div class="section-title">⚽ All Matches</div>
+      <div id="adminMatchesList"></div>
+    </div>
+    <div id="adminTab-moderators" style="display:none">
+      <div class="section-title">🛡️ Moderator Management</div>
+      <div class="mod-panel-info">
+        <div class="mod-panel-title">About Moderators</div>
+        <p class="text-gray text-sm">Moderators can approve or dispute any pending match results. They cannot edit players, delete matches, or access admin settings.</p>
+      </div>
+      <div class="search-bar"><input class="search-input" placeholder="Search player..." id="modPlayerSearch" oninput="filterModPlayers()"></div>
+      <div id="modPlayersList"></div>
+    </div>
+    <div id="adminTab-season" style="display:none">
+      <div class="section-title">🔄 Season Management</div>
+      <div class="card" style="max-width:480px">
+        <p class="text-gray mb-16">Reset the season — clears all points, match history, and resets everyone to Division 9. Player accounts remain.</p>
+        <button class="btn-reject btn-sm" style="padding:10px 24px;font-size:14px" onclick="confirmSeasonReset()">⚠️ Reset Season</button>
+      </div>
+    </div>
+    <div id="adminTab-adminSettings" style="display:none">
+      <div class="section-title">⚙️ Settings</div>
+      <div class="card" style="max-width:400px">
+        <div class="match-form">
+          <div class="form-group"><label class="form-label">New Admin Password</label><input class="form-input" type="password" id="newAdminPw" placeholder="New password"></div>
+          <div class="form-group"><label class="form-label">Confirm Password</label><input class="form-input" type="password" id="confirmAdminPw" placeholder="Confirm"></div>
+          <button class="btn-primary" onclick="changeAdminPassword()">Update Password</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOD PANEL -->
+<div class="page" id="page-modpanel">
+  <div class="section-title">🛡️ Moderator Panel</div>
+  <div class="mod-panel-info">
+    <div class="mod-panel-title">Moderator Access</div>
+    <p class="text-gray text-sm">You can approve or dispute any pending match result below.</p>
+  </div>
+  <div id="modPendingMatches"><div class="loading-spinner"><div class="spinner"></div></div></div>
+</div>
+
+</main>
+
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mob-nav-btn active" onclick="navTo('home');setMobActive(this)"><span class="mob-nav-icon">🏠</span>Home</button>
+    <button class="mob-nav-btn" onclick="navTo('leaderboard');setMobActive(this)"><span class="mob-nav-icon">🏆</span>Ranks</button>
+    <button class="mob-nav-btn" onclick="navTo('matches');setMobActive(this)"><span class="mob-nav-icon">⚽</span>Matches</button>
+    <button class="mob-nav-btn" onclick="navTo('submit');setMobActive(this)"><span class="mob-nav-icon">📝</span>Submit</button>
+    <button class="mob-nav-btn" onclick="navTo('myprofile');setMobActive(this)"><span class="mob-nav-icon">👤</span>Me</button>
+  </div>
+</nav>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <div class="modal-title">Player Login</div>
+    <div class="match-form">
+      <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="loginName" placeholder="Your registered name"></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="loginPw" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn-primary w-full" onclick="doLogin()">Login</button>
+      <p class="text-gray text-sm" style="text-align:center;margin-top:8px">No account? <span class="text-red" style="cursor:pointer" onclick="closeModal('loginModal');openModal('registerModal')">Register</span></p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="registerModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+    <div class="modal-title">Register</div>
+    <div class="match-form">
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="regName" placeholder="Your name"></div>
+      <div class="form-group"><label class="form-label">Category</label>
+        <select class="form-select" id="regCategory"><option value="Youth">Youth</option><option value="Academy">Academy</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="regPw" placeholder="Password"></div>
+      <div class="form-group"><label class="form-label">Confirm Password</label><input class="form-input" type="password" id="regPwConfirm" placeholder="Confirm"></div>
+      <button class="btn-primary w-full" onclick="doRegister()">Register</button>
+      <p class="text-gray text-sm" style="text-align:center;margin-top:8px">Requires admin approval before you can play.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editPlayerModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('editPlayerModal')">✕</button>
+    <div class="modal-title">Edit Player</div>
+    <div class="match-form">
+      <input type="hidden" id="editPlayerId">
+      <div class="form-group"><label class="form-label">Division (1–9)</label><input class="form-input" type="number" min="1" max="9" id="editDivision"></div>
+      <div class="form-group"><label class="form-label">Rating</label><input class="form-input" type="number" id="editRating"></div>
+      <div class="form-group"><label class="form-label">Points</label><input class="form-input" type="number" id="editPoints"></div>
+      <div class="form-group"><label class="form-label">Wins</label><input class="form-input" type="number" id="editWins"></div>
+      <div class="form-group"><label class="form-label">Draws</label><input class="form-input" type="number" id="editDraws"></div>
+      <div class="form-group"><label class="form-label">Losses</label><input class="form-input" type="number" id="editLosses"></div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select class="form-select" id="editStatus"><option value="active">Active</option><option value="banned">Banned</option><option value="pending">Pending</option></select>
+      </div>
+      <button class="btn-primary w-full" onclick="savePlayerEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editMatchModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('editMatchModal')">✕</button>
+    <div class="modal-title">Edit Match</div>
+    <div class="match-form">
+      <input type="hidden" id="editMatchId">
+      <div id="editMatchInfo" class="text-gray text-sm mb-8"></div>
+      <div class="form-group"><label class="form-label">Score — Player A</label><input class="form-input" type="number" min="0" id="editScoreA"></div>
+      <div class="form-group"><label class="form-label">Score — Player B</label><input class="form-input" type="number" min="0" id="editScoreB"></div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select class="form-select" id="editMatchStatus">
+          <option value="confirmed">Confirmed</option><option value="pending">Pending</option><option value="disputed">Disputed</option>
+        </select>
+      </div>
+      <button class="btn-primary w-full" onclick="saveMatchEdit()">Save Changes</button>
+      <button class="btn-reject btn-sm w-full mt-8" onclick="adminDeleteMatch()">🗑 Delete Match</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore, collection, doc, getDoc, getDocs, addDoc, setDoc,
+  updateDoc, deleteDoc, query, where, orderBy, limit, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyCsZrHcpJgGoTHeW0Ex4Hv20KLtDopPq4",
+  authDomain:"llfc-4d2df.firebaseapp.com",
+  projectId:"llfc-4d2df",
+  storageBucket:"llfc-4d2df.firebasestorage.app",
+  messagingSenderId:"697058785471",
+  appId:"1:697058785471:web:7481cae8fe6b682d762e0a"
+});
+const db = getFirestore(app);
+
+// ===== STATE =====
+let S = {
+  user: null,
+  lbTab: 'overall',
+  players: [],
+  matches: [],
+  lbPlayers: [],
+  allMatchesData: [],
+  adminPlayers: [],
+  pageHistory: ['home'],
+  adminPw: 'fardous'
 };
 
-let storage, db;
-try {
-  if (typeof firebase === 'undefined') {
-    throw new Error("Firebase SDK not loaded");
-  }
-  firebase.initializeApp(firebaseConfig);
-  storage = firebase.storage();
-  db = firebase.firestore();
-  console.log("Firebase initialized successfully");
-} catch (e) {
-  console.error("Firebase initialization failed:", e.message);
-  showError("Failed to load Firebase SDK. Check your internet connection or try again later.");
+// ===== UTILS =====
+const $ = id => document.getElementById(id);
+function showToast(msg, type='info') {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => t.classList.remove('show'), 3500);
+}
+function openModal(id) { $(id).classList.add('open'); }
+function closeModal(id) { $(id).classList.remove('open'); }
+
+function showPage(pg) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = $('page-' + pg);
+  if (el) el.classList.add('active');
 }
 
-let playerPhotoMap = {};
-let teamLogoMap = {};
-let matchdays = [];
-let groups = [];
-let squadSubmitLink = "";
-let tournamentLogos = [];
-let tournamentNames = [];
-let currentTournament = { name: "Gkec Unity Cup", logo: "https://i.ibb.co/QmTqf2K/default-logo.png" };
-let currentStage = "Group Stage";
-let archives = [];
-const defaultAvatar = "https://i.ibb.co/3R3p9rV/default-avatar.png";
-const defaultLogo = "https://i.ibb.co/QmTqf2K/default-logo.png";
+function navTo(pg) {
+  S.pageHistory.push(pg);
+  showPage(pg);
+  // Highlight desktop nav
+  const map = {home:'navHome',leaderboard:'navLeaderboard',matches:'navMatches',submit:'navSubmit'};
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (map[pg]) $(map[pg])?.classList.add('active');
 
-const successDiv = document.getElementById("successMessage");
-const errorDiv = document.getElementById("errorMessage");
-
-function showSuccess(message, timeout = 3000) {
-  successDiv.textContent = message;
-  successDiv.style.display = "block";
-  errorDiv.style.display = "none";
-  setTimeout(() => successDiv.style.display = "none", timeout);
+  if (pg === 'home') loadHome();
+  else if (pg === 'leaderboard') loadLeaderboard(S.lbTab);
+  else if (pg === 'matches') loadMatches();
+  else if (pg === 'submit') loadSubmitPage();
+  else if (pg === 'myprofile') loadMyProfile();
+  else if (pg === 'modpanel') loadModPanel();
 }
 
-function showError(message, timeout = 3000) {
-  errorDiv.textContent = message;
-  errorDiv.style.display = "block";
-  successDiv.style.display = "none";
-  setTimeout(() => errorDiv.style.display = "none", timeout);
+function navBack() {
+  S.pageHistory.pop();
+  const prev = S.pageHistory[S.pageHistory.length - 1] || 'home';
+  showPage(prev);
+  if (prev === 'leaderboard') { /* already loaded */ }
 }
 
-async function saveToFirestore(collection, id, data) {
-  if (!db) {
-    showError("Firestore is not initialized.");
-    return false;
-  }
+function setNavActive(btn) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setMobActive(btn) {
+  document.querySelectorAll('.mob-nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Helpers
+function divBadge(d) { return `<div class="div-badge div-${d||9}">${d||9}</div>`; }
+function formBadge(r) { const c = r==='W'?'form-w':r==='D'?'form-d':'form-l'; return `<div class="form-dot ${c}" title="${r}"></div>`; }
+function statusBadge(s) { return `<span class="status-badge status-${s}">${s}</span>`; }
+function fmtDate(ts) {
+  if (!ts) return '';
+  try { const d = ts.toDate ? ts.toDate() : new Date(ts); return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+  catch { return ''; }
+}
+function timeAgo(ts) {
+  if (!ts) return '';
   try {
-    const sanitizedData = {};
-    for (const [key, value] of Object.entries(data)) {
-      if (value !== undefined) {
-        sanitizedData[key] = value;
-      }
-    }
-    await db.collection(collection).doc(id).set(sanitizedData);
-    console.log(`Saved to ${collection}/${id}:`, sanitizedData);
-    return true;
-  } catch (e) {
-    console.error(`Firestore save error for ${collection}/${id}:`, e.message, data);
-    showError('Firestore save error: ' + e.message);
-    return false;
-  }
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    const diff = Date.now() - d.getTime();
+    const m = Math.floor(diff/60000);
+    if (m<1) return 'just now'; if (m<60) return m+'m ago';
+    const h = Math.floor(m/60); if (h<24) return h+'h ago';
+    return Math.floor(h/24)+'d ago';
+  } catch { return ''; }
+}
+function getRC(sA, sB, side) {
+  const my = side==='A'?sA:sB, op = side==='A'?sB:sA;
+  return my>op?'W':my<op?'L':'D';
+}
+function calcPts(sA, sB, side) { const r=getRC(sA,sB,side); return r==='W'?3:r==='D'?1:0; }
+function calcRating(sA, sB, side, div) {
+  if ((div||9)>3) return 0;
+  const r=getRC(sA,sB,side);
+  return r==='W'?Math.floor(Math.random()*11)+15:r==='L'?-(Math.floor(Math.random()*11)+10):(Math.random()>.5?3:-3);
+}
+function isHigh(sA,sB) { return (sA+sB)>7; }
+
+// ===== NEWS =====
+function buildNews(matches) {
+  const hi = matches.filter(m=>m.status==='confirmed'&&isHigh(m.scoreA,m.scoreB));
+  if (!hi.length) { $('newsTicker').style.display='none'; return; }
+  $('newsText').textContent = hi.slice(0,8).map(m=>`🔥 GOAL FEST! ${m.playerAName} ${m.scoreA}–${m.scoreB} ${m.playerBName} (${m.scoreA+m.scoreB} goals!)`).join('    ·    ');
+  $('newsTicker').style.display='flex';
 }
 
-async function getFromFirestore(collection, id) {
-  if (!db) {
-    showError("Firestore is not initialized.");
-    return null;
-  }
+// ===== AUTH =====
+async function doLogin() {
+  const name=$('loginName').value.trim(), pw=$('loginPw').value;
+  if (!name||!pw) return showToast('Fill in all fields','error');
   try {
-    const doc = await db.collection(collection).doc(id).get();
-    console.log(`Retrieved from ${collection}/${id}:`, doc.exists ? doc.data() : null);
-    return doc.exists ? doc.data() : null;
-  } catch (e) {
-    console.error(`Firestore retrieve error for ${collection}/${id}:`, e.message);
-    showError('Firestore retrieve error: ' + e.message);
-    return null;
-  }
+    const snap = await getDocs(query(collection(db,'players'),where('name','==',name)));
+    if (snap.empty) return showToast('Player not found','error');
+    const d = snap.docs[0]; const p = d.data();
+    if (p.password!==pw) return showToast('Wrong password','error');
+    if (p.status==='pending') return showToast('Account pending admin approval','info');
+    if (p.status==='banned') return showToast('Account banned. Contact admin.','error');
+    S.user = {id:d.id,...p};
+    closeModal('loginModal');
+    updateHeaderAuth();
+    showToast('Welcome back, '+name+'! ⚽','success');
+    loadSubmitPage();
+    loadMatches();
+  } catch(e) { showToast('Login failed: '+e.message,'error'); }
 }
 
-async function deleteFromFirestore(collection, id) {
-  if (!db) {
-    showError("Firestore is not initialized.");
-    return false;
-  }
+async function doRegister() {
+  const name=$('regName').value.trim(), cat=$('regCategory').value;
+  const pw=$('regPw').value, pw2=$('regPwConfirm').value;
+  if (!name||!pw) return showToast('Fill in all fields','error');
+  if (pw!==pw2) return showToast('Passwords do not match','error');
+  if (pw.length<4) return showToast('Password too short (min 4)','error');
   try {
-    await db.collection(collection).doc(id).delete();
-    console.log(`Deleted from ${collection}/${id}`);
-    return true;
-  } catch (e) {
-    console.error(`Firestore delete error for ${collection}/${id}:`, e.message);
-    showError('Firestore delete error: ' + e.message);
-    return false;
-  }
-}
-
-async function getAllFromFirestore(collection) {
-  if (!db) {
-    showError("Firestore is not initialized.");
-    return [];
-  }
-  try {
-    const snapshot = await db.collection(collection).get();
-    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    console.log(`Retrieved all from ${collection}:`, data);
-    return data;
-  } catch (e) {
-    console.error(`Firestore retrieve all error for ${collection}:`, e.message);
-    showError('Firestore retrieve all error: ' + e.message);
-    return [];
-  }
-}
-
-function validateImageUrl(url) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = "Anonymous";
-    img.onload = () => {
-      console.log(`Image loaded successfully: ${url}`);
-      resolve(true);
-    };
-    img.onerror = () => {
-      console.warn(`Image failed to load: ${url}`);
-      resolve(false);
-    };
-    img.src = url;
-  });
-}
-
-async function uploadToFirebase(file, path) {
-  if (!storage) {
-    throw new Error("Firebase Storage is not initialized. Check Firebase setup.");
-  }
-  if (!file || !file.type.startsWith('image/')) {
-    throw new Error("Please select a valid image file.");
-  }
-  try {
-    const storageRef = storage.ref(path);
-    await storageRef.put(file);
-    const url = await storageRef.getDownloadURL();
-    console.log(`Uploaded image to Firebase: ${url}`);
-    return url;
-  } catch (e) {
-    console.error("Firebase upload error:", e.message);
-    throw new Error("Failed to upload to Firebase: " + e.message);
-  }
-}
-
-async function ensureImagesLoaded(element) {
-  const images = element.querySelectorAll('img');
-  const promises = Array.from(images).map(img => {
-    return new Promise((resolve) => {
-      if (img.complete && img.naturalHeight !== 0) {
-        console.log(`Image already loaded: ${img.src}`);
-        resolve();
-        return;
-      }
-      img.crossOrigin = "Anonymous";
-      img.onload = () => {
-        console.log(`Image loaded: ${img.src}`);
-        resolve();
-      };
-      img.onerror = () => {
-        console.warn(`Image failed to load, using default: ${img.src}`);
-        img.src = defaultLogo;
-        resolve();
-      };
-      img.src = img.src;
+    const ex = await getDocs(query(collection(db,'players'),where('name','==',name)));
+    if (!ex.empty) return showToast('Name already taken','error');
+    await addDoc(collection(db,'players'),{
+      name,category:cat,password:pw,status:'pending',division:9,rating:1000,
+      points:0,wins:0,draws:0,losses:0,form:[],rivals:[],isModerator:false,createdAt:serverTimestamp()
     });
-  });
-  await Promise.all(promises);
-  console.log("All images ensured loaded");
+    closeModal('registerModal');
+    showToast('Submitted! Awaiting admin approval 🎮','success');
+    ['regName','regPw','regPwConfirm'].forEach(id=>$(id).value='');
+  } catch(e) { showToast('Registration failed: '+e.message,'error'); }
 }
 
-async function clearStorage() {
-  if (confirm('Are you sure you want to clear all saved data (logos, photos, matchdays, groups, archives, tournaments, stage)?')) {
-    try {
-      await Promise.all([
-        db.collection('playerPhotoMap').get().then(s => s.forEach(d => d.ref.delete())),
-        db.collection('teamLogoMap').get().then(s => s.forEach(d => d.ref.delete())),
-        db.collection('matchdays').get().then(s => s.forEach(d => d.ref.delete())),
-        db.collection('groups').get().then(s => s.forEach(d => d.ref.delete())),
-        db.collection('archives').get().then(s => s.forEach(d => d.ref.delete())),
-        db.collection('tournamentNames').get().then(s => s.forEach(d => d.ref.delete())),
-        db.collection('tournamentLogos').get().then(s => s.forEach(d => d.ref.delete())),
-        db.collection('config').doc('squadSubmitLink').delete(),
-        db.collection('config').doc('currentTournament').delete(),
-        db.collection('config').doc('currentStage').delete()
-      ]);
-      playerPhotoMap = {};
-      teamLogoMap = {};
-      matchdays = [];
-      groups = [];
-      squadSubmitLink = "";
-      tournamentLogos = [];
-      tournamentNames = [];
-      currentTournament = { name: "Gkec Unity Cup", logo: defaultLogo };
-      currentStage = "Group Stage";
-      archives = [];
-      updatePlayerList();
-      updateTeamList();
-      updateMatchdayList();
-      updateGroupList();
-      updateSquadLinkDisplay();
-      updateTournamentLogoList();
-      updateTournamentSelects();
-      updateCurrentTournamentDisplay();
-      updateTournamentStageDisplay();
-      updateArchiveList();
-      showSuccess("All storage cleared!");
-    } catch (e) {
-      showError("Failed to clear Firestore: " + e.message);
-    }
-  }
+function doLogout() {
+  S.user=null; updateHeaderAuth();
+  showToast('Logged out','info');
+  navTo('home');
 }
 
-function unlockMatchdaySetup() {
-  const password = document.getElementById("adminPassword").value;
-  if (password === "Fardous") {
-    document.getElementById("matchdaySetup").style.display = "block";
-    showSuccess("Matchday setup unlocked!");
+function updateHeaderAuth() {
+  const el=$('headerAuth');
+  if (S.user) {
+    const isMod=S.user.isModerator;
+    el.innerHTML=`
+      <div class="user-pill" onclick="navTo('myprofile')">
+        <div class="user-avatar">${S.user.name[0].toUpperCase()}</div>
+        <span class="user-name">${S.user.name}</span>
+        ${isMod?'<span class="mod-badge">MOD</span>':''}
+      </div>
+      ${isMod?`<button class="btn-login" style="border-color:var(--blue);color:var(--blue);font-size:11px" onclick="navTo('modpanel')">🛡️ Mod</button>`:''}
+      <button class="btn-login" onclick="doLogout()">Logout</button>
+      <button class="btn-login" style="border-color:var(--yellow);color:var(--yellow);font-size:11px" onclick="navTo('admin')">Admin</button>
+    `;
   } else {
-    showError("Incorrect password!");
-  }
-}
-
-function updateTeamSelect() {
-  const team1Select = document.getElementById("team1Select");
-  const team2Select = document.getElementById("team2Select");
-  team1Select.innerHTML = '<option value="">Select Team 1</option>';
-  team2Select.innerHTML = '<option value="">Select Team 2</option>';
-  Object.keys(teamLogoMap).forEach(team => {
-    team1Select.innerHTML += `<option value="${team}">${team}</option>`;
-    team2Select.innerHTML += `<option value="${team}">${team}</option>`;
-  });
-}
-
-function updateGroupSelect() {
-  const groupSelect = document.getElementById("groupSelect");
-  groupSelect.innerHTML = '<option value="">Select Group</option>';
-  groups.forEach(group => {
-    groupSelect.innerHTML += `<option value="${group.name}">${group.name}</option>`;
-  });
-}
-
-async function addMatchday() {
-  const date = document.getElementById("matchdayDate").value;
-  let team1 = document.getElementById("team1Select").value || document.getElementById("team1Manual").value.trim();
-  let team2 = document.getElementById("team2Select").value || document.getElementById("team2Manual").value.trim();
-  const groupName = document.getElementById("groupSelect").value;
-
-  if (!date || !team1 || !team2 || !groupName) {
-    showError("Please fill in all fields (date, teams, group).");
-    return;
-  }
-
-  if (Object.keys(teamLogoMap).length >= 64 && !teamLogoMap[team1]) {
-    showError("Maximum 64 teams allowed. Add team via 'Add Team' first.");
-    return;
-  }
-
-  const matchday = { date, team1, team2, groupName };
-  const id = Date.now().toString();
-  if (await saveToFirestore('matchdays', id, matchday)) {
-    matchdays.push({ id, ...matchday });
-    updateMatchdayList();
-    document.getElementById("matchdayDate").value = "";
-    document.getElementById("team1Select").value = "";
-    document.getElementById("team1Manual").value = "";
-    document.getElementById("team2Select").value = "";
-    document.getElementById("team2Manual").value = "";
-    document.getElementById("groupSelect").value = "";
-    showSuccess("Matchday added!");
-  }
-}
-
-function updateMatchdayList() {
-  const list = document.getElementById("matchdayList");
-  list.innerHTML = "";
-  matchdays.forEach((m, index) => {
-    list.innerHTML += `
-      <div class="admin-matchday">
-        ${m.date}: ${m.team1} vs ${m.team2} (Group ${m.groupName})
-        <button class="delete-btn" onclick="deleteMatchday(${index})">Delete</button>
-      </div>
+    el.innerHTML=`
+      <button class="btn-login" onclick="openModal('loginModal')">Login</button>
+      <button class="btn-register" onclick="openModal('registerModal')">Register</button>
+      <button class="btn-login" style="border-color:var(--yellow);color:var(--yellow);font-size:11px" onclick="navTo('admin')">Admin</button>
     `;
-  });
-  updateOfficialSelect();
-}
-
-async function deleteMatchday(index) {
-  const matchday = matchdays[index];
-  if (await deleteFromFirestore('matchdays', matchday.id)) {
-    matchdays.splice(index, 1);
-    updateMatchdayList();
-    showSuccess("Matchday deleted!");
   }
 }
 
-async function addGroup() {
-  const name = document.getElementById("groupName").value.trim();
-  const link = document.getElementById("groupLink").value.trim();
-  const official1 = document.getElementById("official1").value.trim();
-  const official2 = document.getElementById("official2").value.trim();
-
-  if (!name || !link || !official1 || !official2) {
-    showError("Please fill in all group fields.");
-    return;
-  }
-
-  if (groups.length >= 16) {
-    showError("Maximum 16 groups allowed.");
-    return;
-  }
-
-  const group = { name, link, officials: [official1, official2] };
-  const id = Date.now().toString();
-  if (await saveToFirestore('groups', id, group)) {
-    groups.push({ id, ...group });
-    updateGroupList();
-    updateGroupSelect();
-    document.getElementById("groupName").value = "";
-    document.getElementById("groupLink").value = "";
-    document.getElementById("official1").value = "";
-    document.getElementById("official2").value = "";
-    showSuccess("Group added!");
-  }
-}
-
-function updateGroupList() {
-  const list = document.getElementById("groupList");
-  list.innerHTML = "";
-  groups.forEach((g, index) => {
-    list.innerHTML += `
-      <div class="admin-group">
-        ${g.name}: ${g.link} (Officials: ${g.officials.join(", ")})
-        <button class="delete-btn" onclick="deleteGroup(${index})">Delete</button>
-      </div>
-    `;
-  });
-  updateOfficialSelect();
-}
-
-async function deleteGroup(index) {
-  const group = groups[index];
-  if (await deleteFromFirestore('groups', group.id)) {
-    groups.splice(index, 1);
-    updateGroupList();
-    updateGroupSelect();
-    showSuccess("Group deleted!");
-  }
-}
-
-async function saveSquadLink() {
-  const link = document.getElementById("squadSubmitLink").value.trim();
-  if (!link) {
-    showError("Please enter a squad submit link.");
-    return;
-  }
-  if (await saveToFirestore('config', 'squadSubmitLink', { link })) {
-    squadSubmitLink = link;
-    updateSquadLinkDisplay();
-    document.getElementById("squadSubmitLink").value = "";
-    showSuccess("Squad submit link saved!");
-  }
-}
-
-function updateSquadLinkDisplay() {
-  document.getElementById("squadLinkDisplay").innerHTML = squadSubmitLink ? `<a href="${squadSubmitLink}" target="_blank">${squadSubmitLink}</a>` : "No link set";
-}
-
-async function saveTournamentStage() {
-  const stage = document.getElementById("tournamentStageInput").value.trim();
-  if (!stage) {
-    showError("Please enter a date or stage.");
-    return;
-  }
-  if (await saveToFirestore('config', 'currentStage', { stage })) {
-    currentStage = stage;
-    updateTournamentStageDisplay();
-    document.getElementById("tournamentStageInput").value = "";
-    document.getElementById("tournamentDate").textContent = currentStage;
-    document.getElementById("tournamentDate-alt").textContent = currentStage;
-    showSuccess("Tournament date/stage saved!");
-  }
-}
-
-function updateTournamentStageDisplay() {
-  document.getElementById("tournamentStageDisplay").textContent = currentStage || "No date/stage set";
-}
-
-async function addTournamentLogo() {
-  const name = document.getElementById("tournamentNameInput").value.trim();
-  const fileInput = document.getElementById("tournamentLogoInput");
-  const urlInput = document.getElementById("tournamentLogoUrl");
-  let imageUrl = urlInput.value.trim();
-  const file = fileInput.files[0];
-
+// ===== HOME =====
+async function loadHome() {
   try {
-    if (!name) {
-      showError("Please enter a tournament name.");
-      return;
-    }
-    if (tournamentNames.length >= 5) {
-      showError("Maximum 5 tournament names allowed.");
-      return;
-    }
-    if (tournamentLogos.length >= 5) {
-      showError("Maximum 5 tournament logos allowed.");
-      return;
-    }
-    if (file) {
-      imageUrl = await uploadToFirebase(file, `images/tournaments/${encodeURIComponent(name)}.jpg`);
-      urlInput.value = imageUrl;
-    } else if (!imageUrl) {
-      showError("Please select a file or enter a valid image URL.");
-      return;
-    }
-
-    const isValid = await validateImageUrl(imageUrl);
-    if (!isValid) {
-      showError("Invalid image URL or image failed to load.");
-      return;
-    }
-
-    if (!tournamentNames.includes(name)) {
-      if (await saveToFirestore('tournamentNames', name, { name })) {
-        tournamentNames.push(name);
-      }
-    }
-    if (!tournamentLogos.some(t => t.url === imageUrl)) {
-      if (await saveToFirestore('tournamentLogos', name, { url: imageUrl })) {
-        tournamentLogos.push({ name, url: imageUrl });
-      }
-    }
-    updateTournamentLogoList();
-    updateTournamentSelects();
-    document.getElementById("tournamentNameInput").value = '';
-    document.getElementById("tournamentLogoInput").value = '';
-    document.getElementById("tournamentLogoUrl").value = '';
-    showSuccess("Tournament logo and name saved!");
-  } catch (e) {
-    showError("Upload failed: " + e.message);
-  }
-}
-
-function updateTournamentLogoList() {
-  const list = document.getElementById("tournamentLogoList");
-  list.innerHTML = "";
-  tournamentLogos.forEach((t, index) => {
-    list.innerHTML += `
-      <div class="admin-tournament">
-        <img src="${t.url}" onerror="this.src='${defaultLogo}'" style="width: 40px; height: 40px; border-radius: 50%;">
-        ${t.name}
-        <button class="delete-btn" onclick="deleteTournamentLogo(${index})">Delete</button>
-      </div>
-    `;
-  });
-}
-
-async function deleteTournamentLogo(index) {
-  const tournament = tournamentLogos[index];
-  try {
-    await Promise.all([
-      deleteFromFirestore('tournamentNames', tournament.name),
-      deleteFromFirestore('tournamentLogos', tournament.name)
+    const [pSnap,mSnap] = await Promise.all([
+      getDocs(collection(db,'players')),
+      getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(100)))
     ]);
-    tournamentNames = tournamentNames.filter(name => name !== tournament.name);
-    tournamentLogos = tournamentLogos.filter(t => t.name !== tournament.name);
-    if (currentTournament.name === tournament.name) {
-      currentTournament = { name: "Gkec Unity Cup", logo: defaultLogo };
-      await saveToFirestore('config', 'currentTournament', currentTournament);
-      document.getElementById("tournamentLogo").src = currentTournament.logo;
-      document.getElementById("tournamentLogo-alt").src = currentTournament.logo;
-      document.getElementById("tournamentName").textContent = currentTournament.name;
-      document.getElementById("tournamentName-alt").textContent = currentTournament.name;
-    }
-    updateTournamentLogoList();
-    updateTournamentSelects();
-    updateCurrentTournamentDisplay();
-    showSuccess("Tournament logo and name deleted!");
-  } catch (e) {
-    showError("Failed to delete tournament: " + e.message);
-  }
+    S.players = pSnap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
+    S.matches = mSnap.docs.map(d=>({id:d.id,...d.data()}));
+    buildNews(S.matches);
+    const now=Date.now();
+    const todayMs=S.matches.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<86400000);
+    $('statPlayers').textContent=S.players.length;
+    $('statMatches').textContent=S.matches.filter(m=>m.status==='confirmed').length;
+    $('statToday').textContent=todayMs.length;
+    $('statPending').textContent=S.matches.filter(m=>m.status==='pending').length;
+
+    const sorted=[...S.players].sort((a,b)=>(b.points||0)-(a.points||0)||(b.rating||0)-(a.rating||0)).slice(0,5);
+    $('homeTopPlayers').innerHTML=sorted.length?sorted.map((p,i)=>`
+      <div class="pending-item" style="cursor:pointer" onclick="viewProfile('${p.id}')">
+        <span class="rank-num rank-${i+1}" style="font-size:20px;width:26px">${i+1}</span>
+        ${divBadge(p.division)}
+        <div class="pending-info">
+          <div class="pending-name">${p.name}</div>
+          <div class="pending-meta">${p.wins||0}W ${p.draws||0}D ${p.losses||0}L · ${p.points||0} pts</div>
+        </div>
+        <span class="rating-val">${p.rating||1000}</span>
+      </div>`).join(''):'<div class="empty-state"><div class="empty-text">No players yet</div></div>';
+
+    const recent=S.matches.filter(m=>m.status==='confirmed').slice(0,6);
+    $('homeRecentMatches').innerHTML=recent.length?recent.map(m=>{
+      const hi=isHigh(m.scoreA,m.scoreB);
+      return `<div class="match-card${hi?' high-score':''}">
+        <div class="match-info">
+          <div class="match-vs">
+            <span class="player-link" style="display:inline" onclick="viewProfile('${m.playerAId}')">${m.playerAName}</span>
+            <span class="text-gray"> vs </span>
+            <span class="player-link" style="display:inline" onclick="viewProfile('${m.playerBId}')">${m.playerBName}</span>
+            ${hi?' <span class="high-score-badge">🔥 GOAL FEST</span>':''}
+          </div>
+          <div class="match-meta">${fmtDate(m.createdAt)}</div>
+        </div>
+        <div class="match-score">${m.scoreA}–${m.scoreB}</div>
+      </div>`;
+    }).join(''):'<div class="empty-state"><div class="empty-text">No matches yet</div></div>';
+
+    const divInfo=[
+      {d:1,name:'Elite',desc:'Top of the ladder. Rating active.'},
+      {d:2,name:'Premier',desc:'Near the summit. Rating active.'},
+      {d:3,name:'Championship',desc:'Rating system activates here.'},
+      {d:4,name:'League One',desc:'Competitive mid-tier.'},
+      {d:5,name:'League Two',desc:'Mid-tier battles.'},
+      {d:6,name:'National',desc:'Development level.'},
+      {d:7,name:'Regional',desc:'Entry competitive.'},
+      {d:8,name:'Amateur',desc:'Getting started.'},
+      {d:9,name:'Rookie',desc:'All new players start here.'},
+    ];
+    $('divisionGuide').innerHTML=divInfo.map(di=>`
+      <div class="stat-card" style="text-align:left;border-color:${di.d<=3?'rgba(204,0,0,0.4)':'rgba(204,0,0,0.15)'}">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          ${divBadge(di.d)}
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:16px">${di.name}</span>
+        </div>
+        <div class="text-gray text-sm">${di.desc}</div>
+        ${di.d<=3?'<div style="font-size:10px;color:var(--red-bright);margin-top:4px;letter-spacing:1px">★ RATING ACTIVE</div>':''}
+      </div>`).join('');
+  } catch(e) { console.error(e); showToast('Error loading home','error'); }
 }
 
-function updateTournamentSelects() {
-  const nameSelect = document.getElementById("currentTournamentNameSelect");
-  const logoSelect = document.getElementById("currentTournamentLogoSelect");
-  nameSelect.innerHTML = '<option value="">Select Tournament Name</option>';
-  logoSelect.innerHTML = '<option value="">Select Tournament Logo</option>';
-  tournamentNames.forEach(name => {
-    nameSelect.innerHTML += `<option value="${name}">${name}</option>`;
-  });
-  tournamentLogos.forEach(t => {
-    logoSelect.innerHTML += `<option value="${t.url}">${t.name}</option>`;
-  });
-  nameSelect.value = currentTournament.name;
-  logoSelect.value = currentTournament.logo;
-}
-
-async function updateCurrentTournament() {
-  const name = document.getElementById("currentTournamentNameSelect").value;
-  const logo = document.getElementById("currentTournamentLogoSelect").value;
-  if (name && logo) {
-    currentTournament = { name, logo };
-    if (await saveToFirestore('config', 'currentTournament', currentTournament)) {
-      document.getElementById("tournamentName").textContent = name;
-      document.getElementById("tournamentName-alt").textContent = name;
-      document.getElementById("tournamentLogo").src = logo;
-      document.getElementById("tournamentLogo-alt").src = logo;
-      updateCurrentTournamentDisplay();
-      showSuccess("Current tournament updated!");
-    }
-  } else {
-    showError("Please select both a tournament name and logo.");
-  }
-}
-
-function updateCurrentTournamentDisplay() {
-  const display = document.getElementById("currentTournamentDisplay");
-  display.innerHTML = `
-    <div class="admin-tournament">
-      <img src="${currentTournament.logo}" onerror="this.src='${defaultLogo}'" style="width: 40px; height: 40px; border-radius: 50%;">
-      ${currentTournament.name}
-    </div>
-  `;
-}
-
-async function addPlayer() {
-  const name = document.getElementById("playerNameInput").value.trim();
-  const fileInput = document.getElementById("playerPhotoInput");
-  const urlInput = document.getElementById("playerPhotoUrl");
-  let imageUrl = urlInput.value.trim();
-  const file = fileInput.files[0];
-
+// ===== LEADERBOARD =====
+async function loadLeaderboard(tab='overall') {
+  S.lbTab=tab;
+  $('lbTableBody').innerHTML='<tr><td colspan="9" style="text-align:center;padding:30px"><div class="spinner" style="margin:0 auto"></div></td></tr>';
   try {
-    if (!name) {
-      showError("Please enter a player name.");
-      return;
-    }
-    if (file) {
-      imageUrl = await uploadToFirebase(file, `images/players/${encodeURIComponent(name)}.jpg`);
-      urlInput.value = imageUrl;
-    } else if (!imageUrl) {
-      showError("Please select a file or enter a valid image URL.");
-      return;
-    }
+    const [pSnap,mSnap]=await Promise.all([
+      getDocs(collection(db,'players')),
+      getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(500)))
+    ]);
+    S.players=pSnap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
+    S.matches=mSnap.docs.map(d=>({id:d.id,...d.data()}));
+    const now=Date.now();
+    const timeFilter={daily:86400000,weekly:604800000,monthly:2592000000,overall:Infinity}[tab];
 
-    const isValid = await validateImageUrl(imageUrl);
-    if (!isValid) {
-      showError("Invalid image URL or image failed to load.");
-      return;
-    }
-
-    if (await saveToFirestore('playerPhotoMap', name, { url: imageUrl })) {
-      playerPhotoMap[name] = imageUrl;
-      updatePlayerList();
-      document.getElementById("playerNameInput").value = '';
-      document.getElementById("playerPhotoInput").value = '';
-      document.getElementById("playerPhotoUrl").value = '';
-      showSuccess("Player successfully saved!");
-    }
-  } catch (e) {
-    showError("Upload failed: " + e.message);
-  }
-}
-
-function updatePlayerList() {
-  const list = document.getElementById("playerList");
-  list.innerHTML = "";
-  Object.keys(playerPhotoMap).forEach(p => {
-    list.innerHTML += `
-      <div class="admin-player">
-        <img src="${playerPhotoMap[p] || defaultAvatar}" onerror="this.src='${defaultAvatar}'" style="width: 40px; height: 40px; border-radius: 50%;"> ${p}
-      </div>
-    `;
-  });
-}
-
-async function addTeam() {
-  const name = document.getElementById("teamNameInput").value.trim();
-  const fileInput = document.getElementById("teamLogoInput");
-  const urlInput = document.getElementById("teamLogoUrl");
-  let imageUrl = urlInput.value.trim();
-  const file = fileInput.files[0];
-
-  try {
-    if (!name) {
-      showError("Please enter a team name.");
-      return;
-    }
-    if (Object.keys(teamLogoMap).length >= 48) {
-      showError("Maximum 64 teams allowed.");
-      return;
-    }
-    if (file) {
-      imageUrl = await uploadToFirebase(file, `images/teams/${encodeURIComponent(name)}.jpg`);
-      urlInput.value = imageUrl;
-    } else if (!imageUrl) {
-      showError("Please select a file or enter a valid image URL.");
-      return;
-    }
-
-    const isValid = await validateImageUrl(imageUrl);
-    if (!isValid) {
-      showError("Invalid image URL or image failed to load.");
-      return;
-    }
-
-    if (await saveToFirestore('teamLogoMap', name, { url: imageUrl })) {
-      teamLogoMap[name] = imageUrl;
-      updateTeamList();
-      updateTeamSelect();
-      document.getElementById("teamNameInput").value = '';
-      document.getElementById("teamLogoInput").value = '';
-      document.getElementById("teamLogoUrl").value = '';
-      showSuccess("Team logo successfully saved!");
-    }
-  } catch (e) {
-    showError("Upload failed: " + e.message);
-  }
-}
-
-function updateTeamList() {
-  const list = document.getElementById("teamList");
-  list.innerHTML = "";
-  Object.keys(teamLogoMap).forEach(t => {
-    list.innerHTML += `
-      <div class="admin-team">
-        <img src="${teamLogoMap[t] || defaultLogo}" onerror="this.src='${defaultLogo}'" style="width: 40px; height: 40px;"> ${t}
-      </div>
-    `;
-  });
-  updateTeamSelect();
-}
-
-function updateOfficialSelect() {
-  const select = document.getElementById("officialSelect");
-  select.innerHTML = '<option value="">Select Official</option>';
-  const officials = new Set();
-  groups.forEach(g => g.officials.forEach(o => officials.add(o)));
-  officials.forEach(o => {
-    select.innerHTML += `<option value="${o}">${o}</option>`;
-  });
-  displayInvitation();
-}
-
-function formatDate(dateStr) {
-  const date = new Date(dateStr);
-  const month = date.toLocaleString('default', { month: 'long' }).toUpperCase();
-  const day = date.getDate().toString().padStart(2, '0');
-  return `${day} ${month}`;
-}
-
-function generateInvitationText(matchday, group) {
-  return `🔔 LLFC CLUB WORLD CUP Group ${group.name}\n\nDate: ${formatDate(matchday.date)}\n\n🔴 ${matchday.team1}\n🔵 ${matchday.team2}\n\n📌 PLEASE JOIN YOUR MATCHDAY GROUP\n${group.link}\n\n✅ Squad Submit Link\n${squadSubmitLink}\n⚠️ PLEASE SUBMIT YOUR SQUAD BEFORE 5:00 PM\n🏅 Officials: ${group.officials.join(", ")}`;
-}
-
-function displayInvitation() {
-  const official = document.getElementById("officialSelect").value;
-  const display = document.getElementById("invitationDisplay");
-  display.innerHTML = "";
-  if (!official) return;
-
-  const officialGroups = groups.filter(g => g.officials.includes(official));
-  officialGroups.forEach(group => {
-    const groupMatchdays = matchdays.filter(m => m.groupName === group.name);
-    groupMatchdays.forEach(matchday => {
-      const text = generateInvitationText(matchday, group);
-      const div = document.createElement("div");
-      div.innerHTML = `
-        <h3>Group ${group.name} - ${matchday.date}</h3>
-        <div class="invitation-text"></div>
-        <button onclick="copyText(\`${text.replace(/`/g, "\\`")}\`)">Copy Text</button>
-      `;
-      div.querySelector(".invitation-text").textContent = text;
-      display.appendChild(div);
+    let players=S.players.map(p=>{
+      let pm=S.matches.filter(m=>(m.playerAId===p.id||m.playerBId===p.id)&&m.status==='confirmed');
+      if (tab!=='overall') pm=pm.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<timeFilter);
+      let w=0,d=0,l=0;
+      pm.forEach(m=>{const r=getRC(m.scoreA,m.scoreB,m.playerAId===p.id?'A':'B');if(r==='W')w++;else if(r==='D')d++;else l++;});
+      const total=w+d+l, wr=total>0?Math.round(w/total*100):0;
+      return {...p,tw:w,td:d,tl:l,twr:wr,tpts:tab==='overall'?(p.points||0):(w*3+d),total};
     });
-  });
+    if (tab!=='overall') players=players.filter(p=>p.total>0);
+    players.sort((a,b)=>b.tpts-a.tpts||(b.rating||0)-(a.rating||0)||b.twr-a.twr);
+    S.lbPlayers=players;
+    renderLbTable(players);
+  } catch(e) {
+    $('lbTableBody').innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--red)">Error loading</td></tr>';
+    console.error(e);
+  }
 }
 
-function displayOverallInvitation() {
-  const selectedDate = document.getElementById("overallDate").value;
-  const display = document.getElementById("overallInvitationDisplay");
-  display.innerHTML = "";
-  if (!selectedDate) return;
-
-  const dateMatchdays = matchdays.filter(m => m.date === selectedDate);
-  if (dateMatchdays.length === 0) {
-    display.innerHTML = "<p>No matchdays on this date.</p>";
+function renderLbTable(players) {
+  const search=($('lbSearch')?.value||'').toLowerCase();
+  const divF=$('lbDivFilter')?.value||'';
+  const filtered=players.filter(p=>p.name.toLowerCase().includes(search)&&(!divF||String(p.division||9)===divF));
+  const tbody=$('lbTableBody');
+  if (!filtered.length) {
+    tbody.innerHTML='<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">🏆</div><div class="empty-text">No players found</div></div></td></tr>';
     return;
   }
-
-  let combinedText = "";
-  dateMatchdays.forEach(matchday => {
-    const group = groups.find(g => g.name === matchday.groupName);
-    if (group) {
-      const text = generateInvitationText(matchday, group);
-      combinedText += text + "\n\n---\n\n";
-    }
-  });
-
-  if (combinedText) {
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <h3>All Matchdays on ${formatDate(selectedDate)}</h3>
-      <div class="invitation-text"></div>
-      <button onclick="copyText(\`${combinedText.replace(/`/g, "\\`")}\`)">Copy All Text</button>
-    `;
-    div.querySelector(".invitation-text").textContent = combinedText;
-    display.appendChild(div);
-  } else {
-    display.innerHTML = "<p>No groups found for matchdays on this date.</p>";
-  }
+  tbody.innerHTML=filtered.map((p,i)=>{
+    const r=i+1, rc=r===1?'top-1':r===2?'top-2':r===3?'top-3':'';
+    const form=(p.form||[]).slice(-5);
+    return `<tr class="${rc}">
+      <td><span class="rank-num rank-${r}">${r}</span></td>
+      <td>
+        <span class="player-link" onclick="viewProfile('${p.id}')">
+          <div class="user-avatar" style="width:26px;height:26px;font-size:11px">${p.name[0].toUpperCase()}</div>
+          ${p.name}${p.isModerator?' <span class="mod-badge">MOD</span>':''}
+        </span>
+      </td>
+      <td>${divBadge(p.division)}</td>
+      <td><span class="rating-val">${p.rating||1000}</span></td>
+      <td><strong style="font-size:16px">${p.tpts}</strong></td>
+      <td>
+        <div class="wdl-row">
+          <span class="wdl-pill wdl-w"><span class="wdl-num">${p.tw}</span>&nbsp;W</span>
+          <span class="wdl-pill wdl-d"><span class="wdl-num">${p.td}</span>&nbsp;D</span>
+          <span class="wdl-pill wdl-l"><span class="wdl-num">${p.tl}</span>&nbsp;L</span>
+        </div>
+      </td>
+      <td class="text-gray">${p.total}</td>
+      <td>
+        <div class="winrate-wrap">
+          <div class="winrate-bar"><div class="winrate-fill" style="width:${p.twr}%"></div></div>
+          <span class="winrate-pct">${p.twr}%</span>
+        </div>
+      </td>
+      <td><div class="form-dots">${form.map(r=>formBadge(r)).join('')}</div></td>
+    </tr>`;
+  }).join('');
 }
 
-function copyText(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    showSuccess("Invitation text copied!");
-  }).catch(err => {
-    console.error("Clipboard error:", err);
-    showError("Failed to copy text. Try again or check browser permissions.");
-  });
+function filterLeaderboard() { if(S.lbPlayers.length) renderLbTable(S.lbPlayers); }
+
+function switchLbTab(tab,btn) {
+  document.querySelectorAll('.lb-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadLeaderboard(tab);
 }
 
-function cleanName(name) {
-  if (!name) return "";
-  return name.replace(/[👑🔑@]/g, '').trim();
-}
-
-async function saveToArchive(team1, team2, team1Points, team2Points, matches, motmPlayer) {
-  const archive = {
-    id: Date.now().toString(),
-    timestamp: new Date().toISOString(),
-    team1: team1 || "Unknown Team 1",
-    team2: team2 || "Unknown Team 2",
-    team1Points: parseInt(team1Points) || 0,
-    team2Points: parseInt(team2Points) || 0,
-    matches: matches || [],
-    motmPlayer: motmPlayer || "",
-    inputText: document.getElementById("pasteText").value || "",
-    tournamentName: currentTournament.name,
-    tournamentLogo: currentTournament.logo,
-    stage: currentStage
-  };
+// ===== MATCHES =====
+async function loadMatches() {
   try {
-    if (await saveToFirestore('archives', archive.id, archive)) {
-      archives.push(archive);
-      updateArchiveList();
-      showSuccess("Scorecard archived!");
-      console.log("Archive saved:", archive);
-    }
-  } catch (e) {
-    console.error("Archive save failed:", e);
-    showError("Failed to archive scorecard: " + e.message);
-  }
+    const mSnap=await getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(150)));
+    S.matches=mSnap.docs.map(d=>({id:d.id,...d.data()}));
+    S.allMatchesData=S.matches;
+    renderMatchesList(S.matches);
+    const section=$('pendingConfirmSection'), list=$('pendingConfirmList');
+    if (S.user) {
+      const isMod=S.user.isModerator;
+      const pending=S.matches.filter(m=>m.status==='pending'&&(isMod||m.playerBId===S.user.id));
+      if (pending.length) {
+        section.style.display='block';
+        list.innerHTML=pending.map(m=>`
+          <div class="confirm-card">
+            ${isMod&&m.playerBId!==S.user.id?'<div class="text-purple text-sm mb-8">🛡️ Moderator review</div>':''}
+            <div class="confirm-vs">
+              <div class="confirm-player"><div class="confirm-player-name">${m.playerAName}</div><div class="text-gray text-sm">Submitted by</div></div>
+              <div class="confirm-score-display">${m.scoreA}–${m.scoreB}</div>
+              <div class="confirm-player"><div class="confirm-player-name">${m.playerBName}</div><div class="text-gray text-sm">Opponent</div></div>
+            </div>
+            <div class="text-gray text-sm mb-8">${fmtDate(m.createdAt)} · ${timeAgo(m.createdAt)}</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn-approve btn-sm" onclick="confirmMatch('${m.id}',true)">✔ Confirm</button>
+              <button class="btn-reject btn-sm" onclick="confirmMatch('${m.id}',false)">✕ Dispute</button>
+            </div>
+          </div>`).join('');
+      } else section.style.display='none';
+    } else section.style.display='none';
+  } catch(e) { $('matchesList').innerHTML='<div class="empty-state"><div class="empty-text">Error loading matches</div></div>'; console.error(e); }
 }
 
-function updateArchiveList() {
-  const list = document.getElementById("archiveList");
-  list.innerHTML = archives.length ? "" : "<p>No archives available.</p>";
-  archives.forEach((archive, index) => {
-    const timestamp = new Date(archive.timestamp).toLocaleString('en-GB', { 
-      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' 
-    });
-    list.innerHTML += `
-      <div class="admin-archive">
-        ${timestamp}: ${archive.team1} vs ${archive.team2} (${archive.team1Points}-${archive.team2Points})
-        <button onclick="loadArchive(${index})">Load</button>
-        <button onclick="editArchive(${index})">Edit</button>
-        <button class="delete-btn" onclick="deleteArchive(${index})">Delete</button>
+function renderMatchesList(matches) {
+  const search=($('matchSearch')?.value||'').toLowerCase();
+  const sf=$('matchStatusFilter')?.value||'';
+  let f=matches;
+  if(search) f=f.filter(m=>m.playerAName?.toLowerCase().includes(search)||m.playerBName?.toLowerCase().includes(search));
+  if(sf) f=f.filter(m=>m.status===sf);
+  const el=$('matchesList');
+  if (!f.length) { el.innerHTML='<div class="empty-state"><div class="empty-icon">⚽</div><div class="empty-text">No matches found</div></div>'; return; }
+  el.innerHTML=f.map(m=>{
+    const hi=isHigh(m.scoreA,m.scoreB);
+    return `<div class="match-card${hi?' high-score':''}">
+      <div class="match-info">
+        <div class="match-vs">
+          <span class="player-link" style="display:inline" onclick="viewProfile('${m.playerAId}')">${m.playerAName}</span>
+          <span class="text-gray"> vs </span>
+          <span class="player-link" style="display:inline" onclick="viewProfile('${m.playerBId}')">${m.playerBName}</span>
+          ${hi?' &nbsp;<span class="high-score-badge">🔥 GOAL FEST</span>':''}
+        </div>
+        <div class="match-meta">${fmtDate(m.createdAt||m.matchDate)} · ${statusBadge(m.status)}</div>
       </div>
-    `;
-  });
-  console.log("Updated archive list with", archives.length, "archives");
+      <div class="match-score">${m.scoreA}–${m.scoreB}</div>
+    </div>`;
+  }).join('');
 }
 
-function loadArchive(index) {
-  const archive = archives[index];
-  document.getElementById("pasteText").value = archive.inputText;
-  document.getElementById("tournamentName").textContent = archive.tournamentName;
-  document.getElementById("tournamentName-alt").textContent = archive.tournamentName;
-  document.getElementById("tournamentLogo").src = archive.tournamentLogo;
-  document.getElementById("tournamentLogo-alt").src = archive.tournamentLogo;
-  document.getElementById("tournamentDate").textContent = archive.stage;
-  document.getElementById("tournamentDate-alt").textContent = archive.stage;
-  generateScorecard();
-  showSuccess("Archive loaded!");
-}
+function filterMatches() { if(S.allMatchesData.length) renderMatchesList(S.allMatchesData); }
 
-async function editArchive(index) {
-  const newText = prompt("Edit scorecard text:", archives[index].inputText);
-  if (newText) {
-    archives[index].inputText = newText;
-    if (await saveToFirestore('archives', archives[index].id, archives[index])) {
-      updateArchiveList();
-      showSuccess("Archive updated!");
-    }
-  }
-}
-
-async function deleteArchive(index) {
-  const archive = archives[index];
-  if (await deleteFromFirestore('archives', archive.id)) {
-    archives.splice(index, 1);
-    updateArchiveList();
-    showSuccess("Archive deleted!");
-  }
-}
-
-async function generateScorecard() {
-  const text = document.getElementById("pasteText").value.trim();
-  if (!text) {
-    showError("Please paste match data.");
-    return;
-  }
-
-  const lines = text.split('\n').map(line => line.trim()).filter(line => line);
-  if (lines.length < 1) {
-    showError("No valid input provided.");
-    return;
-  }
-
-  // Extract team names from the first line containing ⚒️, 🆚, or |
-  let team1 = "", team2 = "";
-  let teamLineFound = false;
-  for (const line of lines) {
-    if (line.includes('⚒️') || line.includes('🆚') || line.includes('|')) {
-      const separator = line.includes('⚒️') ? '⚒️' : line.includes('🆚') ? '🆚' : '|';
-      const teams = line.split(separator).map(t => t.trim());
-      if (teams.length >= 2) {
-        team1 = teams[0].replace(/🅻🅻🅵🅲/, 'LLFC').trim(); // Normalize team names
-        team2 = teams[1].replace(/🅲🅿︎🅲/, 'CPC').trim();
-        teamLineFound = true;
-        break;
-      }
-    }
-  }
-
-  if (!teamLineFound || !team1 || !team2) {
-    showError("Could not find valid team names separated by ⚒️, 🆚, or |.");
-    return;
-  }
-
-  // Parse match lines
-  const matchRegex = /(.+?)\s*\(?(\d+)\)?\s*🆚\s*\(?(\d+)\)?\s*(.+)/;
-  const matches = [];
-  let motmPlayer = "";
-  for (const line of lines) {
-    const match = line.match(matchRegex);
-    if (match) {
-      const [, p1, s1, s2, p2] = match;
-      matches.push([p1.trim(), s1, s2, p2.trim()]);
-      if (p1.includes('👑')) motmPlayer = cleanName(p1);
-      else if (p2.includes('👑')) motmPlayer = cleanName(p2);
-    }
-  }
-
-  if (matches.length === 0) {
-    showError("No valid matches found. Use format 'Player1 X🆚Y Player2'.");
-    return;
-  }
-
-  if (!motmPlayer) {
-    showError("No Man of the Match (👑) specified in any match.");
-    return;
-  }
-
-  // Calculate team points based on match outcomes
-  let team1Points = 0, team2Points = 0;
-  matches.forEach(([p1, s1, s2, p2]) => {
-    const score1 = parseInt(s1);
-    const score2 = parseInt(s2);
-    if (score1 > score2) {
-      team1Points += 3; // Team 1 wins
-    } else if (score2 > score1) {
-      team2Points += 3; // Team 2 wins
+async function confirmMatch(matchId, confirmed) {
+  try {
+    const mRef=doc(db,'matches',matchId);
+    const mSnap=await getDoc(mRef);
+    if (!mSnap.exists()) return showToast('Match not found','error');
+    const m=mSnap.data();
+    if (confirmed) {
+      await updateDoc(mRef,{status:'confirmed',confirmedAt:serverTimestamp()});
+      await applyMatchStats(m);
+      showToast('Match confirmed! Stats updated ✅','success');
     } else {
-      team1Points += 1; // Draw
-      team2Points += 1;
+      await updateDoc(mRef,{status:'disputed'});
+      showToast('Match disputed. Admin will review.','info');
     }
-  });
-
-  const team1Logo = teamLogoMap[team1] || defaultLogo;
-  const team2Logo = teamLogoMap[team2] || defaultLogo;
-
-  // Update Original Scorecard
-  document.getElementById("team1panel").innerHTML = `<img src="${team1Logo}" class="team-logo" onerror="this.src='${defaultLogo}'">${team1}`;
-  document.getElementById("team2panel").innerHTML = `<img src="${team2Logo}" class="team-logo" onerror="this.src='${defaultLogo}'">${team2}`;
-  document.getElementById("team1score").textContent = team1Points;
-  document.getElementById("team2score").textContent = team2Points;
-  document.getElementById("tournamentName").textContent = currentTournament.name;
-  document.getElementById("tournamentLogo").src = currentTournament.logo;
-  document.getElementById("tournamentDate").textContent = currentStage;
-
-  // Update Alternative Scorecard
-  document.getElementById("team1panel-alt").innerHTML = `<img src="${team1Logo}" class="team-logo" onerror="this.src='${defaultLogo}'">${team1}`;
-  document.getElementById("team2panel-alt").innerHTML = `<img src="${team2Logo}" class="team-logo" onerror="this.src='${defaultLogo}'">${team2}`;
-  document.getElementById("team1score-alt").textContent = team1Points;
-  document.getElementById("team2score-alt").textContent = team2Points;
-  document.getElementById("tournamentName-alt").textContent = currentTournament.name;
-  document.getElementById("tournamentLogo-alt").src = currentTournament.logo;
-  document.getElementById("tournamentDate-alt").textContent = currentStage;
-
-  // Generate match rows
-  const matchesDiv = document.getElementById("matches");
-  const matchesDivAlt = document.getElementById("matches-alt");
-  matchesDiv.innerHTML = "";
-  matchesDivAlt.innerHTML = "";
-  matches.forEach(([p1, s1, s2, p2]) => {
-    const cleanP1 = cleanName(p1);
-    const cleanP2 = cleanName(p2);
-    const isMotmP1 = p1.includes("👑");
-    const isMotmP2 = p2.includes("👑");
-    const player1Class = isMotmP1 ? "motm-player" : "";
-    const player2Class = isMotmP2 ? "motm-player" : "";
-    matchesDiv.innerHTML += `
-      <div class="match-row">
-        <div class="player-container ${player1Class}">
-          <span class="player-left">${cleanP1}</span>
-        </div>
-        <div class="score-box">${s1} - ${s2}</div>
-        <div class="player-container ${player2Class}">
-          <span class="player-right">${cleanP2}</span>
-        </div>
-      </div>
-    `;
-    matchesDivAlt.innerHTML += `
-      <div class="match-row">
-        <div class="player-container ${player1Class}">
-          <span class="player-left">${cleanP1}</span>
-        </div>
-        <div class="score-box">${s1} - ${s2}</div>
-        <div class="player-container ${player2Class}">
-          <span class="player-right">${cleanP2}</span>
-        </div>
-      </div>
-    `;
-  });
-
-  // Update winner and MOTM
-  const winnerText = team1Points > team2Points ? `${team1} wins!` : team2Points > team1Points ? `${team2} wins!` : "Draw!";
-  document.getElementById("winner").textContent = `Winner: ${winnerText}`;
-  document.getElementById("winner-alt").textContent = `Winner: ${winnerText}`;
-  document.getElementById("motmScorecard").textContent = `Man of the Match: ${motmPlayer}`;
-  document.getElementById("motmScorecard-alt").textContent = `Man of the Match: ${motmPlayer}`;
-
-  await saveToArchive(team1, team2, team1Points, team2Points, matches, motmPlayer);
-  showSuccess("Scorecard generated and archived!");
+    S.matches=[]; loadMatches();
+  } catch(e) { showToast('Error: '+e.message,'error'); }
 }
 
-async function downloadScorecard(scorecardId) {
-  const scorecard = document.getElementById(scorecardId);
-  await ensureImagesLoaded(scorecard);
-  try {
-    const canvas = await html2canvas(scorecard, {
-      backgroundColor: scorecardId === 'scorecard' ? '#2c2c2c' : '#ffffff',
-      scale: 2,
-      useCORS: true
+async function applyMatchStats(m) {
+  async function upd(pid, side) {
+    const ref=doc(db,'players',pid), snap=await getDoc(ref);
+    if (!snap.exists()) return;
+    const p=snap.data();
+    const result=getRC(m.scoreA,m.scoreB,side);
+    const pts=calcPts(m.scoreA,m.scoreB,side);
+    const rc=calcRating(m.scoreA,m.scoreB,side,p.division||9);
+    const form=[...(p.form||[]).slice(-9),result];
+    await updateDoc(ref,{
+      points:(p.points||0)+pts, rating:Math.max(500,(p.rating||1000)+rc),
+      wins:(p.wins||0)+(result==='W'?1:0), draws:(p.draws||0)+(result==='D'?1:0),
+      losses:(p.losses||0)+(result==='L'?1:0), form
     });
-    const link = document.createElement('a');
-    link.href = canvas.toDataURL('image/png');
-    link.download = `llfc_scorecard_${new Date().toISOString().split('T')[0]}_${scorecardId === 'scorecard' ? 'dark' : 'light'}.png`;
-    link.click();
-    showSuccess(`${scorecardId === 'scorecard' ? 'Original' : 'Alternative'} scorecard downloaded!`);
-  } catch (e) {
-    console.error("Download error:", e);
-    showError("Failed to download scorecard: " + e.message);
   }
+  await Promise.all([upd(m.playerAId,'A'), upd(m.playerBId,'B')]);
 }
 
-function openTab(tabId, button) {
-  document.querySelectorAll('section').forEach(section => {
-    section.classList.remove('active');
-  });
-  document.getElementById(tabId).classList.add('active');
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  button.classList.add('active');
+// ===== SUBMIT =====
+async function loadSubmitPage() {
+  if (!S.user) { $('submitRequireLogin').style.display='block'; $('submitForm').style.display='none'; return; }
+  $('submitRequireLogin').style.display='none'; $('submitForm').style.display='block';
+  $('submitMyName').value=S.user.name;
+  $('matchDate').value=new Date().toISOString().split('T')[0];
+  const snap=await getDocs(collection(db,'players'));
+  S.players=snap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
+  const sel=$('submitOpponent');
+  sel.innerHTML='<option value="">-- Select Opponent --</option>'+
+    S.players.filter(p=>p.id!==S.user.id).map(p=>`<option value="${p.id}">${p.name} (Div ${p.division||9})</option>`).join('');
 }
 
-async function initializeData() {
+async function submitMatchResult() {
+  if (!S.user) return showToast('Login required','error');
+  const oppId=$('submitOpponent').value;
+  const sA=parseInt($('scoreA').value)||0, sB=parseInt($('scoreB').value)||0;
+  const matchDate=$('matchDate').value;
+  if (!oppId) return showToast('Select an opponent','error');
+  const opp=S.players.find(p=>p.id===oppId);
+  if (!opp) return showToast('Opponent not found','error');
   try {
-    const [playerPhotos, teams, matchdaysData, groupsData, archivesData, configSquad, configTournament, configStage, tournamentNamesData, tournamentLogosData] = await Promise.all([
-      getAllFromFirestore('playerPhotoMap'),
-      getAllFromFirestore('teamLogoMap'),
-      getAllFromFirestore('matchdays'),
-      getAllFromFirestore('groups'),
-      getAllFromFirestore('archives'),
-      getFromFirestore('config', 'squadSubmitLink'),
-      getFromFirestore('config', 'currentTournament'),
-      getFromFirestore('config', 'currentStage'),
-      getAllFromFirestore('tournamentNames'),
-      getAllFromFirestore('tournamentLogos')
+    await addDoc(collection(db,'matches'),{
+      playerAId:S.user.id,playerAName:S.user.name,
+      playerBId:oppId,playerBName:opp.name,
+      scoreA:sA,scoreB:sB,status:'pending',matchDate,
+      createdAt:serverTimestamp(),submittedBy:S.user.id
+    });
+    const msg=isHigh(sA,sB)?`🔥 GOAL FEST! ${sA+sB} goals submitted! Waiting for ${opp.name} to confirm.`:`Result submitted! Waiting for ${opp.name} to confirm ⚽`;
+    showToast(msg,'success');
+    $('scoreA').value=''; $('scoreB').value='';
+    S.matches=[];
+  } catch(e) { showToast('Submit failed: '+e.message,'error'); }
+}
+
+// ===== MOD PANEL =====
+async function loadModPanel() {
+  if (!S.user||!S.user.isModerator) {
+    $('modPendingMatches').innerHTML='<div class="empty-state"><div class="empty-icon">🚫</div><div class="empty-text">Moderator access required</div></div>';
+    return;
+  }
+  try {
+    const mSnap=await getDocs(query(collection(db,'matches'),where('status','==','pending'),orderBy('createdAt','desc'),limit(100)));
+    const pending=mSnap.docs.map(d=>({id:d.id,...d.data()}));
+    const el=$('modPendingMatches');
+    if (!pending.length) { el.innerHTML='<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-text">No pending matches</div></div>'; return; }
+    el.innerHTML=pending.map(m=>`
+      <div class="confirm-card">
+        <div class="confirm-vs">
+          <div class="confirm-player"><div class="confirm-player-name">${m.playerAName}</div><div class="text-gray text-sm">Player A</div></div>
+          <div class="confirm-score-display">${m.scoreA}–${m.scoreB}</div>
+          <div class="confirm-player"><div class="confirm-player-name">${m.playerBName}</div><div class="text-gray text-sm">Player B</div></div>
+        </div>
+        <div class="text-gray text-sm mb-8">${fmtDate(m.createdAt)} · ${timeAgo(m.createdAt)}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-approve btn-sm" onclick="confirmMatch('${m.id}',true)">✔ Approve</button>
+          <button class="btn-reject btn-sm" onclick="confirmMatch('${m.id}',false)">✕ Dispute</button>
+        </div>
+      </div>`).join('');
+  } catch(e) { showToast('Error: '+e.message,'error'); }
+}
+
+// ===== PROFILE =====
+async function viewProfile(playerId) {
+  S.pageHistory.push('profile');
+  showPage('profile');
+  $('profileContent').innerHTML='<div class="loading-spinner"><div class="spinner"></div></div>';
+  try {
+    const [snap,mSnap]=await Promise.all([
+      getDoc(doc(db,'players',playerId)),
+      getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(300)))
     ]);
+    if (!snap.exists()) { $('profileContent').innerHTML='<div class="empty-state"><div class="empty-text">Player not found</div></div>'; return; }
+    const p={id:snap.id,...snap.data()};
+    const matches=mSnap.docs.map(d=>({id:d.id,...d.data()})).filter(m=>m.playerAId===playerId||m.playerBId===playerId).slice(0,10);
+    const total=(p.wins||0)+(p.draws||0)+(p.losses||0);
+    const wr=total>0?Math.round((p.wins||0)/total*100):0;
+    const form=(p.form||[]).slice(-5);
+    const promoNeed={9:15,8:20,7:25,6:30,5:35,4:40,3:45,2:50,1:0};
+    const need=promoNeed[p.division||9]||50;
+    const pct=need>0?Math.min(100,Math.round((p.points||0)/need*100)):100;
+    const isRival=S.user&&(S.user.rivals||[]).includes(playerId);
+    const isMe=S.user&&S.user.id===playerId;
 
-    playerPhotoMap = playerPhotos.reduce((acc, p) => ({ ...acc, [p.id]: p.url }), {});
-    teamLogoMap = teams.reduce((acc, t) => ({ ...acc, [t.id]: t.url }), {});
-    matchdays = matchdaysData;
-    groups = groupsData;
-    archives = archivesData;
-    squadSubmitLink = configSquad ? configSquad.link : "";
-    currentTournament = configTournament || { name: "Gkec Unity Cup", logo: defaultLogo };
-    currentStage = configStage ? configStage.stage : "Group Stage";
-    tournamentNames = tournamentNamesData.map(t => t.name);
-    tournamentLogos = tournamentLogosData.map(t => ({ name: t.id, url: t.url }));
+    $('profileContent').innerHTML=`
+      <div class="profile-header">
+        <div class="profile-avatar">${p.name[0].toUpperCase()}</div>
+        <div class="profile-info">
+          <div class="profile-name">${p.name}${p.isModerator?' <span class="mod-badge" style="font-size:13px">🛡️MOD</span>':''}</div>
+          <span class="profile-cat">${p.category||'Youth'}</span>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap">
+            ${divBadge(p.division)} <span class="text-gray text-sm">Division ${p.division||9}</span>
+            <span class="rating-val" style="font-size:26px">${p.rating||1000}</span>
+            <span class="text-gray text-sm">Rating</span>
+          </div>
+          <div class="form-dots mt-8">${form.map(r=>formBadge(r)).join('')}</div>
+          ${!isMe&&S.user?`<button class="btn-sm ${isRival?'btn-reject':'btn-edit'} mt-8" onclick="toggleRival('${playerId}','${p.name}')">
+            ${isRival?'❌ Remove Rival':'⚔️ Add Rival'}</button>`:''}
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="p-stat"><div class="p-stat-val">${p.points||0}</div><div class="p-stat-lbl">Points</div></div>
+        <div class="p-stat"><div class="p-stat-val text-green">${p.wins||0}</div><div class="p-stat-lbl">Wins</div></div>
+        <div class="p-stat"><div class="p-stat-val text-yellow">${p.draws||0}</div><div class="p-stat-lbl">Draws</div></div>
+        <div class="p-stat"><div class="p-stat-val text-red">${p.losses||0}</div><div class="p-stat-lbl">Losses</div></div>
+        <div class="p-stat"><div class="p-stat-val">${total}</div><div class="p-stat-lbl">Matches</div></div>
+        <div class="p-stat"><div class="p-stat-val">${wr}%</div><div class="p-stat-lbl">Win Rate</div></div>
+        <div class="p-stat"><div class="p-stat-val">${p.rating||1000}</div><div class="p-stat-lbl">Rating</div></div>
+      </div>
+      <div class="promo-tracker">
+        <div class="promo-title">Promotion Progress${p.division<=1?' — 🏆 Top Division!':''}</div>
+        <div class="promo-bar-wrap"><div class="promo-bar-fill" style="width:${pct}%"></div></div>
+        <div class="promo-label"><span>${p.points||0} pts</span><span>${p.division<=1?'MAX':need+' pts needed'}</span></div>
+      </div>
+      <div class="section-title mt-16">📅 Recent Matches</div>
+      ${matches.length?matches.map(m=>{
+        const side=m.playerAId===playerId?'A':'B';
+        const res=getRC(m.scoreA,m.scoreB,side);
+        const oppName=side==='A'?m.playerBName:m.playerAName;
+        const oppId=side==='A'?m.playerBId:m.playerAId;
+        const my=side==='A'?m.scoreA:m.scoreB, op=side==='A'?m.scoreB:m.scoreA;
+        const hi=isHigh(m.scoreA,m.scoreB);
+        return `<div class="match-card${hi?' high-score':''}">
+          <div class="match-result-badge result-${res}">${res}</div>
+          <div class="match-info">
+            <div class="match-vs">vs <span class="player-link" style="display:inline" onclick="viewProfile('${oppId}')">${oppName}</span>${hi?' <span class="high-score-badge">🔥</span>':''}</div>
+            <div class="match-meta">${fmtDate(m.createdAt||m.matchDate)} · ${statusBadge(m.status)}</div>
+          </div>
+          <div class="match-score">${my}–${op}</div>
+        </div>`;
+      }).join(''):'<div class="empty-state"><div class="empty-text">No matches yet</div></div>'}
+    `;
+  } catch(e) { $('profileContent').innerHTML='<div class="empty-state"><div class="empty-text">Error loading profile</div></div>'; console.error(e); }
+}
 
-    document.getElementById("tournamentLogo").src = currentTournament.logo;
-    document.getElementById("tournamentLogo-alt").src = currentTournament.logo;
-    document.getElementById("tournamentName").textContent = currentTournament.name;
-    document.getElementById("tournamentName-alt").textContent = currentTournament.name;
-    document.getElementById("tournamentDate").textContent = currentStage;
-    document.getElementById("tournamentDate-alt").textContent = currentStage;
-    updateTournamentLogoList();
-    updateTournamentSelects();
-    updateCurrentTournamentDisplay();
-    updateTournamentStageDisplay();
-    updatePlayerList();
-    updateTeamList();
-    updateMatchdayList();
-    updateGroupList();
-    updateSquadLinkDisplay();
-    updateArchiveList();
-    console.log("Initialization complete");
-  } catch (e) {
-    console.error("Initialization error:", e.message);
-    showError("Failed to initialize data: " + e.message);
+async function loadMyProfile() {
+  if (!S.user) {
+    $('myProfileContent').innerHTML='<div class="empty-state"><div class="empty-icon">🔒</div><div class="empty-text">Not logged in</div><button class="btn-primary mt-12" onclick="openModal(\'loginModal\')">Login</button></div>';
+    return;
+  }
+  await viewProfile(S.user.id);
+  $('myProfileContent').innerHTML=$('profileContent').innerHTML;
+}
+
+async function toggleRival(playerId, playerName) {
+  if (!S.user) return;
+  const rivals=S.user.rivals||[];
+  const nr=rivals.includes(playerId)?rivals.filter(r=>r!==playerId):[...rivals,playerId];
+  await updateDoc(doc(db,'players',S.user.id),{rivals:nr});
+  S.user.rivals=nr;
+  showToast(rivals.includes(playerId)?playerName+' removed from rivals':playerName+' added as rival ⚔️','success');
+  viewProfile(playerId);
+}
+
+// ===== ADMIN =====
+async function adminLogin() {
+  const pw=$('adminPwInput').value;
+  let stored=S.adminPw;
+  try { const snap=await getDoc(doc(db,'settings','admin')); if(snap.exists()&&snap.data().password) stored=snap.data().password; } catch {}
+  if (pw===stored) {
+    $('adminLoginWrap').style.display='none';
+    $('adminPanelWrap').style.display='block';
+    loadAdminPanel('pending');
+    showToast('Admin access granted ✅','success');
+  } else showToast('Wrong password','error');
+}
+
+async function loadAdminPanel(tab) {
+  if (tab==='pending') {
+    const snap=await getDocs(query(collection(db,'players'),where('status','==','pending')));
+    const pending=snap.docs.map(d=>({id:d.id,...d.data()}));
+    const el=$('adminPendingList');
+    if (!pending.length) { el.innerHTML='<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-text">No pending registrations</div></div>'; return; }
+    el.innerHTML=pending.map(p=>`
+      <div class="pending-item">
+        <div class="pending-info"><div class="pending-name">${p.name}</div><div class="pending-meta">${p.category} · ${fmtDate(p.createdAt)}</div></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn-sm btn-approve" onclick="adminApprove('${p.id}')">✔ Approve</button>
+          <button class="btn-sm btn-reject" onclick="adminReject('${p.id}')">✕ Reject</button>
+        </div>
+      </div>`).join('');
+  }
+  if (tab==='players') {
+    const snap=await getDocs(collection(db,'players'));
+    S.adminPlayers=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderAdminPlayers(S.adminPlayers);
+  }
+  if (tab==='adminMatches') {
+    const snap=await getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(100)));
+    const matches=snap.docs.map(d=>({id:d.id,...d.data()}));
+    const el=$('adminMatchesList');
+    if (!matches.length) { el.innerHTML='<div class="empty-state"><div class="empty-text">No matches</div></div>'; return; }
+    el.innerHTML=matches.map(m=>{
+      const hi=isHigh(m.scoreA,m.scoreB);
+      return `<div class="pending-item${hi?' high-score':''}">
+        <div class="pending-info">
+          <div class="pending-name">${m.playerAName} ${m.scoreA}–${m.scoreB} ${m.playerBName}${hi?' 🔥':''}</div>
+          <div class="pending-meta">${fmtDate(m.createdAt)} · ${statusBadge(m.status)}</div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          ${m.status==='pending'?`<button class="btn-sm btn-approve" onclick="adminConfirmMatch('${m.id}')">✔ Confirm</button>`:''}
+          <button class="btn-sm btn-edit" onclick="adminEditMatch('${m.id}','${m.playerAName}','${m.playerBName}',${m.scoreA},${m.scoreB},'${m.status}')">Edit</button>
+          <button class="btn-sm btn-reject" onclick="adminDeleteMatchDirect('${m.id}')">Delete</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  if (tab==='moderators') {
+    const snap=await getDocs(collection(db,'players'));
+    S.adminPlayers=snap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
+    renderModPlayers(S.adminPlayers);
   }
 }
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-  initializeData();
+function renderAdminPlayers(players) {
+  const search=($('adminPlayerSearch')?.value||'').toLowerCase();
+  const filtered=players.filter(p=>p.name?.toLowerCase().includes(search));
+  $('adminPlayersList').innerHTML=filtered.length?filtered.map(p=>`
+    <div class="pending-item">
+      ${divBadge(p.division)}
+      <div class="pending-info">
+        <div class="pending-name">${p.name}${p.status==='banned'?' 🚫':p.status==='pending'?' ⏳':''}${p.isModerator?' 🛡️':''}</div>
+        <div class="pending-meta">${p.category||'Youth'} · Div${p.division||9} · ${p.rating||1000} rating · ${p.points||0}pts · ${p.wins||0}W ${p.draws||0}D ${p.losses||0}L · ${statusBadge(p.status||'active')}</div>
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        <button class="btn-sm btn-edit" onclick="adminEditPlayer('${p.id}',${p.division||9},${p.rating||1000},${p.points||0},${p.wins||0},${p.draws||0},${p.losses||0},'${p.status||'active'}')">Edit</button>
+        <button class="btn-sm btn-ban" onclick="adminToggleBan('${p.id}','${p.name}','${p.status||'active'}')">
+          ${p.status==='banned'?'Unban':'Ban'}</button>
+      </div>
+    </div>`).join(''):'<div class="empty-state"><div class="empty-text">No players</div></div>';
+}
+
+function filterAdminPlayers() { if(S.adminPlayers.length) renderAdminPlayers(S.adminPlayers); }
+
+function renderModPlayers(players) {
+  const search=($('modPlayerSearch')?.value||'').toLowerCase();
+  const filtered=players.filter(p=>p.name?.toLowerCase().includes(search));
+  $('modPlayersList').innerHTML=filtered.length?filtered.map(p=>`
+    <div class="pending-item">
+      ${divBadge(p.division)}
+      <div class="pending-info">
+        <div class="pending-name">${p.name}${p.isModerator?' <span class="mod-badge">🛡️ MODERATOR</span>':''}</div>
+        <div class="pending-meta">${p.category||'Youth'} · ${p.wins||0}W ${p.draws||0}D ${p.losses||0}L</div>
+      </div>
+      <button class="btn-sm ${p.isModerator?'btn-reject':'btn-mod'}" onclick="adminToggleMod('${p.id}','${p.name}',${!!p.isModerator})">
+        ${p.isModerator?'Remove Mod':'Give Mod'}</button>
+    </div>`).join(''):'<div class="empty-state"><div class="empty-text">No active players</div></div>';
+}
+
+function filterModPlayers() { if(S.adminPlayers.length) renderModPlayers(S.adminPlayers); }
+
+async function adminToggleMod(id, name, isMod) {
+  const nv=!isMod;
+  await updateDoc(doc(db,'players',id),{isModerator:nv});
+  showToast(name+(nv?' is now a Moderator 🛡️':' moderator removed'),nv?'success':'info');
+  if (S.user&&S.user.id===id) { S.user.isModerator=nv; updateHeaderAuth(); }
+  loadAdminPanel('moderators');
+}
+
+async function adminApprove(id) {
+  await updateDoc(doc(db,'players',id),{status:'active'});
+  showToast('Player approved ✅','success'); loadAdminPanel('pending');
+}
+
+async function adminReject(id) {
+  if (!confirm('Reject and delete this registration?')) return;
+  await deleteDoc(doc(db,'players',id));
+  showToast('Rejected','info'); loadAdminPanel('pending');
+}
+
+function adminEditPlayer(id,div,rating,pts,wins,draws,losses,status) {
+  $('editPlayerId').value=id; $('editDivision').value=div; $('editRating').value=rating;
+  $('editPoints').value=pts; $('editWins').value=wins; $('editDraws').value=draws;
+  $('editLosses').value=losses; $('editStatus').value=status;
+  openModal('editPlayerModal');
+}
+
+async function savePlayerEdit() {
+  const id=$('editPlayerId').value, div=parseInt($('editDivision').value);
+  const rating=parseInt($('editRating').value), pts=parseInt($('editPoints').value);
+  const wins=parseInt($('editWins').value), draws=parseInt($('editDraws').value);
+  const losses=parseInt($('editLosses').value), status=$('editStatus').value;
+  if (div<1||div>9) return showToast('Division 1–9 only','error');
+  try {
+    await updateDoc(doc(db,'players',id),{division:div,rating,points:pts,wins,draws,losses,status});
+    showToast('Player updated ✅','success'); closeModal('editPlayerModal'); loadAdminPanel('players');
+  } catch(e) { showToast('Error: '+e.message,'error'); }
+}
+
+async function adminToggleBan(id,name,cs) {
+  const ns=cs==='banned'?'active':'banned';
+  await updateDoc(doc(db,'players',id),{status:ns});
+  showToast(name+' '+ns,'info'); loadAdminPanel('players');
+}
+
+function adminEditMatch(id,nA,nB,sA,sB,status) {
+  $('editMatchId').value=id; $('editMatchInfo').textContent=`${nA} vs ${nB}`;
+  $('editScoreA').value=sA; $('editScoreB').value=sB; $('editMatchStatus').value=status;
+  openModal('editMatchModal');
+}
+
+async function adminConfirmMatch(matchId) {
+  const mRef=doc(db,'matches',matchId), mSnap=await getDoc(mRef);
+  if (!mSnap.exists()) return;
+  await updateDoc(mRef,{status:'confirmed',confirmedAt:serverTimestamp()});
+  await applyMatchStats(mSnap.data());
+  showToast('Match confirmed by admin ✅','success');
+  S.matches=[]; loadAdminPanel('adminMatches');
+}
+
+async function saveMatchEdit() {
+  const id=$('editMatchId').value, sA=parseInt($('editScoreA').value), sB=parseInt($('editScoreB').value);
+  const status=$('editMatchStatus').value;
+  try {
+    await updateDoc(doc(db,'matches',id),{scoreA:sA,scoreB:sB,status});
+    showToast('Match updated ✅','success'); closeModal('editMatchModal');
+    S.matches=[]; loadAdminPanel('adminMatches');
+  } catch(e) { showToast('Error: '+e.message,'error'); }
+}
+
+async function adminDeleteMatch() {
+  const id=$('editMatchId').value;
+  if (!confirm('Delete this match permanently?')) return;
+  await deleteDoc(doc(db,'matches',id));
+  showToast('Match deleted','info'); closeModal('editMatchModal');
+  S.matches=[]; loadAdminPanel('adminMatches');
+}
+
+async function adminDeleteMatchDirect(id) {
+  if (!confirm('Delete this match?')) return;
+  await deleteDoc(doc(db,'matches',id));
+  showToast('Match deleted','info');
+  S.matches=[]; loadAdminPanel('adminMatches');
+}
+
+async function confirmSeasonReset() {
+  if (!confirm('⚠️ RESET ENTIRE SEASON?\n\nAll matches deleted, all player stats reset to zero. Accounts remain.\n\nPress OK to confirm.')) return;
+  try {
+    const [pSnap,mSnap]=await Promise.all([getDocs(collection(db,'players')),getDocs(collection(db,'matches'))]);
+    await Promise.all([
+      ...pSnap.docs.map(d=>updateDoc(doc(db,'players',d.id),{points:0,wins:0,draws:0,losses:0,form:[],division:9,rating:1000})),
+      ...mSnap.docs.map(d=>deleteDoc(doc(db,'matches',d.id)))
+    ]);
+    S.players=[]; S.matches=[];
+    showToast('Season reset! 🔄','success');
+  } catch(e) { showToast('Error: '+e.message,'error'); }
+}
+
+async function changeAdminPassword() {
+  const pw=$('newAdminPw').value, pw2=$('confirmAdminPw').value;
+  if (!pw||pw.length<4) return showToast('Password too short','error');
+  if (pw!==pw2) return showToast('Passwords do not match','error');
+  try {
+    await setDoc(doc(db,'settings','admin'),{password:pw},{merge:true});
+    S.adminPw=pw; showToast('Admin password updated ✅','success');
+    $('newAdminPw').value=''; $('confirmAdminPw').value='';
+  } catch(e) { showToast('Error: '+e.message,'error'); }
+}
+
+function switchAdminTab(tab,btn) {
+  document.querySelectorAll('.admin-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('[id^="adminTab-"]').forEach(el=>el.style.display='none');
+  $('adminTab-'+tab).style.display='block';
+  loadAdminPanel(tab);
+}
+
+// ===== EXPOSE =====
+Object.assign(window,{
+  navTo, navBack, setNavActive, setMobActive,
+  openModal, closeModal,
+  doLogin, doRegister, doLogout,
+  switchLbTab, filterLeaderboard,
+  filterMatches, confirmMatch,
+  submitMatchResult, loadSubmitPage,
+  viewProfile, toggleRival, loadMyProfile,
+  adminLogin, loadAdminPanel, switchAdminTab,
+  adminApprove, adminReject, adminEditPlayer, savePlayerEdit,
+  adminToggleBan, adminToggleMod,
+  adminEditMatch, saveMatchEdit, adminDeleteMatch, adminDeleteMatchDirect,
+  adminConfirmMatch, filterAdminPlayers, filterModPlayers,
+  confirmSeasonReset, changeAdminPassword, loadModPanel
 });
 
-// Handle Enter key for password input
-document.getElementById("adminPassword").addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
-    unlockMatchdaySetup();
-  }
+// ===== INIT =====
+updateHeaderAuth();
+loadHome();
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); });
 });
 </script>
 </body>
