@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -224,22 +225,23 @@ main{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:24px 20p
 .div-guide-pts{font-size:11px;color:#FFEA00;font-weight:700;margin-top:5px;letter-spacing:1px;}
 .div-guide-badge{font-size:10px;color:#00E676;margin-top:4px;font-weight:700;letter-spacing:1.5px;}
 
-/* ===== TABLE - FIXED (UCL colors, readable) ===== */
-.lb-table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--ucl-border);}
-table{width:100%;border-collapse:collapse;}
-thead tr{background:#0D1E3A !important;}
+/* ===== TABLE - FORCED DARK (GitHub-safe) ===== */
+.lb-table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--ucl-border);background:#060E1C !important;}
+table{width:100%;border-collapse:collapse;background:#060E1C !important;color:#D0E4FF !important;}
+thead,thead tr{background:#0D1E3A !important;}
 thead th{
   padding:12px 14px;text-align:left;font-size:10px;letter-spacing:2px;
   text-transform:uppercase;color:#82B1FF !important;font-weight:700;
   white-space:nowrap;background:#0D1E3A !important;
 }
-tbody tr{border-bottom:1px solid rgba(68,114,196,0.1);transition:background .15s;}
-tbody tr:hover{background:rgba(68,114,196,0.1) !important;}
+tbody,tbody tr{background:#060E1C !important;}
+tbody tr{border-bottom:1px solid rgba(27,58,107,0.5);}
+tbody tr:hover{background:#0D1E3A !important;}
 tbody tr:last-child{border-bottom:none;}
-tbody td{padding:11px 14px;font-size:14px;font-weight:500;vertical-align:middle;color:#D0E4FF !important;}
-tbody tr.top-1{background:linear-gradient(90deg,rgba(255,215,0,0.1),transparent) !important;}
-tbody tr.top-2{background:linear-gradient(90deg,rgba(192,192,192,0.07),transparent) !important;}
-tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparent) !important;}
+tbody td{padding:11px 14px;font-size:14px;font-weight:500;vertical-align:middle;color:#D0E4FF !important;background:transparent;}
+tbody tr.top-1{background:linear-gradient(90deg,rgba(255,215,0,0.1),#060E1C) !important;}
+tbody tr.top-2{background:linear-gradient(90deg,rgba(192,192,192,0.07),#060E1C) !important;}
+tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),#060E1C) !important;}
 .rank-num{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#4472C4;}
 .rank-1{color:var(--gold)!important;}.rank-2{color:var(--silver)!important;}.rank-3{color:var(--bronze)!important;}
 
@@ -885,17 +887,23 @@ const app = initializeApp({
 const db = getFirestore(app);
 
 // ===== DIVISION RULES =====
+// Div 9-4: cycle-based point system (10 matches per cycle)
+// Div 3-1: ELO-style rating system (starts at 1200, promoted at 1500->Div2, 1800->Div1)
 const DIV_RULES = {
-  9:{cycle:10,promo:12,relo:0, next:8,name:'Rookie'},
-  8:{cycle:10,promo:15,relo:3, next:7,name:'Amateur'},
-  7:{cycle:10,promo:18,relo:4, next:6,name:'Regional'},
-  6:{cycle:10,promo:21,relo:5, next:5,name:'National'},
-  5:{cycle:10,promo:24,relo:6, next:4,name:'League Two'},
-  4:{cycle:10,promo:27,relo:7, next:3,name:'League One'},
-  3:{cycle:10,promo:30,relo:8, next:2,name:'Championship'},
-  2:{cycle:10,promo:33,relo:9, next:1,name:'Premier'},
-  1:{cycle:10,promo:999,relo:10,next:1,name:'Elite'},
+  9:{cycle:10,promo:9, relo:0, next:8,name:'Rookie',      useRating:false},
+  8:{cycle:10,promo:11,relo:2, next:7,name:'Amateur',     useRating:false},
+  7:{cycle:10,promo:13,relo:3, next:6,name:'Regional',    useRating:false},
+  6:{cycle:10,promo:15,relo:4, next:5,name:'National',    useRating:false},
+  5:{cycle:10,promo:16,relo:5, next:4,name:'League Two',  useRating:false},
+  4:{cycle:10,promo:18,relo:6, next:3,name:'League One',  useRating:false},
+  3:{useRating:true, name:'Championship', ratingFloor:1200},
+  2:{useRating:true, name:'Premier',      ratingFloor:1200},
+  1:{useRating:true, name:'Elite',        ratingFloor:1200},
 };
+// Rating thresholds for Div 3+ system
+const RATING_PROMO = {3:1500, 2:1800}; // rating needed to promote
+const RATING_RELO  = {2:1200, 1:1200}; // rating below which relegated (back to Div 3 floor)
+const DEFAULT_DIV3_RATING = 1200;
 
 // ===== STATE =====
 let S={
@@ -1011,7 +1019,7 @@ async function doRegister(){
       name,category:cat,password:pw,status:'pending',division:9,
       wins:0,draws:0,losses:0,goalsFor:0,goalsAgainst:0,cleanSheets:0,
       form:[],rivals:[],isModerator:false,highestDivision:9,
-      cycleMP:0,cyclePts:0,
+      cycleMP:0,cyclePts:0,eloRating:0,eloChange:0,
       isPOTD:false,isPOTW:false,isPOTM:false,isPOTS:false,
       createdAt:serverTimestamp()
     });
@@ -1079,10 +1087,14 @@ async function loadHome(){
     $('statToday').textContent=S.matches.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<86400000).length;
     $('statPending').textContent=S.matches.filter(m=>m.status==='pending').length;
 
-    const sorted=[...S.players].map(p=>({
-      ...p,
-      rating:calcRating(p.wins||0,p.draws||0,p.losses||0,p.goalsFor||0,p.goalsAgainst||0,p.cleanSheets||0)
-    })).sort((a,b)=>b.rating-a.rating).slice(0,5);
+    const sorted=[...S.players].map(p=>{
+      const div=p.division||9;
+      const rules=DIV_RULES[div]||DIV_RULES[9];
+      const rating=rules.useRating
+        ? (p.eloRating||DEFAULT_DIV3_RATING)
+        : calcRating(p.wins||0,p.draws||0,p.losses||0,p.goalsFor||0,p.goalsAgainst||0,p.cleanSheets||0);
+      return {...p,rating};
+    }).sort((a,b)=>b.rating-a.rating).slice(0,5);
 
     $('homeTopPlayers').innerHTML=sorted.length?sorted.map((p,i)=>`
       <div class="pending-item" style="cursor:pointer" onclick="viewProfile('${p.id}')">
@@ -1113,27 +1125,27 @@ async function loadHome(){
       </div>`;
     }).join(''):'<div class="empty-state"><div class="empty-text">No matches yet</div></div>';
 
-    // Division Guide - bigger, green
+    // Division Guide with corrected thresholds
     const divInfo=[
-      {d:1,name:'Elite',promo:'Top Division - Defend your title',relo:'Relegate if <=10 pts'},
-      {d:2,name:'Premier',promo:'33 pts in 10 matches to promote',relo:'Relo if <=9 pts'},
-      {d:3,name:'Championship',promo:'30 pts in 10 matches',relo:'Relo if <=8 pts'},
-      {d:4,name:'League One',promo:'27 pts in 10 matches',relo:'Relo if <=7 pts'},
-      {d:5,name:'League Two',promo:'24 pts in 10 matches',relo:'Relo if <=6 pts'},
-      {d:6,name:'National',promo:'21 pts in 10 matches',relo:'Relo if <=5 pts'},
-      {d:7,name:'Regional',promo:'18 pts in 10 matches',relo:'Relo if <=4 pts'},
-      {d:8,name:'Amateur',promo:'15 pts in 10 matches',relo:'Relo if <=3 pts'},
-      {d:9,name:'Rookie',promo:'12 pts in 10 matches',relo:'Entry level - no relegation'},
+      {d:9,name:'Rookie',     promo:'9 pts in 10 matches',   relo:'No relegation — entry level',      tier:'low'},
+      {d:8,name:'Amateur',    promo:'11 pts in 10 matches',  relo:'Relegated if ≤2 pts in cycle',    tier:'low'},
+      {d:7,name:'Regional',   promo:'13 pts in 10 matches',  relo:'Relegated if ≤3 pts in cycle',    tier:'low'},
+      {d:6,name:'National',   promo:'15 pts in 10 matches',  relo:'Relegated if ≤4 pts in cycle',    tier:'low'},
+      {d:5,name:'League Two', promo:'16 pts in 10 matches',  relo:'Relegated if ≤5 pts in cycle',    tier:'low'},
+      {d:4,name:'League One', promo:'18 pts in 10 matches',  relo:'Relegated if ≤6 pts in cycle',    tier:'low'},
+      {d:3,name:'Championship',promo:'ELO 1500 → Div 2',    relo:'No relegation — ELO floor 1200',  tier:'top'},
+      {d:2,name:'Premier',    promo:'ELO 1800 → Div 1',     relo:'ELO below 1200 → back to Div 3',  tier:'top'},
+      {d:1,name:'Elite',      promo:'Top Division',          relo:'ELO below 1200 → Div 2',          tier:'top'},
     ];
     $('divisionGuide').innerHTML=divInfo.map(di=>`
-      <div class="div-guide-card">
+      <div class="div-guide-card" style="${di.tier==='top'?'border-color:rgba(245,197,24,0.4);background:linear-gradient(135deg,rgba(245,197,24,0.08),rgba(10,22,40,0.9))':''}">
         <div style="display:flex;align-items:center;gap:10px">
           ${divBadge(di.d)}
           <div class="div-guide-name">${di.name}</div>
         </div>
-        <div class="div-guide-pts">Promotion: ${di.promo}</div>
+        <div class="div-guide-pts">&#8679; ${di.promo}</div>
         <div class="div-guide-desc">${di.relo}</div>
-        ${di.d<=3?'<div class="div-guide-badge">TOP TIER DIVISION</div>':''}
+        ${di.tier==='top'?'<div class="div-guide-badge" style="color:#F5C518">ELO RATING SYSTEM</div>':''}
       </div>`).join('');
   }catch(e){console.error(e);T('Error loading home','error');}
 }
@@ -1158,7 +1170,6 @@ async function loadLeaderboard(tab='overall'){
     S.players.forEach(p=>playerCatMap[p.id]=p.category||'Main');
 
     let players=S.players.map(p=>{
-      // Filter confirmed matches in the time window
       let pm=S.matches.filter(m=>(m.playerAId===p.id||m.playerBId===p.id)&&m.status==='confirmed');
       if(tab!=='overall') pm=pm.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<timeFilter);
 
@@ -1169,22 +1180,26 @@ async function loadLeaderboard(tab='overall'){
         const myG=side==='A'?m.scoreA:m.scoreB, opG=side==='A'?m.scoreB:m.scoreA;
         const oppCat=playerCatMap[side==='A'?m.playerBId:m.playerAId]||'Main';
         const mult=getRatingMultiplier(p.category||'Main',oppCat,result);
-        
-        if(result==='W'){w+=mult;} // count weighted wins for rating
-        else if(result==='D'){d+=1;}
-        else{l+=mult;} // count weighted losses
+        if(result==='W'){w+=mult;}else if(result==='D'){d+=1;}else{l+=mult;}
         gf+=myG; ga+=opG;
         if(opG===0)cs++;
       });
 
-      const total=pm.length; // actual match count
-      const wr=total>0?Math.round((w/(w+d+l||1))*100):0; // use weighted w for display
+      const total=pm.length;
+      const wr=total>0?Math.round((w/(w+d+l||1))*100):0;
       const gd=gf-ga;
-      // Rating = weighted_w*10 + d*5 + weighted_l*(-5) + gd + cs*2
-      const rating=Math.max(0,w*10+d*5+l*(-5)+gd+cs*2);
-      const cyclePts=p.cyclePts||0, cycleMP=p.cycleMP||0;
+      const div=p.division||9;
+      const rules=DIV_RULES[div]||DIV_RULES[9];
 
-      return {...p,tw:Math.round(w),td:d,tl:Math.round(l),tgf:gf,tga:ga,tcs:cs,tgd:gd,twr:wr,total,rating,cyclePts,cycleMP};
+      // Rating display: use eloRating for Div 3+, computed formula for Div 4-9
+      let rating;
+      if(rules.useRating){
+        rating=p.eloRating||DEFAULT_DIV3_RATING;
+      } else {
+        rating=Math.max(0,Math.round(w*10+d*5+l*(-5)+gd+cs*2));
+      }
+
+      return {...p,tw:Math.round(w),td:d,tl:Math.round(l),tgf:gf,tga:ga,tcs:cs,tgd:gd,twr:wr,total,rating,cyclePts:p.cyclePts||0,cycleMP:p.cycleMP||0};
     });
 
     if(tab!=='overall') players=players.filter(p=>p.total>0);
@@ -1209,7 +1224,27 @@ function renderLbTable(players){
     const r=i+1,rc=r===1?'top-1':r===2?'top-2':r===3?'top-3':'';
     const form=(p.form||[]).slice(-5);
     const rules=DIV_RULES[p.division||9]||DIV_RULES[9];
-    const pct=Math.min(100,Math.round((p.cyclePts||0)/(rules.promo||1)*100));
+    const isElo=rules.useRating;
+    let cycleCell='';
+    if(isElo){
+      const elo=p.eloRating||DEFAULT_DIV3_RATING;
+      const next=RATING_PROMO[p.division];
+      if(next){
+        const pct=Math.min(100,Math.round(Math.max(0,elo-DEFAULT_DIV3_RATING)/(next-DEFAULT_DIV3_RATING)*100));
+        cycleCell=`<div style="font-size:10px;color:#F5C518">${elo} ELO</div>
+          <div style="background:rgba(255,255,255,.06);border-radius:3px;height:4px;width:48px;margin-top:3px;overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#F5C518,#FFD700);border-radius:3px"></div>
+          </div>`;
+      } else {
+        cycleCell=`<div style="font-size:10px;color:#F5C518">${elo} ELO</div><div style="font-size:9px;color:#4472C4">Elite</div>`;
+      }
+    } else {
+      const pct=Math.min(100,Math.round((p.cyclePts||0)/(rules.promo||1)*100));
+      cycleCell=`<div style="font-size:10px;color:#4472C4">${p.cycleMP||0}/10</div>
+        <div style="background:rgba(255,255,255,.06);border-radius:3px;height:4px;width:48px;margin-top:3px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#00A550,#00E676);border-radius:3px"></div>
+        </div>`;
+    }
     return `<tr class="${rc}">
       <td><span class="rank-num rank-${r}">${r}</span></td>
       <td>
@@ -1238,12 +1273,7 @@ function renderLbTable(players){
       <td><span style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:${p.tgd>=0?'#00E676':'#FF5555'}">${p.tgd>=0?'+':''}${p.tgd}</span></td>
       <td><span style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#82B1FF">${p.tcs}</span></td>
       <td><div class="form-dots">${form.map(r=>formBadge(r)).join('')}</div></td>
-      <td>
-        <div style="font-size:10px;color:#4472C4">${p.cycleMP||0}/10</div>
-        <div style="background:rgba(255,255,255,.06);border-radius:3px;height:4px;width:48px;margin-top:3px;overflow:hidden">
-          <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#00A550,#00E676);border-radius:3px"></div>
-        </div>
-      </td>
+      <td>${cycleCell}</td>
     </tr>`;
   }).join('');
 }
@@ -1324,8 +1354,10 @@ async function downloadRankingCard(){
 // ===== MATCHES =====
 async function loadMatches(){
   try{
-    const mSnap=await getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(200)));
-    S.matches=mSnap.docs.map(d=>({id:d.id,...d.data()}));
+    // Fetch all matches client-side sort to avoid composite index requirement
+    const mSnap=await getDocs(query(collection(db,'matches'),limit(200)));
+    S.matches=mSnap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
     S.allMatchesData=S.matches;
     renderMatchesList(S.matches);
     renderPendingConfirms();
@@ -1391,19 +1423,20 @@ async function confirmMatch(matchId,confirmed){
     const m=mSnap.data();
     if(confirmed){
       await updateDoc(mRef,{status:'confirmed',confirmedAt:serverTimestamp()});
-      await applyMatchStats(m);
+      await applyMatchStats({...m, id:matchId});
       T('Match confirmed! Stats updated','success');
     }else{
       await updateDoc(mRef,{status:'disputed'});
       T('Match disputed. Admin will review.','info');
     }
     S.matches=[];S.allMatchesData=[];
-    loadMatches();
+    // Reload whichever view is active
+    if(document.getElementById('page-modpanel')?.classList.contains('active')){loadModPanel();}
+    else{loadMatches();}
   }catch(e){T('Error: '+e.message,'error');}
 }
 
 async function applyMatchStats(m){
-  // Get both player categories
   const [aSnap,bSnap]=await Promise.all([
     getDoc(doc(db,'players',m.playerAId)),
     getDoc(doc(db,'players',m.playerBId))
@@ -1412,67 +1445,110 @@ async function applyMatchStats(m){
   const aData=aSnap.data(), bData=bSnap.data();
   const aCat=aData.category||'Main', bCat=bData.category||'Main';
 
-  async function upd(pid,pData,side,oppCat){
+  // Store category on match for display
+  await updateDoc(doc(db,'matches',m.id||'_'),{
+    playerACat:aCat,playerBCat:bCat,
+    is2x:getRatingMultiplier(aCat,bCat,getRC(m.scoreA,m.scoreB,'A'))>1||
+         getRatingMultiplier(bCat,aCat,getRC(m.scoreA,m.scoreB,'B'))>1
+  }).catch(()=>{});
+
+  async function upd(pid,pData,side,oppData){
     const ref=doc(db,'players',pid);
+    const oppCat=oppData.category||'Main';
     const result=getRC(m.scoreA,m.scoreB,side);
     const myG=side==='A'?m.scoreA:m.scoreB, opG=side==='A'?m.scoreB:m.scoreA;
     const isCS=opG===0;
     const form=[...(pData.form||[]).slice(-19),result];
-    const cyclePtsGain=result==='W'?3:result==='D'?1:0;
-    const newCycleMP=(pData.cycleMP||0)+1;
-    const newCyclePts=(pData.cyclePts||0)+cyclePtsGain;
-    
-    // 2x multiplier: for division cycle points, no 2x (fair play)
-    // for actual wins/losses stored, we track the multiplied version
+    const div=pData.division||9;
+    const rules=DIV_RULES[div]||DIV_RULES[9];
     const mult=getRatingMultiplier(pData.category||'Main',oppCat,result);
-    // Effective stats stored: wins/losses get multiplied for rating purposes
-    const wInc=result==='W'?mult:0;
-    const lInc=result==='L'?mult:0;
-    const dInc=result==='D'?1:0;
 
-    const updates={
-      wins:(pData.wins||0)+wInc,
-      draws:(pData.draws||0)+dInc,
-      losses:(pData.losses||0)+lInc,
+    let updates={
+      wins:(pData.wins||0)+(result==='W'?mult:0),
+      draws:(pData.draws||0)+(result==='D'?1:0),
+      losses:(pData.losses||0)+(result==='L'?mult:0),
       goalsFor:(pData.goalsFor||0)+myG,
       goalsAgainst:(pData.goalsAgainst||0)+opG,
       cleanSheets:(pData.cleanSheets||0)+(isCS?1:0),
-      form,cycleMP:newCycleMP,cyclePts:newCyclePts,
+      form,
     };
+
+    if(rules.useRating){
+      // === DIV 3-1: ELO-style rating system ===
+      const myRating=pData.eloRating||DEFAULT_DIV3_RATING;
+      const oppRating=oppData.eloRating||DEFAULT_DIV3_RATING;
+      const oppRank=S.lbPlayers.findIndex(x=>x.id===pid);
+      const myRank=S.lbPlayers.findIndex(x=>x.id===(side==='A'?m.playerBId:m.playerAId));
+      const oppIsBetterRanked=(myRank>oppRank)&&oppRank>=0; // lower index = better rank
+
+      let ratingChange=0;
+      if(result==='W'){
+        ratingChange=oppIsBetterRanked?40:25;
+        ratingChange=Math.round(ratingChange*mult);
+      }else if(result==='L'){
+        ratingChange=oppIsBetterRanked?-25:-40;
+        ratingChange=Math.round(ratingChange*mult);
+      }else{
+        ratingChange=0;
+      }
+
+      const newRating=Math.max(DEFAULT_DIV3_RATING, myRating+ratingChange);
+      updates.eloRating=newRating;
+      updates.eloChange=ratingChange;
+
+      // Div 3+ promotion/relegation based on eloRating
+      let newDiv=div, action=null;
+      if(div===3&&newRating>=RATING_PROMO[3]){newDiv=2;action='promote';}
+      else if(div===2&&newRating>=RATING_PROMO[2]){newDiv=1;action='promote';}
+      else if(div===2&&newRating<RATING_RELO[2]){
+        // Relegate back to div 3, reset rating to floor
+        newDiv=3;action='relegate';updates.eloRating=DEFAULT_DIV3_RATING;
+      }else if(div===1&&newRating<RATING_RELO[1]){
+        newDiv=2;action='relegate';
+      }
+      if(action){
+        updates.division=newDiv;
+        updates.highestDivision=Math.min(newDiv,pData.highestDivision||9);
+        if(action==='promote')setTimeout(()=>T(pData.name+' promoted to Division '+newDiv+'!','success'),100);
+        else if(action==='relegate')setTimeout(()=>T(pData.name+' relegated to Division '+newDiv+'.','info'),100);
+      }
+    } else {
+      // === DIV 4-9: Cycle-based point system ===
+      const cyclePtsGain=result==='W'?3:result==='D'?1:0;
+      const newCycleMP=(pData.cycleMP||0)+1;
+      const newCyclePts=(pData.cyclePts||0)+cyclePtsGain;
+      updates.cycleMP=newCycleMP;
+      updates.cyclePts=newCyclePts;
+
+      // Check div promotion/relegation
+      let newDiv=div, action=null;
+      if(newCyclePts>=rules.promo&&div>4){
+        // Promote to Div 3 -> enter rating system
+        newDiv=div-1;action='promote';
+        if(newDiv<=3){updates.eloRating=DEFAULT_DIV3_RATING;}
+        updates.cycleMP=0;updates.cyclePts=0;
+      }else if(newCyclePts>=rules.promo&&div>1){
+        newDiv=div-1;action='promote';
+        updates.cycleMP=0;updates.cyclePts=0;
+      }else if(newCycleMP>=rules.cycle){
+        if(newCyclePts<=rules.relo&&div<9){newDiv=div+1;action='relegate';}
+        updates.cycleMP=0;updates.cyclePts=0;
+      }
+      if(action){
+        updates.division=newDiv;
+        updates.highestDivision=Math.min(newDiv,pData.highestDivision||9);
+        if(action==='promote')setTimeout(()=>T(pData.name+' promoted to Division '+newDiv+'!','success'),100);
+        else if(action==='relegate')setTimeout(()=>T(pData.name+' relegated to Division '+newDiv+'.','info'),100);
+      }
+    }
+
     await updateDoc(ref,updates);
-    
-    // Check division
-    const upd2={...pData,...updates};
-    await checkAndApplyDivision(pid,upd2,result,mult);
   }
-  
-  // Store category on match for display
-  await updateDoc(doc(db,'matches',m.id||'x'),{playerACat:aCat,playerBCat:bCat,is2x:
-    getRatingMultiplier(aCat,bCat,getRC(m.scoreA,m.scoreB,'A'))>1||
-    getRatingMultiplier(bCat,aCat,getRC(m.scoreA,m.scoreB,'B'))>1
-  }).catch(()=>{});
 
-  await Promise.all([upd(m.playerAId,aData,'A',bCat),upd(m.playerBId,bData,'B',aCat)]);
-}
-
-async function checkAndApplyDivision(pid,p){
-  const div=p.division||9;
-  const rules=DIV_RULES[div]||DIV_RULES[9];
-  const cmp=p.cycleMP||0, cpts=p.cyclePts||0;
-  let newDiv=div, action=null;
-  if(cpts>=rules.promo&&div>1){newDiv=Math.max(1,div-1);action='promote';}
-  else if(cmp>=rules.cycle){
-    if(cpts<=rules.relo&&div<9){newDiv=Math.min(9,div+1);action='relegate';}
-    else if(cmp>=rules.cycle){action='stay';}
-  }
-  if(action){
-    await updateDoc(doc(db,'players',pid),{
-      division:newDiv,cycleMP:0,cyclePts:0,
-      highestDivision:Math.min(newDiv,p.highestDivision||9)
-    });
-    if(action==='promote')T(p.name+' promoted to Division '+newDiv+'!','success');
-    else if(action==='relegate')T(p.name+' relegated to Division '+newDiv+'.','info');
-  }
+  await Promise.all([
+    upd(m.playerAId,aData,'A',bData),
+    upd(m.playerBId,bData,'B',aData)
+  ]);
 }
 
 // ===== SUBMIT =====
@@ -1512,25 +1588,30 @@ async function submitMatchResult(){
 // ===== MOD PANEL =====
 async function loadModPanel(){
   if(!S.user||!S.user.isModerator){
-    $('modPendingMatches').innerHTML='<div class="empty-state"><div class="empty-text">Moderator access required</div></div>';return;
+    $('modPendingMatches').innerHTML='<div class="empty-state"><div class="empty-text">Moderator access required. Login with a moderator account.</div></div>';return;
   }
+  const el=$('modPendingMatches');
+  el.innerHTML='<div class="loading-spinner"><div class="spinner"></div></div>';
   try{
-    // Query all pending matches
-    const mSnap=await getDocs(query(collection(db,'matches'),where('status','==','pending'),orderBy('createdAt','desc'),limit(100)));
-    const pending=mSnap.docs.map(d=>({id:d.id,...d.data()}));
-    const el=$('modPendingMatches');
-    if(!pending.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">&#10003;</div><div class="empty-text">No pending matches</div></div>';return;}
+    // Simple query without composite index - filter status only, sort client-side
+    const mSnap=await getDocs(query(collection(db,'matches'),where('status','==','pending'),limit(100)));
+    const pending=mSnap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+    if(!pending.length){
+      el.innerHTML='<div class="empty-state"><div class="empty-icon">&#10003;</div><div class="empty-text">No pending matches</div><div class="empty-sub">All caught up!</div></div>';return;
+    }
     el.innerHTML=pending.map(m=>`
       <div class="confirm-card">
+        <div style="font-size:10px;color:#CE93D8;font-weight:700;letter-spacing:2px;margin-bottom:8px">MODERATOR REVIEW</div>
         <div class="confirm-vs">
           <div class="confirm-player">
             <div class="confirm-player-name">${m.playerAName}</div>
-            <div class="text-gray text-sm">${m.playerACat||''}</div>
+            <div class="text-gray text-sm">${m.playerACat||'Main'}</div>
           </div>
           <div class="confirm-score-display">${m.scoreA}-${m.scoreB}</div>
           <div class="confirm-player">
             <div class="confirm-player-name">${m.playerBName}</div>
-            <div class="text-gray text-sm">${m.playerBCat||''}</div>
+            <div class="text-gray text-sm">${m.playerBCat||'Main'}</div>
           </div>
         </div>
         <div class="text-gray text-sm mb-8">${fmtDate(m.createdAt)} - ${timeAgo(m.createdAt)}</div>
@@ -1539,7 +1620,10 @@ async function loadModPanel(){
           <button class="btn-reject btn-sm" onclick="confirmMatch('${m.id}',false)">Dispute</button>
         </div>
       </div>`).join('');
-  }catch(e){T('Error loading mod panel: '+e.message,'error');console.error(e);}
+  }catch(e){
+    el.innerHTML=`<div class="empty-state"><div class="empty-text">Error: ${e.message}</div><div class="empty-sub">Try refreshing the page</div></div>`;
+    console.error('Mod panel error:',e);
+  }
 }
 
 // ===== PROFILE =====
@@ -1579,11 +1663,47 @@ async function viewProfile(playerId){
     });
     const total=myConfirmed.length,wr=total>0?Math.round((w/(w+d+l||1))*100):0;
     const gd=gf-ga;
-    const rating=Math.max(0,Math.round(w*10+d*5+l*(-5)+gd+cs*2));
+    // Display rating: ELO for div 3+, computed for div 4-9
+    const displayRating=(p.division||9)<=3
+      ? (p.eloRating||DEFAULT_DIV3_RATING)
+      : Math.max(0,Math.round(w*10+d*5+l*(-5)+gd+cs*2));
     
     const div=p.division||9,rules=DIV_RULES[div]||DIV_RULES[9];
+    const isEloDiv=rules.useRating;
     const cmp=p.cycleMP||0,cpts=p.cyclePts||0;
-    const pct=Math.min(100,Math.round(cpts/(rules.promo||1)*100));
+    const eloRating=p.eloRating||DEFAULT_DIV3_RATING;
+    
+    // Build promo tracker HTML
+    let promoHTML='';
+    if(isEloDiv){
+      const nextPromo=RATING_PROMO[div];
+      const floor=DEFAULT_DIV3_RATING;
+      if(nextPromo){
+        const pct=Math.min(100,Math.round(Math.max(0,eloRating-floor)/(nextPromo-floor)*100));
+        promoHTML=`<div class="promo-tracker">
+          <div class="promo-title">ELO Rating - Division ${div} (${rules.name})</div>
+          <div class="promo-bar-wrap"><div class="promo-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,#F5C518,#FFD700)"></div></div>
+          <div class="promo-label"><span>${eloRating} ELO</span><span>Promote at ${nextPromo}</span></div>
+          <div class="promo-cycle-info" style="color:#F5C518">Win vs higher ranks: +40 | Normal win: +25 | Loss: -25 to -40</div>
+        </div>`;
+      } else {
+        promoHTML=`<div class="promo-tracker">
+          <div class="promo-title">ELO Rating - Division 1 Elite</div>
+          <div class="promo-bar-wrap"><div class="promo-bar-fill" style="width:100%;background:linear-gradient(90deg,#FFD700,#FF8C00)"></div></div>
+          <div class="promo-label"><span>${eloRating} ELO</span><span>Top Division</span></div>
+          <div class="promo-cycle-info" style="color:#FFD700">Maintain rating above 1200 to stay in Division 1</div>
+        </div>`;
+      }
+    } else {
+      const pct=Math.min(100,Math.round(cpts/(rules.promo||1)*100));
+      promoHTML=`<div class="promo-tracker">
+        <div class="promo-title">Division ${div} Cycle Progress</div>
+        <div class="promo-bar-wrap"><div class="promo-bar-fill" style="width:${pct}%"></div></div>
+        <div class="promo-label"><span>${cpts} pts / ${rules.promo} needed</span><span>${cmp}/10 matches</span></div>
+        ${cmp>=rules.cycle?'<div class="promo-cycle-info" style="color:#00E676">Cycle complete - awaiting review</div>':
+        `<div class="promo-cycle-info">${Math.max(0,rules.cycle-cmp)} matches left this cycle</div>`}
+      </div>`;
+    }
     const form=(p.form||[]).slice(-5);
     const isMe=S.user&&S.user.id===playerId,isRival=S.user&&(S.user.rivals||[]).includes(playerId);
     
@@ -1627,7 +1747,7 @@ async function viewProfile(playerId){
         </div>
       </div>
       <div class="profile-stats">
-        <div class="p-stat"><div class="p-stat-val" style="color:var(--ucl-star)">${rating}</div><div class="p-stat-lbl">Rating</div></div>
+        <div class="p-stat"><div class="p-stat-val" style="color:var(--ucl-star)">${displayRating}</div><div class="p-stat-lbl">${(p.division||9)<=3?'ELO Rating':'Rating'}</div></div>
         <div class="p-stat"><div class="p-stat-val text-green">${Math.round(w)}</div><div class="p-stat-lbl">Wins</div></div>
         <div class="p-stat"><div class="p-stat-val text-yellow">${d}</div><div class="p-stat-lbl">Draws</div></div>
         <div class="p-stat"><div class="p-stat-val text-red">${Math.round(l)}</div><div class="p-stat-lbl">Losses</div></div>
@@ -1636,13 +1756,7 @@ async function viewProfile(playerId){
         <div class="p-stat"><div class="p-stat-val" style="color:${gd>=0?'#00E676':'#FF5555'}">${gd>=0?'+':''}${gd}</div><div class="p-stat-lbl">Goal Diff</div></div>
         <div class="p-stat"><div class="p-stat-val" style="color:#82B1FF">${cs}</div><div class="p-stat-lbl">Clean Sheets</div></div>
       </div>
-      <div class="promo-tracker">
-        <div class="promo-title">Division ${div} Cycle - Promotion Progress</div>
-        <div class="promo-bar-wrap"><div class="promo-bar-fill" style="width:${pct}%"></div></div>
-        <div class="promo-label"><span>${cpts} pts / ${rules.promo} needed</span><span>${cmp}/10 matches</span></div>
-        ${cmp>=rules.cycle?'<div class="promo-cycle-info" style="color:#00E676">Cycle complete!</div>':
-        `<div class="promo-cycle-info">${Math.max(0,rules.cycle-cmp)} matches remaining in this cycle</div>`}
-      </div>
+      ${promoHTML}
       <div class="section-title mt-16">Recent Matches</div>
       ${recent.length?recent.map(m=>{
         const side=m.playerAId===playerId?'A':'B';
@@ -1722,8 +1836,9 @@ async function loadAdminPanel(tab){
     renderAdminPlayers(S.adminPlayers);
   }
   if(tab==='adminMatches'){
-    const snap=await getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(100)));
-    const matches=snap.docs.map(d=>({id:d.id,...d.data()}));
+    const snap=await getDocs(query(collection(db,'matches'),limit(150)));
+    const matches=snap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
     const el=$('adminMatchesList');
     if(!matches.length){el.innerHTML='<div class="empty-state"><div class="empty-text">No matches</div></div>';return;}
     el.innerHTML=matches.map(m=>{
@@ -1754,13 +1869,17 @@ async function loadAdminPanel(tab){
 function renderAdminPlayers(players){
   const search=($('adminPlayerSearch')?.value||'').toLowerCase();
   const filtered=players.filter(p=>p.name?.toLowerCase().includes(search));
-  const rating=p=>calcRating(p.wins||0,p.draws||0,p.losses||0,p.goalsFor||0,p.goalsAgainst||0,p.cleanSheets||0);
+  const getDisplayRating=p=>{
+    const rules=DIV_RULES[p.division||9]||DIV_RULES[9];
+    if(rules.useRating) return (p.eloRating||DEFAULT_DIV3_RATING)+' ELO';
+    return Math.max(0,Math.round((p.wins||0)*10+(p.draws||0)*5+(p.losses||0)*(-5)+((p.goalsFor||0)-(p.goalsAgainst||0))+(p.cleanSheets||0)*2))+'';
+  };
   $('adminPlayersList').innerHTML=filtered.length?filtered.map(p=>`
     <div class="pending-item">
       ${divBadge(p.division)}
       <div class="pending-info">
         <div class="pending-name">${p.name} <span class="${catClass(p.category||'Main')}" style="font-size:11px">${p.category||'Main'}</span>${p.status==='banned'?' [BANNED]':''}${p.isModerator?' [MOD]':''}</div>
-        <div class="pending-meta">Div${p.division||9} - Rating:${rating(p)} - ${p.wins||0}W ${p.draws||0}D ${p.losses||0}L - Cycle:${p.cycleMP||0}/10 (${p.cyclePts||0}pts) - ${statusBadge(p.status||'active')}</div>
+        <div class="pending-meta">Div${p.division||9} - Rating:${getDisplayRating(p)} - ${p.wins||0}W ${p.draws||0}D ${p.losses||0}L - Cycle:${p.cycleMP||0}/10 (${p.cyclePts||0}pts) - ${statusBadge(p.status||'active')}</div>
       </div>
       <div style="display:flex;gap:4px;flex-wrap:wrap">
         <button class="btn-sm btn-edit" onclick="adminEditPlayer('${p.id}',${p.division||9},'${p.category||'Main'}',${p.wins||0},${p.draws||0},${p.losses||0},${p.goalsFor||0},${p.goalsAgainst||0},${p.cleanSheets||0},${p.cycleMP||0},${p.cyclePts||0},'${p.status||'active'}')">Edit</button>
@@ -1842,7 +1961,7 @@ async function adminConfirmMatch(matchId){
   const mRef=doc(db,'matches',matchId),mSnap=await getDoc(mRef);
   if(!mSnap.exists())return;
   await updateDoc(mRef,{status:'confirmed',confirmedAt:serverTimestamp()});
-  await applyMatchStats(mSnap.data());
+  await applyMatchStats({...mSnap.data(),id:matchId});
   T('Match confirmed by admin','success');S.matches=[];loadAdminPanel('adminMatches');
 }
 
@@ -1855,7 +1974,7 @@ async function saveMatchEdit(){
     const old=await getDoc(mRef);
     await updateDoc(mRef,{scoreA:sA,scoreB:sB,status});
     if(status==='confirmed'&&old.data().status!=='confirmed'){
-      const m={...old.data(),scoreA:sA,scoreB:sB};
+      const m={...old.data(),scoreA:sA,scoreB:sB,id};
       await applyMatchStats(m);
     }
     T('Match updated','success');closeModal('editMatchModal');S.matches=[];loadAdminPanel('adminMatches');
