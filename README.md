@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -420,18 +419,18 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),#060E1C) !
 .promo-label{font-size:12px;color:#82B1FF;display:flex;justify-content:space-between;}
 .promo-cycle-info{font-size:11px;color:#FFEA00;margin-top:6px;font-weight:700;}
 
-/* BADGES */
+/* ACHIEVEMENT BADGES - tiered visual style */
 .badges-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
-.player-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:5px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border:1px solid;}
-.badge-gold{background:rgba(255,215,0,.15);color:var(--gold);border-color:rgba(255,215,0,.4);}
-.badge-silver{background:rgba(192,192,192,.12);color:var(--silver);border-color:rgba(192,192,192,.35);}
-.badge-green{background:rgba(0,230,118,.13);color:#00E676;border-color:rgba(0,230,118,.35);}
-.badge-blue{background:rgba(68,114,196,.15);color:#82B1FF;border-color:rgba(68,114,196,.4);}
-.badge-purple{background:rgba(206,147,216,.13);color:#CE93D8;border-color:rgba(206,147,216,.35);}
-.badge-red{background:rgba(255,61,61,.13);color:#FF5555;border-color:rgba(255,61,61,.35);}
-.badge-star{background:rgba(245,197,24,.13);color:var(--ucl-star);border-color:rgba(245,197,24,.4);}
-
-/* CATEGORY TAG */
+.player-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:5px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border:1px solid;position:relative;}
+.badge-gold{background:rgba(255,215,0,.18);color:#FFD700;border-color:rgba(255,215,0,.45);box-shadow:0 0 8px rgba(255,215,0,.15);}
+.badge-silver{background:rgba(192,192,192,.14);color:#C0C0C0;border-color:rgba(192,192,192,.4);}
+.badge-green{background:rgba(0,230,118,.14);color:#00E676;border-color:rgba(0,230,118,.38);}
+.badge-blue{background:rgba(68,114,196,.16);color:#82B1FF;border-color:rgba(68,114,196,.42);}
+.badge-purple{background:rgba(206,147,216,.14);color:#CE93D8;border-color:rgba(206,147,216,.38);}
+.badge-red{background:rgba(255,61,61,.14);color:#FF5555;border-color:rgba(255,61,61,.38);}
+.badge-star{background:rgba(245,197,24,.16);color:var(--ucl-star);border-color:rgba(245,197,24,.42);box-shadow:0 0 10px rgba(245,197,24,.18);}
+.badge-diamond{background:linear-gradient(135deg,rgba(68,114,196,.2),rgba(206,147,216,.2));color:#A8D8FF;border-color:rgba(150,180,255,.5);box-shadow:0 0 12px rgba(100,150,255,.2);}
+.badge-icon{font-size:13px;}
 .cat-main{color:#FF6B6B;font-weight:700;}
 .cat-youth{color:#82B1FF;font-weight:700;}
 .cat-academy{color:#A5D6A7;font-weight:700;}
@@ -574,12 +573,16 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),#060E1C) !
   </div>
   <div class="lb-tabs">
     <button class="lb-tab active" onclick="switchLbTab('overall',this)">Overall</button>
+    <button class="lb-tab" onclick="switchLbTab('season',this)">Season</button>
     <button class="lb-tab" onclick="switchLbTab('monthly',this)">Monthly</button>
     <button class="lb-tab" onclick="switchLbTab('weekly',this)">Weekly</button>
     <button class="lb-tab" onclick="switchLbTab('daily',this)">Daily</button>
   </div>
   <div class="search-bar">
     <input class="search-input" placeholder="Search player..." id="lbSearch" oninput="filterLeaderboard()">
+    <select class="form-select-sm" id="lbSeasonFilter" onchange="filterLeaderboard()" style="display:none">
+      <option value="">All Seasons</option>
+    </select>
     <select class="form-select-sm" id="lbDivFilter" onchange="filterLeaderboard()">
       <option value="">All Divs</option>
       <option value="1">Div 1</option><option value="2">Div 2</option><option value="3">Div 3</option>
@@ -712,16 +715,47 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),#060E1C) !
     </div>
     <div id="adminTab-season" style="display:none">
       <div class="section-title">Season Management</div>
-      <div class="card" style="max-width:480px;margin-bottom:20px">
+
+      <!-- Active Season Config -->
+      <div class="card card-blue" style="max-width:540px;margin-bottom:20px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--ucl-star);margin-bottom:14px">Active Season Settings</div>
         <div class="match-form">
-          <div class="form-group"><label class="form-label">Season Duration (days)</label><input class="form-input" type="number" id="seasonDuration" value="30" min="7"></div>
+          <div class="form-group"><label class="form-label">Season Name (e.g. Season 1)</label><input class="form-input" id="seasonName" placeholder="Season 1"></div>
           <div class="form-group"><label class="form-label">Season Start Date</label><input class="form-input" type="date" id="seasonStart"></div>
-          <button class="btn-primary" onclick="saveSeasonSettings()">Save Settings</button>
+          <div class="form-group"><label class="form-label">Season End Date</label><input class="form-input" type="date" id="seasonEnd"></div>
+          <button class="btn-primary" onclick="saveSeasonSettings()">Save Season Settings</button>
         </div>
+        <div id="currentSeasonInfo" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--ucl-border);font-size:13px;color:#82B1FF"></div>
       </div>
-      <div class="card" style="max-width:480px">
-        <p class="text-sm mb-16" style="color:#FF5555">Full reset: clears all matches and resets all player stats.</p>
-        <button class="btn-reject btn-sm" style="padding:10px 24px;font-size:13px" onclick="confirmSeasonReset()">Reset Season</button>
+
+      <!-- Award daily/weekly/monthly winners -->
+      <div class="card" style="max-width:540px;margin-bottom:20px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#00E676;margin-bottom:14px">Award Badges</div>
+        <p class="text-gray text-sm mb-8">Auto-award POTD/POTW/POTM/Most Active to the current leaderboard top performers.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-sm btn-approve" onclick="autoAwardPOTD()">Auto POTD</button>
+          <button class="btn-sm btn-edit" onclick="autoAwardPOTW()">Auto POTW</button>
+          <button class="btn-sm btn-mod" onclick="autoAwardPOTM()">Auto POTM</button>
+          <button class="btn-sm btn-ban" onclick="autoAwardPOTS()">Auto POTS</button>
+          <button class="btn-sm btn-approve" onclick="autoAwardMostActive()">Auto Most Active</button>
+        </div>
+        <div id="awardResult" style="margin-top:12px;font-size:12px;color:#82B1FF"></div>
+      </div>
+
+      <!-- Past Seasons -->
+      <div class="card" style="max-width:540px;margin-bottom:20px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#82B1FF;margin-bottom:14px">Past Seasons</div>
+        <div id="pastSeasonsList"><div class="loading-spinner" style="padding:16px"><div class="spinner"></div></div></div>
+      </div>
+
+      <!-- End Season -->
+      <div class="card" style="max-width:540px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#FF5555;margin-bottom:10px">End Season</div>
+        <p class="text-sm mb-16" style="color:#FF8888">Ends current season, archives all stats, resets player cycle data. Players keep their division.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn-reject btn-sm" style="padding:10px 24px;font-size:13px" onclick="endCurrentSeason()">End &amp; Archive Season</button>
+          <button class="btn-reject btn-sm" style="padding:10px 24px;font-size:13px;background:rgba(100,0,0,.3)" onclick="confirmSeasonReset()">Full Reset (Danger)</button>
+        </div>
       </div>
     </div>
     <div id="adminTab-adminSettings" style="display:none">
@@ -844,6 +878,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),#060E1C) !
           <option value="active">Active</option><option value="banned">Banned</option><option value="pending">Pending</option>
         </select>
       </div>
+      <div class="form-group"><label class="form-label">Reset Password (leave blank to keep current)</label><input class="form-input" type="text" id="editPlayerPw" placeholder="New password (optional)"></div>
       <button class="btn-primary w-full" onclick="savePlayerEdit()">Save Changes</button>
     </div>
   </div>
@@ -1081,6 +1116,7 @@ async function loadHome(){
     S.players=pSnap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
     S.matches=mSnap.docs.map(d=>({id:d.id,...d.data()}));
     buildNews(S.matches);
+    await loadSystemNews();
     const now=Date.now();
     $('statPlayers').textContent=S.players.length;
     $('statMatches').textContent=S.matches.filter(m=>m.status==='confirmed').length;
@@ -1154,55 +1190,90 @@ async function loadHome(){
 async function loadLeaderboard(tab='overall'){
   S.lbTab=tab;
   $('lbTableBody').innerHTML='<tr><td colspan="11" style="text-align:center;padding:30px"><div class="spinner" style="margin:0 auto"></div></td></tr>';
+
+  // Season selector visibility
+  const seasonSel=$('lbSeasonFilter');
+  if(seasonSel){
+    if(tab==='season'){
+      seasonSel.style.display='block';
+      if(seasonSel.options.length<=1){
+        try{
+          const snap=await getDocs(collection(db,'pastSeasons'));
+          const seasons=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.endedAt?.seconds||0)-(a.endedAt?.seconds||0));
+          const curSnap=await getDoc(doc(db,'settings','season'));
+          const curName=curSnap.exists()?(curSnap.data().name||'Current Season'):'Current Season';
+          seasonSel.innerHTML=`<option value="current">${curName} (Current)</option>`+seasons.map(s=>`<option value="${s.id}">${s.name||'Season'} (${s.startDate||''})</option>`).join('');
+        }catch(e){console.error(e);}
+      }
+    } else {
+      seasonSel.style.display='none';
+    }
+  }
+
   try{
     const [pSnap,mSnap]=await Promise.all([
       getDocs(collection(db,'players')),
-      getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(1000)))
+      getDocs(collection(db,'matches'))
     ]);
     S.players=pSnap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
-    S.matches=mSnap.docs.map(d=>({id:d.id,...d.data()}));
+    S.matches=mSnap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
 
     const now=Date.now();
-    const timeFilter={daily:86400000,weekly:604800000,monthly:2592000000,overall:Infinity}[tab];
+    let seasonStartMs=0,seasonEndMs=now;
 
-    // Build a player lookup for category
+    // Determine time filter
+    let matchFilter;
+    if(tab==='daily'){matchFilter=m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<86400000;}
+    else if(tab==='weekly'){matchFilter=m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<604800000;}
+    else if(tab==='monthly'){matchFilter=m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<2592000000;}
+    else if(tab==='season'){
+      const selVal=$('lbSeasonFilter')?.value||'current';
+      if(selVal==='current'){
+        try{
+          const ss=await getDoc(doc(db,'settings','season'));
+          if(ss.exists()&&ss.data().startDate)seasonStartMs=new Date(ss.data().startDate).getTime();
+          if(ss.exists()&&ss.data().endDate)seasonEndMs=new Date(ss.data().endDate).getTime();
+        }catch(e){console.error(e);}
+      }else{
+        try{
+          const ps=await getDoc(doc(db,'pastSeasons',selVal));
+          if(ps.exists()){
+            if(ps.data().startDate)seasonStartMs=new Date(ps.data().startDate).getTime();
+            if(ps.data().endDate)seasonEndMs=new Date(ps.data().endDate).getTime();
+          }
+        }catch(e){console.error(e);}
+      }
+      matchFilter=m=>{const t=m.createdAt?.toDate?.()?.getTime()||0;return t>=seasonStartMs&&t<=seasonEndMs;};
+    }
+    else{matchFilter=null;} // overall = no filter
+
     const playerCatMap={};
     S.players.forEach(p=>playerCatMap[p.id]=p.category||'Main');
 
     let players=S.players.map(p=>{
       let pm=S.matches.filter(m=>(m.playerAId===p.id||m.playerBId===p.id)&&m.status==='confirmed');
-      if(tab!=='overall') pm=pm.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<timeFilter);
+      if(matchFilter)pm=pm.filter(matchFilter);
 
       let w=0,d=0,l=0,gf=0,ga=0,cs=0;
       pm.forEach(m=>{
         const side=m.playerAId===p.id?'A':'B';
         const result=getRC(m.scoreA,m.scoreB,side);
-        const myG=side==='A'?m.scoreA:m.scoreB, opG=side==='A'?m.scoreB:m.scoreA;
+        const myG=side==='A'?m.scoreA:m.scoreB,opG=side==='A'?m.scoreB:m.scoreA;
         const oppCat=playerCatMap[side==='A'?m.playerBId:m.playerAId]||'Main';
         const mult=getRatingMultiplier(p.category||'Main',oppCat,result);
-        if(result==='W'){w+=mult;}else if(result==='D'){d+=1;}else{l+=mult;}
-        gf+=myG; ga+=opG;
-        if(opG===0)cs++;
+        if(result==='W')w+=mult;else if(result==='D')d++;else l+=mult;
+        gf+=myG;ga+=opG;if(opG===0)cs++;
       });
 
-      const total=pm.length;
-      const wr=total>0?Math.round((w/(w+d+l||1))*100):0;
-      const gd=gf-ga;
-      const div=p.division||9;
-      const rules=DIV_RULES[div]||DIV_RULES[9];
-
-      // Rating display: use eloRating for Div 3+, computed formula for Div 4-9
-      let rating;
-      if(rules.useRating){
-        rating=p.eloRating||DEFAULT_DIV3_RATING;
-      } else {
-        rating=Math.max(0,Math.round(w*10+d*5+l*(-5)+gd+cs*2));
-      }
+      const total=pm.length,wr=total>0?Math.round((w/(w+d+l||1))*100):0,gd=gf-ga;
+      const div=p.division||9,rules=DIV_RULES[div]||DIV_RULES[9];
+      const rating=rules.useRating?(p.eloRating||DEFAULT_DIV3_RATING):Math.max(0,Math.round(w*10+d*5+l*(-5)+gd+cs*2));
 
       return {...p,tw:Math.round(w),td:d,tl:Math.round(l),tgf:gf,tga:ga,tcs:cs,tgd:gd,twr:wr,total,rating,cyclePts:p.cyclePts||0,cycleMP:p.cycleMP||0};
     });
 
-    if(tab!=='overall') players=players.filter(p=>p.total>0);
+    if(tab!=='overall')players=players.filter(p=>p.total>0);
     players.sort((a,b)=>b.rating-a.rating||b.tgd-a.tgd||b.twr-a.twr);
     S.lbPlayers=players;
     renderLbTable(players);
@@ -1290,7 +1361,7 @@ function closeRankingPreview(){$('rankingCardPreview').classList.remove('open');
 
 function buildRankingCard(){
   const top10=S.lbPlayers.slice(0,10);
-  const labels={overall:'Overall Season',daily:'Daily',weekly:'Weekly',monthly:'Monthly'};
+  const labels={overall:'Overall',season:'Season Ranking',daily:'Daily Top',weekly:'Weekly Top',monthly:'Monthly Top'};
   const now=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
   if(!top10.length){$('rcCardContainer').innerHTML='<div style="color:#666;padding:20px">Load leaderboard first</div>';return;}
   const divNames=['','Elite','Premier','Championship','League One','League Two','National','Regional','Amateur','Rookie'];
@@ -1706,26 +1777,58 @@ async function viewProfile(playerId){
     }
     const form=(p.form||[]).slice(-5);
     const isMe=S.user&&S.user.id===playerId,isRival=S.user&&(S.user.rivals||[]).includes(playerId);
-    
-    // Badges
+
+    // ===== ACHIEVEMENT BADGES =====
     const badges=[];
-    if(div===1)badges.push({t:'Elite Division',c:'badge-star'});
-    else if(div===2)badges.push({t:'Premier Division',c:'badge-silver'});
-    else if(div===3)badges.push({t:'Championship',c:'badge-gold'});
+    // Division achievement
+    if(div===1)badges.push({t:'Elite Division',c:'badge-star',icon:'★'});
+    else if(div===2)badges.push({t:'Premier Division',c:'badge-silver',icon:'◆'});
+    else if(div===3)badges.push({t:'Championship',c:'badge-gold',icon:'◈'});
     const highest=p.highestDivision||div;
-    if(highest<div)badges.push({t:'Peak: Div '+highest,c:'badge-blue'});
-    const wrPct=wr;
-    if(wrPct>=80&&total>=5)badges.push({t:'Win Machine 80%+',c:'badge-gold'});
-    else if(wrPct>=70&&total>=5)badges.push({t:'Sharp 70%+',c:'badge-green'});
+    if(highest<div)badges.push({t:'Peak: Div '+highest,c:'badge-blue',icon:'▲'});
+    // Win ratio
+    if(wr>=80&&total>=5)badges.push({t:'Win Machine 80%+',c:'badge-gold',icon:'⚡'});
+    else if(wr>=70&&total>=5)badges.push({t:'Sharp 70%+',c:'badge-green',icon:'✦'});
+    // Streak
     let streak=0;const fm=p.form||[];for(let i=fm.length-1;i>=0;i--){if(fm[i]==='W')streak++;else break;}
-    if(streak>=5)badges.push({t:'On Fire '+streak+' Streak',c:'badge-red'});
-    else if(streak>=3)badges.push({t:streak+' Win Streak',c:'badge-green'});
-    if(x2Count>0)badges.push({t:'2x Upsets: '+x2Count,c:'badge-purple'});
-    if(p.isPOTD)badges.push({t:'Player of the Day',c:'badge-star'});
-    if(p.isPOTW)badges.push({t:'Player of the Week',c:'badge-gold'});
-    if(p.isPOTM)badges.push({t:'Player of the Month',c:'badge-purple'});
-    if(p.isPOTS)badges.push({t:'Player of the Season',c:'badge-star'});
-    if(p.isModerator)badges.push({t:'Moderator',c:'badge-blue'});
+    if(streak>=5)badges.push({t:'On Fire '+streak+'W',c:'badge-red',icon:'🔥'});
+    else if(streak>=3)badges.push({t:streak+' Win Streak',c:'badge-green',icon:'↑'});
+    // 2x upsets
+    if(x2Count>0)badges.push({t:'Upset King x'+x2Count,c:'badge-purple',icon:'⚔'});
+    // POTD tiered
+    const potdC=p.potdCount||0;
+    if(p.isPOTD||potdC>0){
+      if(potdC>=5)badges.push({t:'POTD Legend x'+potdC,c:'badge-diamond',icon:'♦'});
+      else if(potdC>=3)badges.push({t:'POTD Elite x'+potdC,c:'badge-star',icon:'★'});
+      else if(potdC>=2)badges.push({t:'2x Player of Day',c:'badge-gold',icon:'☀'});
+      else badges.push({t:'Player of the Day',c:'badge-gold',icon:'☀'});
+    }
+    // POTW tiered
+    const potwC=p.potwCount||0;
+    if(p.isPOTW||potwC>0){
+      if(potwC>=3)badges.push({t:'POTW Legend x'+potwC,c:'badge-diamond',icon:'♦'});
+      else if(potwC>=2)badges.push({t:'2x Player of Week',c:'badge-purple',icon:'◉'});
+      else badges.push({t:'Player of the Week',c:'badge-purple',icon:'◉'});
+    }
+    // POTM tiered
+    const potmC=p.potmCount||0;
+    if(p.isPOTM||potmC>0){
+      if(potmC>=3)badges.push({t:'POTM Legend x'+potmC,c:'badge-diamond',icon:'♦'});
+      else if(potmC>=2)badges.push({t:'2x Player of Month',c:'badge-blue',icon:'◑'});
+      else badges.push({t:'Player of the Month',c:'badge-blue',icon:'◑'});
+    }
+    // POTS tiered
+    const potsC=p.potsCount||0;
+    if(p.isPOTS||potsC>0){
+      if(potsC>=2)badges.push({t:'Season Champion x'+potsC,c:'badge-diamond',icon:'♛'});
+      else badges.push({t:'Player of the Season',c:'badge-star',icon:'♛'});
+    }
+    // Most active
+    if(p.isMostActiveD){const dC=p.mostActiveDCount||1;badges.push({t:'Most Active Today'+(dC>1?' x'+dC:''),c:'badge-green',icon:'▶'});}
+    if(p.isMostActiveW){const wC=p.mostActiveWCount||1;badges.push({t:'Most Active Week'+(wC>1?' x'+wC:''),c:'badge-green',icon:'▶▶'});}
+    if(p.isMostActiveM){const mC=p.mostActiveMCount||1;badges.push({t:'Most Active Month'+(mC>1?' x'+mC:''),c:'badge-blue',icon:'▶▶▶'});}
+    // Moderator
+    if(p.isModerator)badges.push({t:'Moderator',c:'badge-blue',icon:'⚑'});
 
     $('profileContent').innerHTML=`
       <div class="profile-header">
@@ -1738,7 +1841,7 @@ async function viewProfile(playerId){
             ${highest<div?`<span class="text-blue text-sm">Best Div: ${highest}</span>`:''}
           </div>
           <div class="form-dots mt-8">${form.map(r=>formBadge(r)).join('')}</div>
-          <div class="badges-row">${badges.map(b=>`<span class="player-badge ${b.c}">${b.t}</span>`).join('')}</div>
+          <div class="badges-row">${badges.map(b=>`<span class="player-badge ${b.c}"><span class="badge-icon">${b.icon||''}</span>${b.t}</span>`).join('')}</div>
           <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
             ${!isMe&&S.user?`<button class="btn-sm ${isRival?'btn-reject':'btn-edit'}" onclick="toggleRival('${playerId}','${p.name}')">
               ${isRival?'Remove Rival':'Add Rival'}</button>`:''}
@@ -1862,7 +1965,7 @@ async function loadAdminPanel(tab){
     renderModPlayers(S.adminPlayers);
   }
   if(tab==='season'){
-    try{const s=await getDoc(doc(db,'settings','season'));if(s.exists()){if(s.data().duration)$('seasonDuration').value=s.data().duration;if(s.data().startDate)$('seasonStart').value=s.data().startDate;}}catch{}
+    loadSeasonInfo();
   }
 }
 
@@ -1928,6 +2031,7 @@ function adminEditPlayer(id,div,cat,wins,draws,losses,gf,ga,cs,cmp,cpts,status){
   $('editWins').value=wins;$('editDraws').value=draws;$('editLosses').value=losses;
   $('editGF').value=gf;$('editGA').value=ga;$('editCS').value=cs;
   $('editCycleMP').value=cmp;$('editCyclePts').value=cpts;$('editStatus').value=status;
+  $('editPlayerPw').value='';
   openModal('editPlayerModal');
 }
 
@@ -1938,10 +2042,15 @@ async function savePlayerEdit(){
   const gf=parseInt($('editGF').value),ga=parseInt($('editGA').value),cs=parseInt($('editCS').value);
   const cmp=parseInt($('editCycleMP').value),cpts=parseInt($('editCyclePts').value);
   const status=$('editStatus').value;
+  const newPw=($('editPlayerPw').value||'').trim();
   if(div<1||div>9)return T('Division 1-9 only','error');
+  if(newPw&&newPw.length<4)return T('Password must be at least 4 characters','error');
   try{
-    await updateDoc(doc(db,'players',id),{division:div,category:cat,wins,draws,losses,goalsFor:gf,goalsAgainst:ga,cleanSheets:cs,cycleMP:cmp,cyclePts:cpts,status});
-    T('Player updated','success');closeModal('editPlayerModal');loadAdminPanel('players');
+    const updates={division:div,category:cat,wins,draws,losses,goalsFor:gf,goalsAgainst:ga,cleanSheets:cs,cycleMP:cmp,cyclePts:cpts,status};
+    if(newPw) updates.password=newPw;
+    await updateDoc(doc(db,'players',id),updates);
+    T('Player updated'+(newPw?' (password changed)':''),'success');
+    closeModal('editPlayerModal');loadAdminPanel('players');
   }catch(e){T('Error: '+e.message,'error');}
 }
 
@@ -1997,8 +2106,272 @@ async function adminDeleteMatchDirect(id){
 }
 
 async function saveSeasonSettings(){
-  const dur=parseInt($('seasonDuration').value)||30,sd=$('seasonStart').value;
-  try{await setDoc(doc(db,'settings','season'),{duration:dur,startDate:sd},{merge:true});T('Season settings saved','success');}catch(e){T('Error','error');}
+  const name=$('seasonName')?.value||'Season 1';
+  const startDate=$('seasonStart').value;
+  const endDate=$('seasonEnd').value;
+  if(!startDate||!endDate)return T('Set start and end dates','error');
+  try{
+    const snap=await getDoc(doc(db,'settings','season'));
+    const existing=snap.exists()?snap.data():{};
+    await setDoc(doc(db,'settings','season'),{
+      ...existing, name, startDate, endDate,
+      updatedAt:serverTimestamp()
+    },{merge:true});
+    T('Season settings saved','success');
+    loadSeasonInfo();
+  }catch(e){T('Error: '+e.message,'error');}
+}
+
+async function loadSeasonInfo(){
+  try{
+    const snap=await getDoc(doc(db,'settings','season'));
+    const el=$('currentSeasonInfo');
+    if(!el)return;
+    if(snap.exists()){
+      const d=snap.data();
+      const now=new Date();
+      const start=d.startDate?new Date(d.startDate):null;
+      const end=d.endDate?new Date(d.endDate):null;
+      const daysLeft=end?Math.max(0,Math.ceil((end-now)/86400000)):null;
+      el.innerHTML=`
+        <div style="font-weight:700;color:var(--ucl-star)">${d.name||'No season set'}</div>
+        <div>Start: ${d.startDate||'-'} &nbsp;|&nbsp; End: ${d.endDate||'-'}</div>
+        ${daysLeft!==null?`<div style="color:#00E676;margin-top:4px">${daysLeft} days remaining</div>`:''}
+      `;
+    } else {
+      el.innerHTML='<div style="color:#4472C4">No active season configured</div>';
+    }
+    // Load past seasons
+    await loadPastSeasons();
+  }catch(e){console.error(e);}
+}
+
+async function loadPastSeasons(){
+  const el=$('pastSeasonsList');
+  if(!el)return;
+  try{
+    const snap=await getDocs(collection(db,'pastSeasons'));
+    const seasons=snap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>(b.endedAt?.seconds||0)-(a.endedAt?.seconds||0));
+    if(!seasons.length){el.innerHTML='<div class="text-gray text-sm">No past seasons yet</div>';return;}
+    el.innerHTML=seasons.map(s=>`
+      <div style="padding:10px;border:1px solid var(--ucl-border);border-radius:6px;margin-bottom:8px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--ucl-star)">${s.name||'Season'}</div>
+        <div class="text-gray text-sm">${s.startDate||''} to ${s.endDate||''}</div>
+        ${s.topPlayer?`<div style="font-size:12px;color:#00E676;margin-top:4px">Top: ${s.topPlayer}</div>`:''}
+        ${s.potd?`<div style="font-size:11px;color:#CE93D8">POTD: ${s.potd} | POTW: ${s.potw||'-'} | POTM: ${s.potm||'-'}</div>`:''}
+      </div>`).join('');
+  }catch(e){el.innerHTML='<div class="text-gray text-sm">Error loading past seasons</div>';}
+}
+
+async function endCurrentSeason(){
+  if(!confirm('End current season and archive all stats?\n\nThis will:\n- Save season record to archive\n- Reset all cycle data\n- Keep player divisions\n\nOK to confirm.'))return;
+  try{
+    // Get current season info
+    const seasonSnap=await getDoc(doc(db,'settings','season'));
+    const seasonData=seasonSnap.exists()?seasonSnap.data():{name:'Season',startDate:'',endDate:''};
+
+    // Get current top players for archive
+    const pSnap=await getDocs(collection(db,'players'));
+    const players=pSnap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
+    const mSnap=await getDocs(collection(db,'matches'));
+    const matches=mSnap.docs.map(d=>({id:d.id,...d.data()})).filter(m=>m.status==='confirmed');
+
+    // Find top performers
+    const sorted=players.map(p=>{
+      const pm=matches.filter(m=>m.playerAId===p.id||m.playerBId===p.id);
+      const w=p.wins||0,d2=p.draws||0,l=p.losses||0;
+      const rating=(DIV_RULES[p.division||9]||{}).useRating?(p.eloRating||1200):Math.max(0,w*10+d2*5+l*(-5)+((p.goalsFor||0)-(p.goalsAgainst||0))+(p.cleanSheets||0)*2);
+      return{...p,rating,mp:pm.length};
+    }).sort((a,b)=>b.rating-a.rating);
+
+    const topPlayer=sorted[0]?.name||'-';
+    const topActive=[...players].sort((a,b)=>{
+      const ma=matches.filter(m=>m.playerAId===a.id||m.playerBId===a.id).length;
+      const mb=matches.filter(m=>m.playerAId===b.id||m.playerBId===b.id).length;
+      return mb-ma;
+    })[0]?.name||'-';
+
+    // Find players with POTD/POTW/POTM
+    const potd=players.find(p=>p.isPOTD)?.name||'-';
+    const potw=players.find(p=>p.isPOTW)?.name||'-';
+    const potm=players.find(p=>p.isPOTM)?.name||'-';
+
+    // Archive season
+    await addDoc(collection(db,'pastSeasons'),{
+      name:seasonData.name||'Season',
+      startDate:seasonData.startDate||'',
+      endDate:seasonData.endDate||'',
+      topPlayer, topActive, potd, potw, potm,
+      playerCount:players.length,
+      matchCount:matches.length,
+      endedAt:serverTimestamp()
+    });
+
+    // Reset cycles but keep divisions
+    await Promise.all(players.map(p=>updateDoc(doc(db,'players',p.id),{
+      cycleMP:0,cyclePts:0,
+      wins:0,draws:0,losses:0,goalsFor:0,goalsAgainst:0,cleanSheets:0,
+      form:[],isPOTD:false,isPOTW:false,isPOTM:false,isPOTS:false,
+      mostActiveD:0,mostActiveW:0,mostActiveM:0
+    })));
+
+    // Archive matches
+    await Promise.all(mSnap.docs.map(d=>deleteDoc(doc(db,'matches',d.id))));
+
+    // Clear season award data but keep settings
+    await updateDoc(doc(db,'settings','season'),{lastEndedAt:serverTimestamp()}).catch(()=>{});
+
+    S.players=[];S.matches=[];
+    T('Season ended and archived!','success');
+    loadSeasonInfo();
+    // Post a news item
+    await postSystemNews(`Season "${seasonData.name}" has ended! Winner: ${topPlayer}. See you next season!`);
+  }catch(e){T('Error: '+e.message,'error');console.error(e);}
+}
+
+// ===== AUTO AWARD FUNCTIONS =====
+async function autoAwardPOTD(){
+  // Top player in last 24h
+  const winner=await getTopPlayerInWindow(86400000);
+  if(!winner)return T('No matches in last 24h','info');
+  await grantAward(winner.id,winner.name,'POTD','isPOTD','potdCount');
+  await postSystemNews(`PLAYER OF THE DAY: ${winner.name} claimed the daily top spot!`);
+  $('awardResult').textContent='POTD awarded to: '+winner.name;
+  T('POTD awarded to '+winner.name,'success');
+}
+
+async function autoAwardPOTW(){
+  const winner=await getTopPlayerInWindow(604800000);
+  if(!winner)return T('No matches this week','info');
+  await grantAward(winner.id,winner.name,'POTW','isPOTW','potwCount');
+  await postSystemNews(`PLAYER OF THE WEEK: ${winner.name} dominated the weekly rankings!`);
+  $('awardResult').textContent='POTW awarded to: '+winner.name;
+  T('POTW awarded to '+winner.name,'success');
+}
+
+async function autoAwardPOTM(){
+  const winner=await getTopPlayerInWindow(2592000000);
+  if(!winner)return T('No matches this month','info');
+  await grantAward(winner.id,winner.name,'POTM','isPOTM','potmCount');
+  await postSystemNews(`PLAYER OF THE MONTH: ${winner.name} is the standout performer this month!`);
+  $('awardResult').textContent='POTM awarded to: '+winner.name;
+  T('POTM awarded to '+winner.name,'success');
+}
+
+async function autoAwardPOTS(){
+  // Top player overall
+  const winner=await getTopPlayerInWindow(Infinity);
+  if(!winner)return T('No matches found','info');
+  await grantAward(winner.id,winner.name,'POTS','isPOTS','potsCount');
+  await postSystemNews(`PLAYER OF THE SEASON: ${winner.name} is crowned the season champion!`);
+  $('awardResult').textContent='POTS awarded to: '+winner.name;
+  T('POTS awarded to '+winner.name,'success');
+}
+
+async function autoAwardMostActive(){
+  const mSnap=await getDocs(collection(db,'matches'));
+  const matches=mSnap.docs.map(d=>({id:d.id,...d.data()})).filter(m=>m.status==='confirmed');
+  const pSnap=await getDocs(collection(db,'players'));
+  const players=pSnap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
+  const now=Date.now();
+
+  // Day
+  const dayM=matches.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<86400000);
+  const weekM=matches.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<604800000);
+  const monthM=matches.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<2592000000);
+
+  const countFor=(ms,pid)=>ms.filter(m=>m.playerAId===pid||m.playerBId===pid).length;
+  const topFor=(ms)=>players.reduce((best,p)=>{
+    const c=countFor(ms,p.id);return c>best.count?{...p,count:c}:best;
+  },{count:0});
+
+  const dayTop=topFor(dayM),weekTop=topFor(weekM),monthTop=topFor(monthM);
+
+  const updates=[];
+  if(dayTop.count>0){
+    await grantAward(dayTop.id,dayTop.name,'Most Active Day','isMostActiveD','mostActiveDCount');
+    updates.push('Day: '+dayTop.name+' ('+dayTop.count+'m)');
+  }
+  if(weekTop.count>0){
+    await grantAward(weekTop.id,weekTop.name,'Most Active Week','isMostActiveW','mostActiveWCount');
+    updates.push('Week: '+weekTop.name+' ('+weekTop.count+'m)');
+  }
+  if(monthTop.count>0){
+    await grantAward(monthTop.id,monthTop.name,'Most Active Month','isMostActiveM','mostActiveMCount');
+    updates.push('Month: '+monthTop.name+' ('+monthTop.count+'m)');
+  }
+  $('awardResult').textContent='Most Active: '+updates.join(' | ');
+  if(dayTop.count>0)await postSystemNews(`MOST ACTIVE: ${dayTop.name} leads with ${dayTop.count} matches today!`);
+  T('Most Active badges awarded','success');
+}
+
+async function getTopPlayerInWindow(windowMs){
+  const [pSnap,mSnap]=await Promise.all([
+    getDocs(collection(db,'players')),
+    getDocs(collection(db,'matches'))
+  ]);
+  const players=pSnap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
+  const matches=mSnap.docs.map(d=>({id:d.id,...d.data()})).filter(m=>m.status==='confirmed');
+  const now=Date.now();
+  const filtered=windowMs===Infinity?matches:matches.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<windowMs);
+  const playerCatMap={};players.forEach(p=>playerCatMap[p.id]=p.category||'Main');
+
+  let best=null,bestRating=-Infinity;
+  for(const p of players){
+    const pm=filtered.filter(m=>m.playerAId===p.id||m.playerBId===p.id);
+    if(!pm.length)continue;
+    let w=0,d=0,l=0,gf=0,ga=0,cs=0;
+    pm.forEach(m=>{
+      const side=m.playerAId===p.id?'A':'B';
+      const res=getRC(m.scoreA,m.scoreB,side);
+      const myG=side==='A'?m.scoreA:m.scoreB,opG=side==='A'?m.scoreB:m.scoreA;
+      const oppCat=playerCatMap[side==='A'?m.playerBId:m.playerAId]||'Main';
+      const mult=getRatingMultiplier(p.category||'Main',oppCat,res);
+      if(res==='W')w+=mult;else if(res==='D')d++;else l+=mult;
+      gf+=myG;ga+=opG;if(opG===0)cs++;
+    });
+    const r=Math.max(0,w*10+d*5+l*(-5)+(gf-ga)+cs*2);
+    if(r>bestRating){bestRating=r;best={...p,windowRating:r};}
+  }
+  return best;
+}
+
+async function grantAward(pid,name,awardLabel,field,countField){
+  const ref=doc(db,'players',pid);
+  const snap=await getDoc(ref);
+  if(!snap.exists())return;
+  const current=snap.data()[countField]||0;
+  const updates={[field]:true,[countField]:current+1};
+  // Also clear award from previous holder
+  const allSnap=await getDocs(collection(db,'players'));
+  const clearOthers=allSnap.docs
+    .filter(d=>d.id!==pid&&d.data()[field])
+    .map(d=>updateDoc(doc(db,'players',d.id),{[field]:false}));
+  await Promise.all([updateDoc(ref,updates),...clearOthers]);
+}
+
+async function postSystemNews(text){
+  try{
+    await addDoc(collection(db,'systemNews'),{
+      text, createdAt:serverTimestamp(), type:'award'
+    });
+  }catch(e){console.error('News post failed:',e);}
+}
+
+async function loadSystemNews(){
+  try{
+    const snap=await getDocs(collection(db,'systemNews'));
+    const items=snap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))
+      .slice(0,10);
+    if(!items.length)return;
+    // Merge with existing news
+    const existing=$('newsText').textContent;
+    const newsItems=items.map(n=>n.text).join('     |     ');
+    $('newsText').textContent=newsItems+(existing?' |  '+existing:'');
+    $('newsTicker').style.display='flex';
+  }catch(e){console.error(e);}
 }
 
 async function confirmSeasonReset(){
@@ -2040,7 +2413,8 @@ Object.assign(window,{
   adminTogglePOTD,adminTogglePOTW,adminTogglePOTM,adminTogglePOTS,
   adminEditMatch,saveMatchEdit,adminDeleteMatch,adminDeleteMatchDirect,
   adminConfirmMatch,filterAdminPlayers,filterModPlayers,
-  confirmSeasonReset,changeAdminPassword,loadModPanel,saveSeasonSettings
+  confirmSeasonReset,endCurrentSeason,changeAdminPassword,loadModPanel,
+  saveSeasonSettings,autoAwardPOTD,autoAwardPOTW,autoAwardPOTM,autoAwardPOTS,autoAwardMostActive
 });
 
 // INIT
