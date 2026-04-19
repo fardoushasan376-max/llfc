@@ -28,6 +28,7 @@
 html{scroll-behavior:smooth;}
 body{font-family:'Montserrat',sans-serif;background:var(--ucl-dark);color:var(--ucl-white);min-height:100vh;overflow-x:hidden;}
 
+/* Stars bg */
 body::before{
   content:'';position:fixed;inset:0;
   background:
@@ -211,7 +212,7 @@ main{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:24px 20p
 .div-8{background:linear-gradient(135deg,#0A2850,#061530);color:#999;border:1px solid #1B3A6B;}
 .div-9{background:linear-gradient(135deg,#071428,#030A14);color:#667;border:1px solid #1B3A6B;}
 
-/* ===== DIVISION GUIDE CARDS ===== */
+/* ===== DIVISION GUIDE CARDS (bigger, green) ===== */
 .div-guide-card{
   background:linear-gradient(135deg,rgba(0,100,50,0.22),rgba(10,22,40,0.9));
   border:1px solid rgba(0,200,80,0.35);border-radius:12px;padding:18px;
@@ -223,7 +224,7 @@ main{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:24px 20p
 .div-guide-pts{font-size:11px;color:#FFEA00;font-weight:700;margin-top:5px;letter-spacing:1px;}
 .div-guide-badge{font-size:10px;color:#00E676;margin-top:4px;font-weight:700;letter-spacing:1.5px;}
 
-/* ===== TABLE ===== */
+/* ===== TABLE - FIXED (UCL colors, readable) ===== */
 .lb-table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--ucl-border);}
 table{width:100%;border-collapse:collapse;}
 thead tr{background:#0D1E3A !important;}
@@ -242,6 +243,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .rank-num{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#4472C4;}
 .rank-1{color:var(--gold)!important;}.rank-2{color:var(--silver)!important;}.rank-3{color:var(--bronze)!important;}
 
+/* WDL PILLS */
 .wdl-row{display:flex;align-items:center;gap:5px;}
 .wdl-pill{display:inline-flex;align-items:center;gap:3px;padding:4px 9px;border-radius:5px;font-size:12px;font-weight:700;white-space:nowrap;}
 .wdl-w{background:rgba(0,230,118,.18);color:#00E676;border:1px solid rgba(0,230,118,.35);}
@@ -249,27 +251,33 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .wdl-l{background:rgba(255,61,61,.15);color:#FF5555;border:1px solid rgba(255,61,61,.3);}
 .wdl-num{font-family:'Bebas Neue',sans-serif;font-size:17px;line-height:1;}
 
+/* WINRATE */
 .winrate-wrap{display:flex;align-items:center;gap:5px;}
 .winrate-bar{background:rgba(255,255,255,.08);border-radius:8px;height:5px;width:52px;overflow:hidden;flex-shrink:0;position:relative;}
 .winrate-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--ucl-mid),var(--ucl-bright));border-radius:8px;}
 .winrate-pct{font-size:12px;font-weight:700;color:#82B1FF;white-space:nowrap;}
 
+/* FORM DOTS */
 .form-dots{display:flex;gap:3px;align-items:center;}
 .form-dot{width:9px;height:9px;border-radius:50%;}
 .form-w{background:#00E676;}.form-d{background:#FFEA00;}.form-l{background:#FF3D3D;}
 
+/* PLAYER LINK */
 .player-link{cursor:pointer;color:#D0E4FF;font-weight:600;transition:color .2s;display:inline-flex;align-items:center;gap:7px;}
 .player-link:hover{color:var(--ucl-star);}
 
+/* STATUS BADGES */
 .status-badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
 .status-confirmed{background:rgba(0,230,118,.18);color:#00E676;border:1px solid rgba(0,230,118,.3);}
 .status-pending{background:rgba(255,234,0,.15);color:#FFEA00;border:1px solid rgba(255,234,0,.3);}
 .status-disputed{background:rgba(255,61,61,.18);color:#FF5555;border:1px solid rgba(255,61,61,.3);}
 
+/* LB TABS */
 .lb-tabs{display:flex;gap:5px;margin-bottom:18px;background:rgba(27,58,107,.2);border:1px solid var(--ucl-border);border-radius:10px;padding:5px;flex-wrap:wrap;}
 .lb-tab{flex:1;min-width:70px;background:none;border:none;color:var(--ucl-silver);padding:8px 12px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:12px;cursor:pointer;border-radius:7px;transition:all .2s;text-transform:uppercase;letter-spacing:1px;}
 .lb-tab.active{background:linear-gradient(135deg,var(--ucl-mid),var(--ucl-light));color:white;box-shadow:0 2px 8px rgba(68,114,196,0.4);}
 
+/* SEARCH */
 .search-bar{display:flex;gap:8px;margin-bottom:16px;}
 .search-input{flex:1;background:rgba(27,58,107,.25);border:1px solid var(--ucl-border);border-radius:6px;color:#D0E4FF;padding:10px 14px;font-family:'Montserrat',sans-serif;font-size:14px;}
 .search-input:focus{outline:none;border-color:var(--ucl-light);}
@@ -278,6 +286,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .form-select-sm:focus{outline:none;border-color:var(--ucl-light);}
 .form-select-sm option{background:#0D1E3A;color:#D0E4FF;}
 
+/* FORM INPUTS */
 .match-form{display:grid;gap:14px;}
 .form-group{display:flex;flex-direction:column;gap:6px;}
 .form-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#82B1FF;}
@@ -292,7 +301,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .score-vs{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--ucl-star);text-align:center;}
 .score-input{text-align:center;font-size:28px;font-family:'Bebas Neue',sans-serif;padding:10px;}
 
-/* ===== MODAL ===== */
+/* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);}
 .modal-overlay.open{display:flex;}
 .modal{
@@ -309,7 +318,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 }
 .modal-close:hover{background:var(--ucl-mid);color:white;}
 
-/* ===== TOAST ===== */
+/* TOAST */
 .toast{
   position:fixed;bottom:80px;right:16px;z-index:9999;
   background:#0D1E3A;border-left:4px solid var(--ucl-light);border-radius:8px;
@@ -322,7 +331,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .toast.error{border-color:#FF3D3D;}
 .toast.info{border-color:var(--ucl-star);}
 
-/* ===== NEWS TICKER ===== */
+/* NEWS TICKER */
 .news-ticker{
   background:linear-gradient(135deg,rgba(27,58,107,0.4),rgba(10,22,40,0.9));
   border:1px solid var(--ucl-border);border-radius:8px;margin-bottom:18px;overflow:hidden;display:flex;align-items:center;
@@ -335,7 +344,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .news-scroll-text{font-size:13px;font-weight:600;color:var(--ucl-star);white-space:nowrap;display:inline-block;animation:scrollNews 22s linear infinite;}
 @keyframes scrollNews{0%{transform:translateX(100vw);}100%{transform:translateX(-100%);}}
 
-/* ===== MATCH CARD ===== */
+/* MATCH CARD */
 .match-card{
   background:linear-gradient(135deg,rgba(27,58,107,.2),rgba(10,22,40,.8));
   border:1px solid var(--ucl-border);border-radius:8px;padding:13px 16px;margin-bottom:9px;
@@ -354,7 +363,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .high-score-badge{background:rgba(245,197,24,.2);color:var(--ucl-star);border:1px solid rgba(245,197,24,.4);border-radius:4px;font-size:10px;font-weight:700;padding:1px 7px;letter-spacing:1px;}
 .x2-badge{background:rgba(0,230,118,.2);color:#00E676;border:1px solid rgba(0,230,118,.4);border-radius:4px;font-size:10px;font-weight:700;padding:1px 7px;letter-spacing:1px;}
 
-/* ===== PENDING ===== */
+/* PENDING */
 .pending-item{
   background:linear-gradient(135deg,rgba(27,58,107,.2),rgba(10,22,40,.8));
   border:1px solid var(--ucl-border);border-radius:8px;padding:13px 16px;margin-bottom:8px;
@@ -364,7 +373,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .pending-name{font-size:15px;font-weight:700;color:#D0E4FF;}
 .pending-meta{font-size:11px;color:#4472C4;margin-top:2px;}
 
-/* ===== CONFIRM CARD ===== */
+/* CONFIRM CARD */
 .confirm-card{
   background:linear-gradient(135deg,rgba(68,114,196,.15),rgba(10,22,40,.9));
   border:1px solid var(--ucl-light);border-radius:10px;padding:16px;margin-bottom:12px;
@@ -374,7 +383,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .confirm-player-name{font-size:15px;font-weight:700;color:#D0E4FF;}
 .confirm-score-display{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--ucl-star);padding:0 12px;flex-shrink:0;}
 
-/* ===== PROFILE ===== */
+/* PROFILE */
 .profile-header{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;margin-bottom:22px;}
 .profile-avatar{
   width:80px;height:80px;
@@ -398,7 +407,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .p-stat-val{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;}
 .p-stat-lbl{font-size:9px;color:#4472C4;letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
 
-/* ===== PROMO ===== */
+/* PROMO */
 .promo-tracker{
   background:linear-gradient(135deg,rgba(0,100,50,.2),rgba(10,22,40,.9));
   border:1px solid rgba(0,200,80,.3);border-radius:10px;padding:16px;margin-top:16px;
@@ -409,7 +418,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .promo-label{font-size:12px;color:#82B1FF;display:flex;justify-content:space-between;}
 .promo-cycle-info{font-size:11px;color:#FFEA00;margin-top:6px;font-weight:700;}
 
-/* ===== BADGES ===== */
+/* BADGES */
 .badges-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
 .player-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:5px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border:1px solid;}
 .badge-gold{background:rgba(255,215,0,.15);color:var(--gold);border-color:rgba(255,215,0,.4);}
@@ -420,20 +429,22 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .badge-red{background:rgba(255,61,61,.13);color:#FF5555;border-color:rgba(255,61,61,.35);}
 .badge-star{background:rgba(245,197,24,.13);color:var(--ucl-star);border-color:rgba(245,197,24,.4);}
 
+/* CATEGORY TAG */
 .cat-main{color:#FF6B6B;font-weight:700;}
 .cat-youth{color:#82B1FF;font-weight:700;}
 .cat-academy{color:#A5D6A7;font-weight:700;}
 
-/* ===== ADMIN ===== */
+/* ADMIN */
 .admin-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--ucl-border);padding-bottom:10px;}
 .admin-tab{background:none;border:1px solid transparent;color:var(--ucl-silver);padding:7px 13px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:11px;cursor:pointer;border-radius:5px;transition:all .2s;text-transform:uppercase;letter-spacing:1px;}
 .admin-tab.active{background:linear-gradient(135deg,var(--ucl-mid),var(--ucl-light));color:white;border-color:var(--ucl-light);}
 .admin-tab:hover:not(.active){border-color:var(--ucl-light);color:white;}
 
+/* MOD INFO */
 .mod-info-box{background:rgba(68,114,196,.1);border:1px solid rgba(68,114,196,.3);border-radius:8px;padding:14px;margin-bottom:16px;}
 .mod-info-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:#82B1FF;margin-bottom:5px;}
 
-/* ===== RANKING CARD ===== */
+/* RANKING CARD */
 .rc-card{width:820px;background:#060E1C;border:2px solid #1B3A6B;border-radius:14px;overflow:hidden;font-family:'Montserrat',sans-serif;}
 .rc-header{background:linear-gradient(135deg,#0A1E3C 0%,#1B3A6B 40%,#0A1E3C 100%);padding:22px 28px 18px;position:relative;overflow:hidden;}
 .rc-header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#F5C518,#4472C4,#F5C518,transparent);}
@@ -464,11 +475,12 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .rc-footer-brand{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:4px;color:#1B3A6B;}
 .rc-footer-date{font-size:10px;color:#1B3A6B;letter-spacing:2px;}
 
+/* RANKING PREVIEW */
 .ranking-card-preview{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:3000;align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:20px;overflow:auto;}
 .ranking-card-preview.open{display:flex;}
 .ranking-card-close{position:absolute;top:16px;right:16px;background:rgba(27,58,107,.4);border:1px solid var(--ucl-light);color:white;width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 
-/* ===== MOBILE NAV ===== */
+/* MOBILE NAV */
 .mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(6,14,28,.98);border-top:1px solid var(--ucl-border);z-index:999;padding:6px 0;}
 .mobile-nav-inner{display:flex;justify-content:space-around;}
 .mob-nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;color:#4472C4;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;padding:4px 10px;cursor:pointer;transition:color .2s;text-transform:uppercase;}
@@ -476,7 +488,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .mob-nav-icon{font-size:19px;}
 @media(max-width:768px){.mobile-nav{display:block;}main{padding-bottom:72px;}}
 
-/* ===== MISC ===== */
+/* MISC */
 .loading-spinner{display:flex;align-items:center;justify-content:center;padding:48px;gap:12px;color:#4472C4;}
 .spinner{width:26px;height:26px;border:2px solid rgba(68,114,196,0.2);border-top-color:var(--ucl-light);border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -486,253 +498,6 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 .empty-sub{font-size:13px;margin-top:5px;opacity:.6;}
 .text-gold{color:var(--gold);}.text-green{color:#00E676;}.text-red{color:#FF5555;}.text-yellow{color:#FFEA00;}.text-blue{color:#82B1FF;}.text-gray{color:#4472C4;}.text-sm{font-size:13px;}.font-bold{font-weight:700;}
 .mt-8{margin-top:8px;}.mt-12{margin-top:12px;}.mt-16{margin-top:16px;}.mb-8{margin-bottom:8px;}.mb-16{margin-bottom:16px;}
-
-/* ====================================================
-   ===== TOURNAMENT ANNOUNCEMENT BOARD =====
-   ==================================================== */
-
-/* Pulsing glow for live tournament */
-@keyframes tourneyGlow {
-  0%,100%{box-shadow:0 0 30px rgba(255,215,0,0.25),0 0 60px rgba(255,140,0,0.1);}
-  50%{box-shadow:0 0 50px rgba(255,215,0,0.45),0 0 100px rgba(255,140,0,0.2);}
-}
-@keyframes shimmer {
-  0%{transform:translateX(-100%);}
-  100%{transform:translateX(100%);}
-}
-@keyframes pulse-dot {
-  0%,100%{opacity:1;transform:scale(1);}
-  50%{opacity:0.5;transform:scale(1.4);}
-}
-@keyframes countdownTick {
-  0%{transform:scale(1);}
-  50%{transform:scale(1.05);}
-  100%{transform:scale(1);}
-}
-
-.tourney-announcement {
-  position:relative;
-  background:linear-gradient(135deg, rgba(10,6,0,0.98) 0%, rgba(40,20,0,0.95) 40%, rgba(10,6,0,0.98) 100%);
-  border:2px solid rgba(255,200,0,0.6);
-  border-radius:16px;
-  padding:0;
-  margin-bottom:24px;
-  overflow:hidden;
-  animation:tourneyGlow 3s ease-in-out infinite;
-}
-.tourney-announcement::before {
-  content:'';
-  position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg, transparent, #FFD700, #FF8C00, #FFD700, transparent);
-}
-.tourney-announcement::after {
-  content:'TOURNAMENT';
-  position:absolute;right:-10px;bottom:-15px;
-  font-family:'Bebas Neue',sans-serif;font-size:120px;
-  color:rgba(255,180,0,0.04);pointer-events:none;line-height:1;letter-spacing:8px;
-}
-
-/* Shimmer sweep effect */
-.tourney-shimmer {
-  position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:16px;
-}
-.tourney-shimmer::after {
-  content:'';
-  position:absolute;top:0;left:-100%;width:60%;height:100%;
-  background:linear-gradient(90deg, transparent, rgba(255,215,0,0.07), transparent);
-  animation:shimmer 3.5s ease-in-out infinite;
-}
-
-.tourney-inner {
-  display:flex;align-items:stretch;gap:0;flex-wrap:wrap;
-}
-
-/* LEFT: Big banner side */
-.tourney-left {
-  flex:1;min-width:200px;
-  padding:28px 28px 24px;
-  display:flex;flex-direction:column;justify-content:center;
-  border-right:1px solid rgba(255,180,0,0.15);
-}
-
-.tourney-live-badge {
-  display:inline-flex;align-items:center;gap:6px;
-  background:rgba(255,50,50,0.15);border:1px solid rgba(255,80,80,0.4);
-  border-radius:20px;padding:4px 10px;margin-bottom:12px;
-  font-size:10px;font-weight:800;letter-spacing:2px;color:#FF5555;
-  text-transform:uppercase;width:fit-content;
-}
-.live-dot {
-  width:7px;height:7px;background:#FF3D3D;border-radius:50%;
-  animation:pulse-dot 1s ease-in-out infinite;
-}
-
-.tourney-title {
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(24px,4vw,42px);
-  letter-spacing:4px;
-  line-height:1.05;
-  color:#FFD700;
-  text-shadow:0 0 30px rgba(255,215,0,0.4);
-  margin-bottom:6px;
-}
-
-.tourney-subtitle {
-  font-size:11px;font-weight:700;letter-spacing:3px;
-  color:rgba(255,200,100,0.7);text-transform:uppercase;margin-bottom:16px;
-}
-
-.tourney-cta {
-  background:linear-gradient(135deg,#FF8C00,#FFD700);
-  color:#0A0600;border:none;
-  padding:12px 28px;
-  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;
-  cursor:pointer;border-radius:6px;transition:all .2s;
-  width:fit-content;
-  box-shadow:0 4px 18px rgba(255,180,0,0.35);
-}
-.tourney-cta:hover {
-  background:linear-gradient(135deg,#FFD700,#FFF0A0);
-  transform:translateY(-2px);
-  box-shadow:0 8px 28px rgba(255,215,0,0.5);
-}
-
-/* RIGHT: Stats grid */
-.tourney-right {
-  display:flex;flex-direction:column;justify-content:center;
-  padding:24px 28px;gap:16px;min-width:280px;
-}
-
-.tourney-stats {
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;
-}
-
-.t-stat {
-  background:rgba(255,180,0,0.06);
-  border:1px solid rgba(255,180,0,0.2);
-  border-radius:10px;padding:12px 14px;text-align:center;
-  transition:border-color .2s;
-}
-.t-stat:hover{border-color:rgba(255,215,0,0.5);}
-
-.t-stat-val {
-  font-family:'Bebas Neue',sans-serif;
-  font-size:28px;color:#FFD700;line-height:1;
-}
-.t-stat-lbl {
-  font-size:9px;color:rgba(255,200,100,0.6);letter-spacing:2px;
-  text-transform:uppercase;margin-top:3px;
-}
-
-/* Slot progress bar */
-.slot-progress-wrap {
-  background:rgba(255,180,0,0.06);border:1px solid rgba(255,180,0,0.2);
-  border-radius:10px;padding:12px 14px;
-}
-.slot-progress-label {
-  display:flex;justify-content:space-between;margin-bottom:7px;
-  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-}
-.slot-progress-label span:first-child{color:rgba(255,200,100,0.7);}
-.slot-progress-label span:last-child{color:#FFD700;font-family:'Bebas Neue',sans-serif;font-size:14px;}
-.slot-bar {
-  background:rgba(255,180,0,0.1);border-radius:6px;height:8px;overflow:hidden;
-}
-.slot-fill {
-  height:100%;border-radius:6px;
-  background:linear-gradient(90deg,#FF8C00,#FFD700);
-  transition:width .8s ease;
-}
-
-/* ====================================================
-   ===== TOURNAMENT REGISTRATION MODAL =====
-   ==================================================== */
-
-.tourney-modal {
-  max-width:520px;
-  background:linear-gradient(135deg,rgba(20,10,0,0.99),rgba(10,6,0,0.99));
-  border:2px solid rgba(255,180,0,0.5);
-}
-.tourney-modal-header {
-  background:linear-gradient(135deg,rgba(40,20,0,0.8),rgba(20,10,0,0.6));
-  margin:-26px -26px 20px -26px;
-  padding:22px 26px 18px;
-  border-bottom:1px solid rgba(255,180,0,0.2);
-  position:relative;overflow:hidden;
-}
-.tourney-modal-header::before {
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,transparent,#FFD700,#FF8C00,#FFD700,transparent);
-}
-.tourney-modal-title {
-  font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:4px;
-  color:#FFD700;text-shadow:0 0 20px rgba(255,215,0,0.4);
-}
-.tourney-modal-sub {
-  font-size:11px;color:rgba(255,200,100,0.6);letter-spacing:2px;margin-top:3px;text-transform:uppercase;
-}
-
-.t-form-label {
-  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-  color:rgba(255,200,100,0.8);
-}
-.t-form-input, .t-form-select {
-  background:rgba(255,180,0,0.06);
-  border:1px solid rgba(255,180,0,0.25);
-  border-radius:6px;color:#FFE4A0;
-  padding:11px 14px;font-family:'Montserrat',sans-serif;font-size:14px;
-  font-weight:500;transition:border-color .2s;width:100%;
-}
-.t-form-input:focus,.t-form-select:focus{outline:none;border-color:rgba(255,215,0,0.6);background:rgba(255,180,0,0.1);}
-.t-form-input::placeholder{color:rgba(255,180,0,0.3);}
-.t-form-select option{background:#1A0E00;color:#FFE4A0;}
-.t-form-input[readonly]{
-  background:rgba(255,215,0,0.05);
-  color:rgba(255,200,100,0.6);cursor:default;
-}
-
-.btn-tourney-submit {
-  background:linear-gradient(135deg,#FF8C00,#FFD700);
-  color:#0A0600;border:none;
-  padding:13px 28px;
-  font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;
-  cursor:pointer;border-radius:6px;transition:all .2s;width:100%;
-  box-shadow:0 4px 18px rgba(255,180,0,0.3);margin-top:6px;
-}
-.btn-tourney-submit:hover{
-  background:linear-gradient(135deg,#FFD700,#FFF0A0);
-  transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,215,0,0.45);
-}
-.tourney-fee-note {
-  background:rgba(255,50,50,0.1);
-  border:1px solid rgba(255,80,80,0.3);
-  border-radius:8px;padding:12px 14px;
-  font-size:12px;color:rgba(255,180,100,0.9);
-  line-height:1.6;text-align:center;
-}
-.tourney-fee-amount {
-  font-family:'Bebas Neue',sans-serif;font-size:22px;color:#FF5555;letter-spacing:1px;
-}
-.trx-help {
-  font-size:11px;color:rgba(255,180,0,0.5);margin-top:5px;line-height:1.5;
-}
-
-/* ===== ADMIN TOURNAMENT TAB ===== */
-.tourney-reg-item {
-  background:linear-gradient(135deg,rgba(40,20,0,0.5),rgba(10,6,0,0.8));
-  border:1px solid rgba(255,180,0,0.25);
-  border-radius:8px;padding:13px 16px;margin-bottom:8px;
-  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-}
-.tourney-reg-item.t-approved{border-color:rgba(0,230,118,0.3);}
-.tourney-reg-item.t-rejected{border-color:rgba(255,61,61,0.3);}
-.tourney-reg-info{flex:1;min-width:140px;}
-.tourney-reg-name{font-size:15px;font-weight:700;color:#FFE4A0;}
-.tourney-reg-meta{font-size:11px;color:rgba(255,180,0,0.5);margin-top:3px;}
-.t-status-badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
-.t-status-pending{background:rgba(255,234,0,.15);color:#FFEA00;border:1px solid rgba(255,234,0,.3);}
-.t-status-approved{background:rgba(0,230,118,.18);color:#00E676;border:1px solid rgba(0,230,118,.3);}
-.t-status-rejected{background:rgba(255,61,61,.18);color:#FF5555;border:1px solid rgba(255,61,61,.3);}
 </style>
 </head>
 <body>
@@ -764,63 +529,10 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
 
 <!-- HOME -->
 <div class="page active" id="page-home">
-
-  <!-- NEWS TICKER -->
   <div class="news-ticker" id="newsTicker" style="display:none">
     <div class="news-label">BREAKING</div>
     <div class="news-scroll-wrap"><span class="news-scroll-text" id="newsText"></span></div>
   </div>
-
-  <!-- ===== TOURNAMENT ANNOUNCEMENT BOARD ===== -->
-  <div class="tourney-announcement" id="tourneyBoard">
-    <div class="tourney-shimmer"></div>
-    <div class="tourney-inner">
-      <!-- Left: Title & CTA -->
-      <div class="tourney-left">
-        <div class="tourney-live-badge">
-          <span class="live-dot"></span>
-          Registration Open
-        </div>
-        <div class="tourney-title">LLFC PAID SOLO<br>TOURNAMENT</div>
-        <div class="tourney-subtitle">Season 1 &bull; Powered by LLFC Division</div>
-        <button class="tourney-cta" onclick="openTourneyReg()">
-          &#9917; Click Here to Register
-        </button>
-      </div>
-      <!-- Right: Stats -->
-      <div class="tourney-right">
-        <div class="tourney-stats">
-          <div class="t-stat">
-            <div class="t-stat-val">16</div>
-            <div class="t-stat-lbl">Total Slots</div>
-          </div>
-          <div class="t-stat">
-            <div class="t-stat-val" id="tStatFilled">-</div>
-            <div class="t-stat-lbl">Registered</div>
-          </div>
-          <div class="t-stat">
-            <div class="t-stat-val">৳50</div>
-            <div class="t-stat-lbl">Entry Fee</div>
-          </div>
-          <div class="t-stat">
-            <div class="t-stat-val">৳800</div>
-            <div class="t-stat-lbl">Prize Pool</div>
-          </div>
-        </div>
-        <div class="slot-progress-wrap">
-          <div class="slot-progress-label">
-            <span>Slot Progress</span>
-            <span id="slotProgressText">0 / 16</span>
-          </div>
-          <div class="slot-bar">
-            <div class="slot-fill" id="slotFill" style="width:0%"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- ===== END TOURNAMENT BOARD ===== -->
-
   <div class="hero">
     <div class="hero-tag">Season Active</div>
     <h1>LLFC <span>eFootball</span> Division</h1>
@@ -970,7 +682,6 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
       <button class="admin-tab active" onclick="switchAdminTab('pending',this)">Pending</button>
       <button class="admin-tab" onclick="switchAdminTab('players',this)">Players</button>
       <button class="admin-tab" onclick="switchAdminTab('adminMatches',this)">Matches</button>
-      <button class="admin-tab" onclick="switchAdminTab('tournament',this)">&#127942; Tournament</button>
       <button class="admin-tab" onclick="switchAdminTab('moderators',this)">Moderators</button>
       <button class="admin-tab" onclick="switchAdminTab('season',this)">Season</button>
       <button class="admin-tab" onclick="switchAdminTab('adminSettings',this)">Settings</button>
@@ -988,23 +699,6 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
       <div class="section-title">All Matches</div>
       <div id="adminMatchesList"></div>
     </div>
-
-    <!-- TOURNAMENT ADMIN TAB -->
-    <div id="adminTab-tournament" style="display:none">
-      <div class="section-title">Tournament Registrations</div>
-      <div class="mod-info-box" style="border-color:rgba(255,180,0,0.3);background:rgba(255,180,0,0.06)">
-        <div class="mod-info-title" style="color:#FFD700">Paid Solo Tournament</div>
-        <p style="font-size:12px;color:rgba(255,200,100,0.7)">Review bKash TRX IDs and approve or reject registrations below. Approved players are added to the 16-slot bracket.</p>
-      </div>
-      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
-        <div class="t-stat" style="flex:1;min-width:90px"><div class="t-stat-val" id="adminTotalRegs">-</div><div class="t-stat-lbl">Total Regs</div></div>
-        <div class="t-stat" style="flex:1;min-width:90px"><div class="t-stat-val" id="adminApprovedRegs">-</div><div class="t-stat-lbl">Approved</div></div>
-        <div class="t-stat" style="flex:1;min-width:90px"><div class="t-stat-val" id="adminPendingRegs">-</div><div class="t-stat-lbl">Pending</div></div>
-        <div class="t-stat" style="flex:1;min-width:90px"><div class="t-stat-val" id="adminSlotsLeft">-</div><div class="t-stat-lbl">Slots Left</div></div>
-      </div>
-      <div id="adminTourneyList"><div class="loading-spinner"><div class="spinner"></div></div></div>
-    </div>
-
     <div id="adminTab-moderators" style="display:none">
       <div class="section-title">Moderator Management</div>
       <div class="mod-info-box">
@@ -1073,71 +767,7 @@ tbody tr.top-3{background:linear-gradient(90deg,rgba(205,127,50,0.07),transparen
   </div>
 </div>
 
-<!-- ============================================
-     TOURNAMENT REGISTRATION MODAL
-     ============================================ -->
-<div class="modal-overlay" id="tourneyRegModal">
-  <div class="modal tourney-modal">
-    <button class="modal-close" onclick="closeModal('tourneyRegModal')" style="border-color:rgba(255,180,0,0.5);color:#FFD700;">X</button>
-    <div class="tourney-modal-header">
-      <div class="tourney-modal-title">&#9917; Tournament Registration</div>
-      <div class="tourney-modal-sub">LLFC Paid Solo Tournament &bull; Season 1</div>
-    </div>
-
-    <!-- Fee notice -->
-    <div class="tourney-fee-note" style="margin-bottom:16px">
-      <div class="tourney-fee-amount">Entry Fee: ৳50 BDT</div>
-      <div style="font-size:11px;margin-top:4px;color:rgba(255,180,100,0.7)">
-        Send via <strong style="color:#FFD700">bKash</strong> &bull; Total Prize Pool: <strong style="color:#FFD700">৳800 BDT</strong> &bull; 16 Slots Only
-      </div>
-    </div>
-
-    <div class="match-form" style="gap:13px">
-
-      <!-- Player name — auto-filled if logged in, else manual -->
-      <div class="form-group">
-        <label class="t-form-label">Your Name</label>
-        <input class="t-form-input" id="tRegName" placeholder="Your registered name">
-        <div style="font-size:10px;color:rgba(255,180,0,0.4);margin-top:3px" id="tRegNameHint"></div>
-      </div>
-
-      <!-- Priority Time Slot -->
-      <div class="form-group">
-        <label class="t-form-label">Priority Time Slot</label>
-        <select class="t-form-select" id="tRegTimeSlot">
-          <option value="">-- Select Your Preferred Time --</option>
-          <option value="11:30 PM">&#128337; 11:30 PM</option>
-          <option value="12:00 AM">&#128337; 12:00 AM (Midnight)</option>
-          <option value="1:00 AM">&#128337; 1:00 AM</option>
-        </select>
-      </div>
-
-      <!-- bKash TRX ID -->
-      <div class="form-group">
-        <label class="t-form-label">bKash Transaction ID</label>
-        <input class="t-form-input" id="tRegTrxId" placeholder="e.g. 8N7A6B3C2D" maxlength="40">
-        <div class="trx-help">
-          Send ৳50 to bKash &rarr; enter the 10-digit TRX ID you receive after payment.<br>
-          Your registration is pending until admin verifies the transaction.
-        </div>
-      </div>
-
-      <!-- Slots remaining -->
-      <div style="text-align:center;font-size:12px;color:rgba(255,180,0,0.6);padding:6px 0">
-        <span id="tRegSlotsLeft" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#FFD700">?</span> slots remaining
-      </div>
-
-      <button class="btn-tourney-submit" onclick="submitTourneyReg()">
-        Submit Registration &#9917;
-      </button>
-      <p style="text-align:center;font-size:11px;color:rgba(255,180,0,0.4);margin-top:4px">
-        Pending admin approval after payment verification
-      </p>
-    </div>
-  </div>
-</div>
-
-<!-- EXISTING MODALS -->
+<!-- MODALS -->
 <div class="modal-overlay" id="loginModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('loginModal')">X</button>
@@ -1254,6 +884,7 @@ const app = initializeApp({
 });
 const db = getFirestore(app);
 
+// ===== DIVISION RULES =====
 const DIV_RULES = {
   9:{cycle:10,promo:12,relo:0, next:8,name:'Rookie'},
   8:{cycle:10,promo:15,relo:3, next:7,name:'Amateur'},
@@ -1266,13 +897,14 @@ const DIV_RULES = {
   1:{cycle:10,promo:999,relo:10,next:1,name:'Elite'},
 };
 
+// ===== STATE =====
 let S={
   user:null,lbTab:'overall',players:[],matches:[],
   lbPlayers:[],allMatchesData:[],adminPlayers:[],
-  pageHistory:['home'],adminPw:'fardous',
-  tourneyRegs:[],
+  pageHistory:['home'],adminPw:'fardous'
 };
 
+// ===== UTILS =====
 const $=id=>document.getElementById(id);
 function T(msg,type='info'){
   const t=$('toast');t.textContent=msg;t.className=`toast show ${type}`;
@@ -1280,6 +912,7 @@ function T(msg,type='info'){
 }
 function openModal(id){$(id).classList.add('open');}
 function closeModal(id){$(id).classList.remove('open');}
+
 function showPage(pg){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const el=$('page-'+pg);if(el)el.classList.add('active');
@@ -1318,16 +951,26 @@ function timeAgo(ts){
 function getRC(sA,sB,side){const my=side==='A'?sA:sB,op=side==='A'?sB:sA;return my>op?'W':my<op?'L':'D';}
 function isHigh(sA,sB){return(sA+sB)>7;}
 function catClass(c){return c==='Main'?'cat-main':c==='Youth'?'cat-youth':'cat-academy';}
-function getRatingMultiplier(myCategory,oppCategory,result){
-  const imNonMain=myCategory==='Youth'||myCategory==='Academy';
-  const oppIsMain=oppCategory==='Main';
-  const imMain=myCategory==='Main';
-  const oppIsNonMain=oppCategory==='Youth'||oppCategory==='Academy';
-  if(imNonMain&&oppIsMain&&result==='W')return 2;
-  if(imMain&&oppIsNonMain&&result==='L')return 2;
+
+// 2x RATING LOGIC
+// If a non-Main (Youth/Academy) beats a Main player -> 2x rating gain
+// If a Main player loses to a non-Main -> 2x rating loss
+function getRatingMultiplier(myCategory, oppCategory, result) {
+  const imNonMain = myCategory==='Youth'||myCategory==='Academy';
+  const oppIsMain = oppCategory==='Main';
+  const imMain = myCategory==='Main';
+  const oppIsNonMain = oppCategory==='Youth'||oppCategory==='Academy';
+  if(imNonMain && oppIsMain && result==='W') return 2;
+  if(imMain && oppIsNonMain && result==='L') return 2;
   return 1;
 }
-function calcRating(w,d,l,gf,ga,cs){return Math.max(0,w*10+d*5+l*(-5)+(gf-ga)+cs*2);}
+
+// RATING = computed from match history (always fresh)
+// W*10 + D*5 + L*(-5) + GD*1 + CS*2
+// multiplier applied at match time is stored per match, but we recompute from stored aggregate stats
+function calcRating(w,d,l,gf,ga,cs){
+  return Math.max(0, w*10 + d*5 + l*(-5) + (gf-ga) + cs*2);
+}
 
 // ===== NEWS =====
 function buildNews(matches){
@@ -1335,126 +978,6 @@ function buildNews(matches){
   if(!hi.length){$('newsTicker').style.display='none';return;}
   $('newsText').textContent=hi.slice(0,8).map(m=>`GOAL FEST: ${m.playerAName} ${m.scoreA}-${m.scoreB} ${m.playerBName} (${m.scoreA+m.scoreB} goals!)`).join('     |     ');
   $('newsTicker').style.display='flex';
-}
-
-// ===== TOURNAMENT SLOT COUNTER =====
-async function loadTourneySlotCount(){
-  try{
-    const snap=await getDocs(query(collection(db,'tournamentRegs'),where('status','==','approved')));
-    const filled=snap.size;
-    const remaining=Math.max(0,16-filled);
-    $('tStatFilled').textContent=filled;
-    $('slotProgressText').textContent=filled+' / 16';
-    $('slotFill').style.width=Math.min(100,Math.round(filled/16*100))+'%';
-    $('tRegSlotsLeft').textContent=remaining;
-  }catch(e){$('tStatFilled').textContent='?';}
-}
-
-// ===== TOURNAMENT REG MODAL =====
-function openTourneyReg(){
-  // Auto-fill name if logged in
-  if(S.user){
-    $('tRegName').value=S.user.name;
-    $('tRegName').readOnly=true;
-    $('tRegNameHint').textContent='Signed in as '+S.user.name;
-  }else{
-    $('tRegName').readOnly=false;
-    $('tRegName').value='';
-    $('tRegNameHint').textContent='Login for auto-fill, or enter your name manually';
-  }
-  loadTourneySlotCount();
-  openModal('tourneyRegModal');
-}
-
-async function submitTourneyReg(){
-  const name=$('tRegName').value.trim();
-  const slot=$('tRegTimeSlot').value;
-  const trxId=$('tRegTrxId').value.trim();
-  if(!name)return T('Enter your name','error');
-  if(!slot)return T('Select a time slot','error');
-  if(!trxId||trxId.length<5)return T('Enter valid bKash TRX ID','error');
-
-  // Check slot availability
-  try{
-    const approvedSnap=await getDocs(query(collection(db,'tournamentRegs'),where('status','==','approved')));
-    if(approvedSnap.size>=16)return T('Sorry! All 16 slots are filled.','error');
-
-    // Check duplicate by name
-    const dupSnap=await getDocs(query(collection(db,'tournamentRegs'),where('playerName','==',name)));
-    if(!dupSnap.empty)return T('You have already registered!','info');
-
-    await addDoc(collection(db,'tournamentRegs'),{
-      playerName:name,
-      playerId:S.user?.id||null,
-      timeSlot:slot,
-      bkashTrxId:trxId,
-      status:'pending',
-      submittedAt:serverTimestamp(),
-    });
-
-    T('Registration submitted! Pending payment verification.','success');
-    closeModal('tourneyRegModal');
-    $('tRegTimeSlot').value='';
-    $('tRegTrxId').value='';
-    loadTourneySlotCount();
-  }catch(e){T('Error: '+e.message,'error');}
-}
-
-// ===== ADMIN: TOURNAMENT =====
-async function loadAdminTournament(){
-  try{
-    const snap=await getDocs(query(collection(db,'tournamentRegs'),orderBy('submittedAt','desc')));
-    S.tourneyRegs=snap.docs.map(d=>({id:d.id,...d.data()}));
-    const total=S.tourneyRegs.length;
-    const approved=S.tourneyRegs.filter(r=>r.status==='approved').length;
-    const pending=S.tourneyRegs.filter(r=>r.status==='pending').length;
-    $('adminTotalRegs').textContent=total;
-    $('adminApprovedRegs').textContent=approved;
-    $('adminPendingRegs').textContent=pending;
-    $('adminSlotsLeft').textContent=Math.max(0,16-approved);
-    const el=$('adminTourneyList');
-    if(!S.tourneyRegs.length){
-      el.innerHTML='<div class="empty-state"><div class="empty-icon">&#9917;</div><div class="empty-text">No registrations yet</div></div>';return;
-    }
-    el.innerHTML=S.tourneyRegs.map((r,i)=>{
-      const stCls=r.status==='approved'?'t-approved':r.status==='rejected'?'t-rejected':'';
-      const stBadge=r.status==='approved'?'t-status-approved':r.status==='rejected'?'t-status-rejected':'t-status-pending';
-      return `<div class="tourney-reg-item ${stCls}">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:rgba(255,180,0,0.3);width:28px">${i+1}</div>
-        <div class="tourney-reg-info">
-          <div class="tourney-reg-name">${r.playerName}</div>
-          <div class="tourney-reg-meta">
-            &#128337; ${r.timeSlot} &nbsp;&bull;&nbsp;
-            bKash TRX: <strong style="color:#FFD700;letter-spacing:1px">${r.bkashTrxId}</strong> &nbsp;&bull;&nbsp;
-            ${fmtDate(r.submittedAt)} ${timeAgo(r.submittedAt)}
-          </div>
-        </div>
-        <span class="t-status-badge ${stBadge}">${r.status}</span>
-        <div style="display:flex;gap:5px;flex-wrap:wrap">
-          ${r.status!=='approved'?`<button class="btn-sm btn-approve" onclick="adminTourneyApprove('${r.id}')">Approve</button>`:''}
-          ${r.status!=='rejected'?`<button class="btn-sm btn-reject" onclick="adminTourneyReject('${r.id}')">Reject</button>`:''}
-          <button class="btn-sm btn-ban" onclick="adminTourneyDelete('${r.id}')">Delete</button>
-        </div>
-      </div>`;
-    }).join('');
-  }catch(e){T('Error loading tournament data','error');console.error(e);}
-}
-
-async function adminTourneyApprove(id){
-  const approvedSnap=await getDocs(query(collection(db,'tournamentRegs'),where('status','==','approved')));
-  if(approvedSnap.size>=16)return T('Cannot approve — all 16 slots full!','error');
-  await updateDoc(doc(db,'tournamentRegs',id),{status:'approved',approvedAt:serverTimestamp()});
-  T('Registration approved! Slot confirmed.','success');
-  loadAdminTournament();loadTourneySlotCount();
-}
-async function adminTourneyReject(id){
-  await updateDoc(doc(db,'tournamentRegs',id),{status:'rejected'});
-  T('Registration rejected.','info');loadAdminTournament();loadTourneySlotCount();
-}
-async function adminTourneyDelete(id){
-  if(!confirm('Delete this registration permanently?'))return;
-  await deleteDoc(doc(db,'tournamentRegs',id));
-  T('Deleted.','info');loadAdminTournament();loadTourneySlotCount();
 }
 
 // ===== AUTH =====
@@ -1523,6 +1046,7 @@ function updateHeaderAuth(){
   }
 }
 
+// ===== PASSWORD CHANGE =====
 async function changeMyPassword(){
   if(!S.user)return;
   const oldPw=$('cpOld').value,newPw=$('cpNew').value,conf=$('cpConfirm').value;
@@ -1532,7 +1056,8 @@ async function changeMyPassword(){
   if(newPw.length<4)return T('Password too short','error');
   try{
     await updateDoc(doc(db,'players',S.user.id),{password:newPw});
-    S.user.password=newPw;closeModal('changePwModal');
+    S.user.password=newPw;
+    closeModal('changePwModal');
     T('Password updated successfully','success');
     ['cpOld','cpNew','cpConfirm'].forEach(id=>$(id).value='');
   }catch(e){T('Error: '+e.message,'error');}
@@ -1548,7 +1073,6 @@ async function loadHome(){
     S.players=pSnap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
     S.matches=mSnap.docs.map(d=>({id:d.id,...d.data()}));
     buildNews(S.matches);
-    loadTourneySlotCount();
     const now=Date.now();
     $('statPlayers').textContent=S.players.length;
     $('statMatches').textContent=S.matches.filter(m=>m.status==='confirmed').length;
@@ -1556,7 +1080,8 @@ async function loadHome(){
     $('statPending').textContent=S.matches.filter(m=>m.status==='pending').length;
 
     const sorted=[...S.players].map(p=>({
-      ...p,rating:calcRating(p.wins||0,p.draws||0,p.losses||0,p.goalsFor||0,p.goalsAgainst||0,p.cleanSheets||0)
+      ...p,
+      rating:calcRating(p.wins||0,p.draws||0,p.losses||0,p.goalsFor||0,p.goalsAgainst||0,p.cleanSheets||0)
     })).sort((a,b)=>b.rating-a.rating).slice(0,5);
 
     $('homeTopPlayers').innerHTML=sorted.length?sorted.map((p,i)=>`
@@ -1588,6 +1113,7 @@ async function loadHome(){
       </div>`;
     }).join(''):'<div class="empty-state"><div class="empty-text">No matches yet</div></div>';
 
+    // Division Guide - bigger, green
     const divInfo=[
       {d:1,name:'Elite',promo:'Top Division - Defend your title',relo:'Relegate if <=10 pts'},
       {d:2,name:'Premier',promo:'33 pts in 10 matches to promote',relo:'Relo if <=9 pts'},
@@ -1612,7 +1138,7 @@ async function loadHome(){
   }catch(e){console.error(e);T('Error loading home','error');}
 }
 
-// ===== LEADERBOARD =====
+// ===== LEADERBOARD - COMPUTED FROM MATCH HISTORY ONLY =====
 async function loadLeaderboard(tab='overall'){
   S.lbTab=tab;
   $('lbTableBody').innerHTML='<tr><td colspan="11" style="text-align:center;padding:30px"><div class="spinner" style="margin:0 auto"></div></td></tr>';
@@ -1623,32 +1149,51 @@ async function loadLeaderboard(tab='overall'){
     ]);
     S.players=pSnap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
     S.matches=mSnap.docs.map(d=>({id:d.id,...d.data()}));
+
     const now=Date.now();
     const timeFilter={daily:86400000,weekly:604800000,monthly:2592000000,overall:Infinity}[tab];
-    const playerCatMap={};S.players.forEach(p=>playerCatMap[p.id]=p.category||'Main');
+
+    // Build a player lookup for category
+    const playerCatMap={};
+    S.players.forEach(p=>playerCatMap[p.id]=p.category||'Main');
+
     let players=S.players.map(p=>{
+      // Filter confirmed matches in the time window
       let pm=S.matches.filter(m=>(m.playerAId===p.id||m.playerBId===p.id)&&m.status==='confirmed');
-      if(tab!=='overall')pm=pm.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<timeFilter);
+      if(tab!=='overall') pm=pm.filter(m=>now-(m.createdAt?.toDate?.()?.getTime()||0)<timeFilter);
+
       let w=0,d=0,l=0,gf=0,ga=0,cs=0;
       pm.forEach(m=>{
         const side=m.playerAId===p.id?'A':'B';
         const result=getRC(m.scoreA,m.scoreB,side);
-        const myG=side==='A'?m.scoreA:m.scoreB,opG=side==='A'?m.scoreB:m.scoreA;
+        const myG=side==='A'?m.scoreA:m.scoreB, opG=side==='A'?m.scoreB:m.scoreA;
         const oppCat=playerCatMap[side==='A'?m.playerBId:m.playerAId]||'Main';
         const mult=getRatingMultiplier(p.category||'Main',oppCat,result);
-        if(result==='W')w+=mult;else if(result==='D')d+=1;else l+=mult;
-        gf+=myG;ga+=opG;if(opG===0)cs++;
+        
+        if(result==='W'){w+=mult;} // count weighted wins for rating
+        else if(result==='D'){d+=1;}
+        else{l+=mult;} // count weighted losses
+        gf+=myG; ga+=opG;
+        if(opG===0)cs++;
       });
-      const total=pm.length,wr=total>0?Math.round((w/(w+d+l||1))*100):0,gd=gf-ga;
+
+      const total=pm.length; // actual match count
+      const wr=total>0?Math.round((w/(w+d+l||1))*100):0; // use weighted w for display
+      const gd=gf-ga;
+      // Rating = weighted_w*10 + d*5 + weighted_l*(-5) + gd + cs*2
       const rating=Math.max(0,w*10+d*5+l*(-5)+gd+cs*2);
-      const cyclePts=p.cyclePts||0,cycleMP=p.cycleMP||0;
-      return{...p,tw:Math.round(w),td:d,tl:Math.round(l),tgf:gf,tga:ga,tcs:cs,tgd:gd,twr:wr,total,rating,cyclePts,cycleMP};
+      const cyclePts=p.cyclePts||0, cycleMP=p.cycleMP||0;
+
+      return {...p,tw:Math.round(w),td:d,tl:Math.round(l),tgf:gf,tga:ga,tcs:cs,tgd:gd,twr:wr,total,rating,cyclePts,cycleMP};
     });
-    if(tab!=='overall')players=players.filter(p=>p.total>0);
+
+    if(tab!=='overall') players=players.filter(p=>p.total>0);
     players.sort((a,b)=>b.rating-a.rating||b.tgd-a.tgd||b.twr-a.twr);
-    S.lbPlayers=players;renderLbTable(players);
+    S.lbPlayers=players;
+    renderLbTable(players);
   }catch(e){
-    $('lbTableBody').innerHTML='<tr><td colspan="11" style="text-align:center;color:#FF5555">Error loading</td></tr>';console.error(e);
+    $('lbTableBody').innerHTML='<tr><td colspan="11" style="text-align:center;color:#FF5555">Error loading</td></tr>';
+    console.error(e);
   }
 }
 
@@ -1657,13 +1202,15 @@ function renderLbTable(players){
   const divF=$('lbDivFilter')?.value||'';
   const filtered=players.filter(p=>p.name.toLowerCase().includes(search)&&(!divF||String(p.division||9)===divF));
   const tbody=$('lbTableBody');
-  if(!filtered.length){tbody.innerHTML='<tr><td colspan="11"><div class="empty-state"><div class="empty-text">No players found</div></div></td></tr>';return;}
+  if(!filtered.length){
+    tbody.innerHTML='<tr><td colspan="11"><div class="empty-state"><div class="empty-text">No players found</div></div></td></tr>';return;
+  }
   tbody.innerHTML=filtered.map((p,i)=>{
     const r=i+1,rc=r===1?'top-1':r===2?'top-2':r===3?'top-3':'';
     const form=(p.form||[]).slice(-5);
     const rules=DIV_RULES[p.division||9]||DIV_RULES[9];
     const pct=Math.min(100,Math.round((p.cyclePts||0)/(rules.promo||1)*100));
-    return`<tr class="${rc}">
+    return `<tr class="${rc}">
       <td><span class="rank-num rank-${r}">${r}</span></td>
       <td>
         <span class="player-link" onclick="viewProfile('${p.id}')">
@@ -1710,6 +1257,7 @@ function switchLbTab(tab,btn){
 // ===== RANKING CARD =====
 function openRankingCardPreview(){buildRankingCard();$('rankingCardPreview').classList.add('open');}
 function closeRankingPreview(){$('rankingCardPreview').classList.remove('open');}
+
 function buildRankingCard(){
   const top10=S.lbPlayers.slice(0,10);
   const labels={overall:'Overall Season',daily:'Daily',weekly:'Weekly',monthly:'Monthly'};
@@ -1719,7 +1267,7 @@ function buildRankingCard(){
   const rows=top10.map((p,i)=>{
     const r=i+1,rc=r===1?'rank-1-row':r===2?'rank-2-row':r===3?'rank-3-row':'';
     const rankCls=r===1?'r1':r===2?'r2':r===3?'r3':'';
-    return`<div class="rc-row ${rc}">
+    return `<div class="rc-row ${rc}">
       <div class="rc-rank ${rankCls}">${r}</div>
       <div class="rc-player-info">
         <div class="rc-avatar">${p.name[0].toUpperCase()}</div>
@@ -1759,14 +1307,17 @@ function buildRankingCard(){
       </div>
     </div>`;
 }
+
 async function downloadRankingCard(){
-  const card=$('theRankingCard');if(!card)return T('No card to download','error');
+  const card=$('theRankingCard');
+  if(!card)return T('No card to download','error');
   try{
     T('Generating...','info');
     const canvas=await html2canvas(card,{backgroundColor:'#060E1C',scale:2,useCORS:true,logging:false});
     const link=document.createElement('a');
     link.download=`LLFC-Ranking-${S.lbTab}-${new Date().toISOString().split('T')[0]}.jpg`;
-    link.href=canvas.toDataURL('image/jpeg',0.95);link.click();T('Downloaded!','success');
+    link.href=canvas.toDataURL('image/jpeg',0.95);link.click();
+    T('Downloaded!','success');
   }catch(e){T('Download failed: '+e.message,'error');}
 }
 
@@ -1775,9 +1326,12 @@ async function loadMatches(){
   try{
     const mSnap=await getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(200)));
     S.matches=mSnap.docs.map(d=>({id:d.id,...d.data()}));
-    S.allMatchesData=S.matches;renderMatchesList(S.matches);renderPendingConfirms();
+    S.allMatchesData=S.matches;
+    renderMatchesList(S.matches);
+    renderPendingConfirms();
   }catch(e){$('matchesList').innerHTML='<div class="empty-state"><div class="empty-text">Error loading</div></div>';console.error(e);}
 }
+
 function renderMatchesList(matches){
   const search=($('matchSearch')?.value||'').toLowerCase();
   const sf=$('matchStatusFilter')?.value||'';
@@ -1788,7 +1342,7 @@ function renderMatchesList(matches){
   if(!f.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">&#9917;</div><div class="empty-text">No matches found</div></div>';return;}
   el.innerHTML=f.map(m=>{
     const hi=isHigh(m.scoreA,m.scoreB),x2=m.is2x;
-    return`<div class="match-card${hi?' high-score':''}">
+    return `<div class="match-card${hi?' high-score':''}">
       <div class="match-info">
         <div class="match-vs">
           <span class="player-link" style="display:inline" onclick="viewProfile('${m.playerAId}')">${m.playerAName}</span>
@@ -1803,6 +1357,7 @@ function renderMatchesList(matches){
     </div>`;
   }).join('');
 }
+
 function renderPendingConfirms(){
   const section=$('pendingConfirmSection'),list=$('pendingConfirmList');
   if(!S.user){section.style.display='none';return;}
@@ -1825,62 +1380,96 @@ function renderPendingConfirms(){
       </div>
     </div>`).join('');
 }
+
 function filterMatches(){if(S.allMatchesData.length)renderMatchesList(S.allMatchesData);}
 
 async function confirmMatch(matchId,confirmed){
   try{
-    const mRef=doc(db,'matches',matchId),mSnap=await getDoc(mRef);
+    const mRef=doc(db,'matches',matchId);
+    const mSnap=await getDoc(mRef);
     if(!mSnap.exists())return T('Match not found','error');
     const m=mSnap.data();
     if(confirmed){
       await updateDoc(mRef,{status:'confirmed',confirmedAt:serverTimestamp()});
-      await applyMatchStats(m);T('Match confirmed! Stats updated','success');
-    }else{await updateDoc(mRef,{status:'disputed'});T('Match disputed.','info');}
-    S.matches=[];S.allMatchesData=[];loadMatches();
+      await applyMatchStats(m);
+      T('Match confirmed! Stats updated','success');
+    }else{
+      await updateDoc(mRef,{status:'disputed'});
+      T('Match disputed. Admin will review.','info');
+    }
+    S.matches=[];S.allMatchesData=[];
+    loadMatches();
   }catch(e){T('Error: '+e.message,'error');}
 }
 
 async function applyMatchStats(m){
-  const [aSnap,bSnap]=await Promise.all([getDoc(doc(db,'players',m.playerAId)),getDoc(doc(db,'players',m.playerBId))]);
+  // Get both player categories
+  const [aSnap,bSnap]=await Promise.all([
+    getDoc(doc(db,'players',m.playerAId)),
+    getDoc(doc(db,'players',m.playerBId))
+  ]);
   if(!aSnap.exists()||!bSnap.exists())return;
-  const aData=aSnap.data(),bData=bSnap.data();
-  const aCat=aData.category||'Main',bCat=bData.category||'Main';
+  const aData=aSnap.data(), bData=bSnap.data();
+  const aCat=aData.category||'Main', bCat=bData.category||'Main';
+
   async function upd(pid,pData,side,oppCat){
     const ref=doc(db,'players',pid);
     const result=getRC(m.scoreA,m.scoreB,side);
-    const myG=side==='A'?m.scoreA:m.scoreB,opG=side==='A'?m.scoreB:m.scoreA;
+    const myG=side==='A'?m.scoreA:m.scoreB, opG=side==='A'?m.scoreB:m.scoreA;
     const isCS=opG===0;
     const form=[...(pData.form||[]).slice(-19),result];
     const cyclePtsGain=result==='W'?3:result==='D'?1:0;
-    const newCycleMP=(pData.cycleMP||0)+1,newCyclePts=(pData.cyclePts||0)+cyclePtsGain;
+    const newCycleMP=(pData.cycleMP||0)+1;
+    const newCyclePts=(pData.cyclePts||0)+cyclePtsGain;
+    
+    // 2x multiplier: for division cycle points, no 2x (fair play)
+    // for actual wins/losses stored, we track the multiplied version
     const mult=getRatingMultiplier(pData.category||'Main',oppCat,result);
-    const wInc=result==='W'?mult:0,lInc=result==='L'?mult:0,dInc=result==='D'?1:0;
+    // Effective stats stored: wins/losses get multiplied for rating purposes
+    const wInc=result==='W'?mult:0;
+    const lInc=result==='L'?mult:0;
+    const dInc=result==='D'?1:0;
+
     const updates={
-      wins:(pData.wins||0)+wInc,draws:(pData.draws||0)+dInc,losses:(pData.losses||0)+lInc,
-      goalsFor:(pData.goalsFor||0)+myG,goalsAgainst:(pData.goalsAgainst||0)+opG,
-      cleanSheets:(pData.cleanSheets||0)+(isCS?1:0),form,cycleMP:newCycleMP,cyclePts:newCyclePts,
+      wins:(pData.wins||0)+wInc,
+      draws:(pData.draws||0)+dInc,
+      losses:(pData.losses||0)+lInc,
+      goalsFor:(pData.goalsFor||0)+myG,
+      goalsAgainst:(pData.goalsAgainst||0)+opG,
+      cleanSheets:(pData.cleanSheets||0)+(isCS?1:0),
+      form,cycleMP:newCycleMP,cyclePts:newCyclePts,
     };
     await updateDoc(ref,updates);
-    await checkAndApplyDivision(pid,{...pData,...updates});
+    
+    // Check division
+    const upd2={...pData,...updates};
+    await checkAndApplyDivision(pid,upd2,result,mult);
   }
+  
+  // Store category on match for display
   await updateDoc(doc(db,'matches',m.id||'x'),{playerACat:aCat,playerBCat:bCat,is2x:
     getRatingMultiplier(aCat,bCat,getRC(m.scoreA,m.scoreB,'A'))>1||
     getRatingMultiplier(bCat,aCat,getRC(m.scoreA,m.scoreB,'B'))>1
   }).catch(()=>{});
+
   await Promise.all([upd(m.playerAId,aData,'A',bCat),upd(m.playerBId,bData,'B',aCat)]);
 }
 
 async function checkAndApplyDivision(pid,p){
-  const div=p.division||9,rules=DIV_RULES[div]||DIV_RULES[9];
-  const cmp=p.cycleMP||0,cpts=p.cyclePts||0;
-  let newDiv=div,action=null;
+  const div=p.division||9;
+  const rules=DIV_RULES[div]||DIV_RULES[9];
+  const cmp=p.cycleMP||0, cpts=p.cyclePts||0;
+  let newDiv=div, action=null;
   if(cpts>=rules.promo&&div>1){newDiv=Math.max(1,div-1);action='promote';}
   else if(cmp>=rules.cycle){
     if(cpts<=rules.relo&&div<9){newDiv=Math.min(9,div+1);action='relegate';}
-    else if(cmp>=rules.cycle)action='stay';
+    else if(cmp>=rules.cycle){action='stay';}
   }
   if(action){
-    await updateDoc(doc(db,'players',pid),{division:newDiv,cycleMP:0,cyclePts:0,highestDivision:Math.min(newDiv,p.highestDivision||9)});
+    await updateDoc(doc(db,'players',pid),{
+      division:newDiv,cycleMP:0,cyclePts:0,
+      highestDivision:Math.min(newDiv,p.highestDivision||9)
+    });
     if(action==='promote')T(p.name+' promoted to Division '+newDiv+'!','success');
     else if(action==='relegate')T(p.name+' relegated to Division '+newDiv+'.','info');
   }
@@ -1905,7 +1494,8 @@ async function submitMatchResult(){
   const sA=parseInt($('scoreA').value)||0,sB=parseInt($('scoreB').value)||0;
   const matchDate=$('matchDate').value;
   if(!oppId)return T('Select an opponent','error');
-  const opp=S.players.find(p=>p.id===oppId);if(!opp)return T('Opponent not found','error');
+  const opp=S.players.find(p=>p.id===oppId);
+  if(!opp)return T('Opponent not found','error');
   try{
     await addDoc(collection(db,'matches'),{
       playerAId:S.user.id,playerAName:S.user.name,playerACat:S.user.category||'Main',
@@ -1914,7 +1504,8 @@ async function submitMatchResult(){
       createdAt:serverTimestamp(),submittedBy:S.user.id
     });
     const msg=isHigh(sA,sB)?`GOAL FEST! ${sA+sB} goals submitted. Waiting for ${opp.name}.`:`Result submitted. Waiting for ${opp.name} to confirm.`;
-    T(msg,'success');$('scoreA').value='';$('scoreB').value='';S.matches=[];
+    T(msg,'success');
+    $('scoreA').value='';$('scoreB').value='';S.matches=[];
   }catch(e){T('Submit failed: '+e.message,'error');}
 }
 
@@ -1924,6 +1515,7 @@ async function loadModPanel(){
     $('modPendingMatches').innerHTML='<div class="empty-state"><div class="empty-text">Moderator access required</div></div>';return;
   }
   try{
+    // Query all pending matches
     const mSnap=await getDocs(query(collection(db,'matches'),where('status','==','pending'),orderBy('createdAt','desc'),limit(100)));
     const pending=mSnap.docs.map(d=>({id:d.id,...d.data()}));
     const el=$('modPendingMatches');
@@ -1931,9 +1523,15 @@ async function loadModPanel(){
     el.innerHTML=pending.map(m=>`
       <div class="confirm-card">
         <div class="confirm-vs">
-          <div class="confirm-player"><div class="confirm-player-name">${m.playerAName}</div><div class="text-gray text-sm">${m.playerACat||''}</div></div>
+          <div class="confirm-player">
+            <div class="confirm-player-name">${m.playerAName}</div>
+            <div class="text-gray text-sm">${m.playerACat||''}</div>
+          </div>
           <div class="confirm-score-display">${m.scoreA}-${m.scoreB}</div>
-          <div class="confirm-player"><div class="confirm-player-name">${m.playerBName}</div><div class="text-gray text-sm">${m.playerBCat||''}</div></div>
+          <div class="confirm-player">
+            <div class="confirm-player-name">${m.playerBName}</div>
+            <div class="text-gray text-sm">${m.playerBCat||''}</div>
+          </div>
         </div>
         <div class="text-gray text-sm mb-8">${fmtDate(m.createdAt)} - ${timeAgo(m.createdAt)}</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -1956,36 +1554,49 @@ async function viewProfile(playerId){
     if(!snap.exists()){$('profileContent').innerHTML='<div class="empty-state"><div class="empty-text">Player not found</div></div>';return;}
     const p={id:snap.id,...snap.data()};
     const allM=mSnap.docs.map(d=>({id:d.id,...d.data()}));
+    
+    // Compute stats strictly from match history
     const myConfirmed=allM.filter(m=>(m.playerAId===playerId||m.playerBId===playerId)&&m.status==='confirmed');
     const recent=myConfirmed.slice(0,10);
-    const playerCatMap={};S.players.forEach(pp=>playerCatMap[pp.id]=pp.category||'Main');
+    
+    // Build player category map for 2x calc
+    const playerCatMap={};
+    S.players.forEach(pp=>playerCatMap[pp.id]=pp.category||'Main');
+    
     let w=0,d=0,l=0,gf=0,ga=0,cs=0,x2Count=0;
     myConfirmed.forEach(m=>{
       const side=m.playerAId===playerId?'A':'B';
       const result=getRC(m.scoreA,m.scoreB,side);
-      const myG=side==='A'?m.scoreA:m.scoreB,opG=side==='A'?m.scoreB:m.scoreA;
+      const myG=side==='A'?m.scoreA:m.scoreB, opG=side==='A'?m.scoreB:m.scoreA;
       const oppId=side==='A'?m.playerBId:m.playerAId;
       const oppCat=playerCatMap[oppId]||(side==='A'?m.playerBCat:m.playerACat)||'Main';
       const mult=getRatingMultiplier(p.category||'Main',oppCat,result);
       if(mult>1)x2Count++;
-      if(result==='W')w+=mult;else if(result==='D')d+=1;else l+=mult;
+      if(result==='W')w+=mult;
+      else if(result==='D')d+=1;
+      else l+=mult;
       gf+=myG;ga+=opG;if(opG===0)cs++;
     });
     const total=myConfirmed.length,wr=total>0?Math.round((w/(w+d+l||1))*100):0;
-    const gd=gf-ga,rating=Math.max(0,Math.round(w*10+d*5+l*(-5)+gd+cs*2));
+    const gd=gf-ga;
+    const rating=Math.max(0,Math.round(w*10+d*5+l*(-5)+gd+cs*2));
+    
     const div=p.division||9,rules=DIV_RULES[div]||DIV_RULES[9];
     const cmp=p.cycleMP||0,cpts=p.cyclePts||0;
     const pct=Math.min(100,Math.round(cpts/(rules.promo||1)*100));
     const form=(p.form||[]).slice(-5);
     const isMe=S.user&&S.user.id===playerId,isRival=S.user&&(S.user.rivals||[]).includes(playerId);
+    
+    // Badges
     const badges=[];
     if(div===1)badges.push({t:'Elite Division',c:'badge-star'});
     else if(div===2)badges.push({t:'Premier Division',c:'badge-silver'});
     else if(div===3)badges.push({t:'Championship',c:'badge-gold'});
     const highest=p.highestDivision||div;
     if(highest<div)badges.push({t:'Peak: Div '+highest,c:'badge-blue'});
-    if(wr>=80&&total>=5)badges.push({t:'Win Machine 80%+',c:'badge-gold'});
-    else if(wr>=70&&total>=5)badges.push({t:'Sharp 70%+',c:'badge-green'});
+    const wrPct=wr;
+    if(wrPct>=80&&total>=5)badges.push({t:'Win Machine 80%+',c:'badge-gold'});
+    else if(wrPct>=70&&total>=5)badges.push({t:'Sharp 70%+',c:'badge-green'});
     let streak=0;const fm=p.form||[];for(let i=fm.length-1;i>=0;i--){if(fm[i]==='W')streak++;else break;}
     if(streak>=5)badges.push({t:'On Fire '+streak+' Streak',c:'badge-red'});
     else if(streak>=3)badges.push({t:streak+' Win Streak',c:'badge-green'});
@@ -1995,6 +1606,7 @@ async function viewProfile(playerId){
     if(p.isPOTM)badges.push({t:'Player of the Month',c:'badge-purple'});
     if(p.isPOTS)badges.push({t:'Player of the Season',c:'badge-star'});
     if(p.isModerator)badges.push({t:'Moderator',c:'badge-blue'});
+
     $('profileContent').innerHTML=`
       <div class="profile-header">
         <div class="profile-avatar">${p.name[0].toUpperCase()}</div>
@@ -2008,7 +1620,8 @@ async function viewProfile(playerId){
           <div class="form-dots mt-8">${form.map(r=>formBadge(r)).join('')}</div>
           <div class="badges-row">${badges.map(b=>`<span class="player-badge ${b.c}">${b.t}</span>`).join('')}</div>
           <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-            ${!isMe&&S.user?`<button class="btn-sm ${isRival?'btn-reject':'btn-edit'}" onclick="toggleRival('${playerId}','${p.name}')">${isRival?'Remove Rival':'Add Rival'}</button>`:''}
+            ${!isMe&&S.user?`<button class="btn-sm ${isRival?'btn-reject':'btn-edit'}" onclick="toggleRival('${playerId}','${p.name}')">
+              ${isRival?'Remove Rival':'Add Rival'}</button>`:''}
             ${isMe?`<button class="btn-sm btn-edit" onclick="openModal('changePwModal')">Change Password</button>`:''}
           </div>
         </div>
@@ -2027,7 +1640,8 @@ async function viewProfile(playerId){
         <div class="promo-title">Division ${div} Cycle - Promotion Progress</div>
         <div class="promo-bar-wrap"><div class="promo-bar-fill" style="width:${pct}%"></div></div>
         <div class="promo-label"><span>${cpts} pts / ${rules.promo} needed</span><span>${cmp}/10 matches</span></div>
-        ${cmp>=rules.cycle?'<div class="promo-cycle-info" style="color:#00E676">Cycle complete!</div>':`<div class="promo-cycle-info">${Math.max(0,rules.cycle-cmp)} matches remaining in this cycle</div>`}
+        ${cmp>=rules.cycle?'<div class="promo-cycle-info" style="color:#00E676">Cycle complete!</div>':
+        `<div class="promo-cycle-info">${Math.max(0,rules.cycle-cmp)} matches remaining in this cycle</div>`}
       </div>
       <div class="section-title mt-16">Recent Matches</div>
       ${recent.length?recent.map(m=>{
@@ -2037,7 +1651,7 @@ async function viewProfile(playerId){
         const oppId2=side==='A'?m.playerBId:m.playerAId;
         const myG=side==='A'?m.scoreA:m.scoreB,opG=side==='A'?m.scoreB:m.scoreA;
         const hi=isHigh(m.scoreA,m.scoreB),x2=m.is2x;
-        return`<div class="match-card${hi?' high-score':''}">
+        return `<div class="match-card${hi?' high-score':''}">
           <div class="match-result-badge result-${res}">${res}</div>
           <div class="match-info">
             <div class="match-vs">vs <span class="player-link" style="display:inline" onclick="viewProfile('${oppId2}')">${oppName}</span>
@@ -2057,7 +1671,11 @@ async function loadMyProfile(){
   if(!S.user){
     $('myProfileContent').innerHTML='<div class="empty-state"><div class="empty-icon">&#128274;</div><div class="empty-text">Not logged in</div><button class="btn-primary mt-12" onclick="openModal(\'loginModal\')">Login</button></div>';return;
   }
-  try{const snap=await getDoc(doc(db,'players',S.user.id));if(snap.exists())S.user={...S.user,...snap.data()};}catch{}
+  // Refresh user data
+  try{
+    const snap=await getDoc(doc(db,'players',S.user.id));
+    if(snap.exists())S.user={...S.user,...snap.data()};
+  }catch{}
   await viewProfile(S.user.id);
   $('myProfileContent').innerHTML=$('profileContent').innerHTML;
 }
@@ -2067,7 +1685,8 @@ async function toggleRival(playerId,playerName){
   const rivals=S.user.rivals||[];
   const nr=rivals.includes(playerId)?rivals.filter(r=>r!==playerId):[...rivals,playerId];
   await updateDoc(doc(db,'players',S.user.id),{rivals:nr});
-  S.user.rivals=nr;T(rivals.includes(playerId)?playerName+' removed from rivals':playerName+' added as rival','success');
+  S.user.rivals=nr;
+  T(rivals.includes(playerId)?playerName+' removed from rivals':playerName+' added as rival','success');
   viewProfile(playerId);
 }
 
@@ -2099,17 +1718,19 @@ async function loadAdminPanel(tab){
   }
   if(tab==='players'){
     const snap=await getDocs(collection(db,'players'));
-    S.adminPlayers=snap.docs.map(d=>({id:d.id,...d.data()}));renderAdminPlayers(S.adminPlayers);
+    S.adminPlayers=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderAdminPlayers(S.adminPlayers);
   }
   if(tab==='adminMatches'){
     const snap=await getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(100)));
     const matches=snap.docs.map(d=>({id:d.id,...d.data()}));
     const el=$('adminMatchesList');
     if(!matches.length){el.innerHTML='<div class="empty-state"><div class="empty-text">No matches</div></div>';return;}
-    el.innerHTML=matches.map(m=>`
-      <div class="pending-item">
+    el.innerHTML=matches.map(m=>{
+      const hi=isHigh(m.scoreA,m.scoreB),x2=m.is2x;
+      return `<div class="pending-item${hi?' high-score':''}">
         <div class="pending-info">
-          <div class="pending-name">${m.playerAName} ${m.scoreA}-${m.scoreB} ${m.playerBName}${isHigh(m.scoreA,m.scoreB)?' [GOAL FEST]':''}${m.is2x?' [2X]':''}</div>
+          <div class="pending-name">${m.playerAName} ${m.scoreA}-${m.scoreB} ${m.playerBName}${hi?' [GOAL FEST]':''}${x2?' [2X]':''}</div>
           <div class="pending-meta">${fmtDate(m.createdAt)} - ${statusBadge(m.status)}</div>
         </div>
         <div style="display:flex;gap:5px;flex-wrap:wrap">
@@ -2117,9 +1738,9 @@ async function loadAdminPanel(tab){
           <button class="btn-sm btn-edit" onclick="adminEditMatch('${m.id}','${m.playerAName}','${m.playerBName}',${m.scoreA},${m.scoreB},'${m.status}')">Edit</button>
           <button class="btn-sm btn-reject" onclick="adminDeleteMatchDirect('${m.id}')">Delete</button>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
-  if(tab==='tournament')loadAdminTournament();
   if(tab==='moderators'){
     const snap=await getDocs(collection(db,'players'));
     S.adminPlayers=snap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.status==='active');
@@ -2152,6 +1773,7 @@ function renderAdminPlayers(players){
       </div>
     </div>`).join(''):'<div class="empty-state"><div class="empty-text">No players</div></div>';
 }
+
 function filterAdminPlayers(){if(S.adminPlayers.length)renderAdminPlayers(S.adminPlayers);}
 
 function renderModPlayers(players){
@@ -2168,6 +1790,7 @@ function renderModPlayers(players){
         ${p.isModerator?'Remove Mod':'Give Mod'}</button>
     </div>`).join(''):'<div class="empty-state"><div class="empty-text">No active players</div></div>';
 }
+
 function filterModPlayers(){if(S.adminPlayers.length)renderModPlayers(S.adminPlayers);}
 
 async function adminToggleMod(id,name,isMod){
@@ -2227,10 +1850,13 @@ async function saveMatchEdit(){
   const id=$('editMatchId').value,sA=parseInt($('editScoreA').value),sB=parseInt($('editScoreB').value);
   const status=$('editMatchStatus').value;
   try{
-    const mRef=doc(db,'matches',id);const old=await getDoc(mRef);
+    // If changing to confirmed from pending, also apply stats
+    const mRef=doc(db,'matches',id);
+    const old=await getDoc(mRef);
     await updateDoc(mRef,{scoreA:sA,scoreB:sB,status});
     if(status==='confirmed'&&old.data().status!=='confirmed'){
-      await applyMatchStats({...old.data(),scoreA:sA,scoreB:sB});
+      const m={...old.data(),scoreA:sA,scoreB:sB};
+      await applyMatchStats(m);
     }
     T('Match updated','success');closeModal('editMatchModal');S.matches=[];loadAdminPanel('adminMatches');
   }catch(e){T('Error: '+e.message,'error');}
@@ -2246,7 +1872,9 @@ async function adminDeleteMatch(){
 async function adminDeleteMatchDirect(id){
   if(!confirm('Delete this match?'))return;
   await deleteDoc(doc(db,'matches',id));
-  T('Match deleted. Ranking will update automatically.','info');S.matches=[];loadAdminPanel('adminMatches');
+  // NOTE: Since stats are computed live from history, no need to reverse stats
+  T('Match deleted. Ranking will update automatically.','info');
+  S.matches=[];loadAdminPanel('adminMatches');
 }
 
 async function saveSeasonSettings(){
@@ -2255,7 +1883,7 @@ async function saveSeasonSettings(){
 }
 
 async function confirmSeasonReset(){
-  if(!confirm('RESET ENTIRE SEASON?\n\nAll matches deleted, all stats reset.\n\nOK to confirm.'))return;
+  if(!confirm('RESET ENTIRE SEASON?\n\nAll matches deleted, all stats reset. Player accounts remain.\n\nOK to confirm.'))return;
   try{
     const [pSnap,mSnap]=await Promise.all([getDocs(collection(db,'players')),getDocs(collection(db,'matches'))]);
     await Promise.all([
@@ -2288,8 +1916,6 @@ Object.assign(window,{
   switchLbTab,filterLeaderboard,filterMatches,confirmMatch,
   submitMatchResult,loadSubmitPage,viewProfile,toggleRival,loadMyProfile,
   openRankingCardPreview,closeRankingPreview,downloadRankingCard,
-  openTourneyReg,submitTourneyReg,
-  adminTourneyApprove,adminTourneyReject,adminTourneyDelete,
   adminLogin,loadAdminPanel,switchAdminTab,adminApprove,adminReject,
   adminEditPlayer,savePlayerEdit,adminToggleBan,adminToggleMod,
   adminTogglePOTD,adminTogglePOTW,adminTogglePOTM,adminTogglePOTS,
