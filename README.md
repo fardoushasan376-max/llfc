@@ -1578,6 +1578,7 @@ async function confirmMatch(matchId,confirmed){
 }
 
 async function applyMatchStats(m){
+  // Store category on match for display
   const [aSnap,bSnap]=await Promise.all([
     getDoc(doc(db,'players',m.playerAId)),
     getDoc(doc(db,'players',m.playerBId))
@@ -1586,97 +1587,112 @@ async function applyMatchStats(m){
   const aData=aSnap.data(), bData=bSnap.data();
   const aCat=aData.category||'Main', bCat=bData.category||'Main';
 
-  // Store category on match for display
-  await updateDoc(doc(db,'matches',m.id||'_'),{
-    playerACat:aCat,playerBCat:bCat,
-    is2x:getRatingMultiplier(aCat,bCat,getRC(m.scoreA,m.scoreB,'A'))>1||
-         getRatingMultiplier(bCat,aCat,getRC(m.scoreA,m.scoreB,'B'))>1
+  await updateDoc(doc(db,'matches',m.id),{
+    playerACat:aCat, playerBCat:bCat,
+    is2x: getRatingMultiplier(aCat,bCat,getRC(m.scoreA,m.scoreB,'A'))>1 ||
+          getRatingMultiplier(bCat,aCat,getRC(m.scoreA,m.scoreB,'B'))>1
   }).catch(()=>{});
 
-  async function upd(pid,pData,side,oppData){
-    const ref=doc(db,'players',pid);
-    const oppCat=oppData.category||'Main';
-    const result=getRC(m.scoreA,m.scoreB,side);
-    const myG=side==='A'?m.scoreA:m.scoreB, opG=side==='A'?m.scoreB:m.scoreA;
-    const isCS=opG===0;
-    const form=[...(pData.form||[]).slice(-19),result];
-    const div=pData.division||9;
-    const rules=DIV_RULES[div]||DIV_RULES[9];
-    const mult=getRatingMultiplier(pData.category||'Main',oppCat,result);
+  // Fetch ALL confirmed matches for each player (including the one just confirmed)
+  const allMatchSnap = await getDocs(collection(db,'matches'));
+  const allMatches = allMatchSnap.docs.map(d=>({id:d.id,...d.data()}))
+    .filter(mx=>mx.status==='confirmed');
 
-    let updates={
-      wins:(pData.wins||0)+(result==='W'?mult:0),
-      draws:(pData.draws||0)+(result==='D'?1:0),
-      losses:(pData.losses||0)+(result==='L'?mult:0),
-      goalsFor:(pData.goalsFor||0)+myG,
-      goalsAgainst:(pData.goalsAgainst||0)+opG,
-      cleanSheets:(pData.cleanSheets||0)+(isCS?1:0),
+  async function recomputePlayer(pid, pData){
+    const div = pData.division||9;
+    const rules = DIV_RULES[div]||DIV_RULES[9];
+    const cat = pData.category||'Main';
+
+    // Get all confirmed matches for this player
+    const myMatches = allMatches.filter(mx=>mx.playerAId===pid||mx.playerBId===pid);
+
+    // Build category map from stored data on matches (playerACat/playerBCat)
+    let w=0,d=0,l=0,gf=0,ga=0,cs=0;
+    const formArr=[];
+    myMatches
+      .sort((a,b)=>(a.createdAt?.seconds||0)-(b.createdAt?.seconds||0))
+      .forEach(mx=>{
+        const side=mx.playerAId===pid?'A':'B';
+        const result=getRC(mx.scoreA,mx.scoreB,side);
+        const myG=side==='A'?mx.scoreA:mx.scoreB;
+        const opG=side==='A'?mx.scoreB:mx.scoreA;
+        const oppCat=(side==='A'?(mx.playerBCat||'Main'):(mx.playerACat||'Main'));
+        const mult=getRatingMultiplier(cat,oppCat,result);
+        if(result==='W')w+=mult;
+        else if(result==='D')d+=1;
+        else l+=mult;
+        gf+=myG; ga+=opG;
+        if(opG===0)cs++;
+        formArr.push(result);
+      });
+
+    const form=formArr.slice(-20);
+    const updates={
+      wins:w, draws:d, losses:l,
+      goalsFor:gf, goalsAgainst:ga, cleanSheets:cs,
       form,
     };
 
     if(rules.useRating){
-      // === DIV 3-1: Fixed rating system ===
-      // Div 3: W=+30, L=-30 (floor 1200, no demotion from div 3)
-      // Div 2: W=+30, L=-30 (drop below 1200 -> back to Div 3)
-      // Div 1: W=+20, L=-40 (drop below 1500 -> back to Div 2)
-      const myRating=pData.eloRating||DEFAULT_DIV3_RATING;
+      // Recompute ELO by replaying all matches in order
+      let elo=DEFAULT_DIV3_RATING;
+      let currentDiv=div;
+      myMatches
+        .sort((a,b)=>(a.createdAt?.seconds||0)-(b.createdAt?.seconds||0))
+        .forEach(mx=>{
+          const side=mx.playerAId===pid?'A':'B';
+          const result=getRC(mx.scoreA,mx.scoreB,side);
+          const oppCat=(side==='A'?(mx.playerBCat||'Main'):(mx.playerACat||'Main'));
+          const mult=getRatingMultiplier(cat,oppCat,result);
+          let winGain=30, lossDeduct=-30;
+          if(currentDiv===1){winGain=20;lossDeduct=-40;}
+          let change=0;
+          if(result==='W')change=Math.round(winGain*mult);
+          else if(result==='L')change=Math.round(lossDeduct*mult);
+          const floor=currentDiv===3?DEFAULT_DIV3_RATING:0;
+          elo=Math.max(floor,elo+change);
+        });
 
-      let winGain=30, lossDeduct=-30;
-      if(div===1){ winGain=20; lossDeduct=-40; }
+      updates.eloRating=elo;
 
-      let ratingChange=0;
-      if(result==='W') ratingChange=Math.round(winGain*mult);
-      else if(result==='L') ratingChange=Math.round(lossDeduct*mult);
-      else ratingChange=0;
-
-      // Div 3 floor = 1200 (no demotion from div 3, just can't go below 1200)
-      const floor=div===3?DEFAULT_DIV3_RATING:0;
-      const newRating=Math.max(floor, myRating+ratingChange);
-      updates.eloRating=newRating;
-      updates.eloChange=ratingChange;
-
-      // Promotion/relegation
-      let newDiv=div, action=null;
-      if(div===3&&newRating>=RATING_PROMO[3]){
-        newDiv=2; action='promote';
-        updates.eloRating=DEFAULT_DIV3_RATING; // reset to floor when entering Div 2
-      } else if(div===2&&newRating>=RATING_PROMO[2]){
-        newDiv=1; action='promote';
-      } else if(div===2&&newRating<RATING_RELO[2]){
-        // 1200 threshold -> back to Div 3
-        newDiv=3; action='relegate';
-        updates.eloRating=DEFAULT_DIV3_RATING;
-      } else if(div===1&&newRating<RATING_RELO[1]){
-        // 1500 threshold -> back to Div 2
-        newDiv=2; action='relegate';
-        updates.eloRating=RATING_PROMO[3]; // enter Div 2 at 1500 floor
-      }
-      if(action){
-        updates.division=newDiv;
-        updates.highestDivision=Math.min(newDiv,pData.highestDivision||9);
-        if(action==='promote')setTimeout(()=>T(pData.name+' promoted to Division '+newDiv+'!','success'),100);
-        else if(action==='relegate')setTimeout(()=>T(pData.name+' relegated to Division '+newDiv+'.','info'),100);
+      // Determine div from replayed ELO
+      let newDiv=div;
+      if(elo>=RATING_PROMO[2])newDiv=1;
+      else if(elo>=RATING_PROMO[3])newDiv=2;
+      else newDiv=3;
+      updates.division=newDiv;
+      updates.highestDivision=Math.min(newDiv,pData.highestDivision||9);
+      if(newDiv!==div){
+        const act=newDiv<div?'promoted':'relegated';
+        setTimeout(()=>T(pData.name+' '+act+' to Division '+newDiv+'!',newDiv<div?'success':'info'),100);
       }
     } else {
-      // === DIV 4-9: Cycle-based point system ===
-      const cyclePtsGain=result==='W'?3:result==='D'?1:0;
-      const newCycleMP=(pData.cycleMP||0)+1;
-      const newCyclePts=(pData.cyclePts||0)+cyclePtsGain;
-      updates.cycleMP=newCycleMP;
-      updates.cyclePts=newCyclePts;
+      // For cycle-based divisions, recount cycle MP and pts from matches in current cycle
+      // A cycle resets when division changes — approximate by using last cycleReset timestamp
+      // For safety: just recount from all matches (cycleMP = total confirmed matches, cyclePts = W*3+D*1)
+      const totalMP=myMatches.length;
+      const totalCyclePts=Math.round(w)*3+d;  // simplified cycle pts from full history
+      // Clamp to 10-match cycle window: use last 10 matches
+      const last10=myMatches.sort((a,b)=>(a.createdAt?.seconds||0)-(b.createdAt?.seconds||0)).slice(-10);
+      let cw=0,cd=0,cl=0;
+      last10.forEach(mx=>{
+        const side=mx.playerAId===pid?'A':'B';
+        const r=getRC(mx.scoreA,mx.scoreB,side);
+        if(r==='W')cw++;else if(r==='D')cd++;else cl++;
+      });
+      const cyclePts=cw*3+cd;
+      const cycleMP=last10.length;
+      updates.cycleMP=cycleMP;
+      updates.cyclePts=cyclePts;
 
-      // Check div promotion/relegation
-      let newDiv=div, action=null;
-      if(newCyclePts>=rules.promo&&div>4){
-        // Promote to Div 3 -> enter rating system
-        newDiv=div-1;action='promote';
-        if(newDiv<=3){updates.eloRating=DEFAULT_DIV3_RATING;}
-        updates.cycleMP=0;updates.cyclePts=0;
-      }else if(newCyclePts>=rules.promo&&div>1){
+      // Check promotion/relegation from current cycle
+      let newDiv=div,action=null;
+      if(cyclePts>=rules.promo&&div>1){
         newDiv=div-1;action='promote';
         updates.cycleMP=0;updates.cyclePts=0;
-      }else if(newCycleMP>=rules.cycle){
-        if(newCyclePts<=rules.relo&&div<9){newDiv=div+1;action='relegate';}
+        if(newDiv<=3)updates.eloRating=DEFAULT_DIV3_RATING;
+      }else if(cycleMP>=rules.cycle){
+        if(cyclePts<=rules.relo&&div<9){newDiv=div+1;action='relegate';}
         updates.cycleMP=0;updates.cyclePts=0;
       }
       if(action){
@@ -1687,12 +1703,12 @@ async function applyMatchStats(m){
       }
     }
 
-    await updateDoc(ref,updates);
+    await updateDoc(doc(db,'players',pid),updates);
   }
 
   await Promise.all([
-    upd(m.playerAId,aData,'A',bData),
-    upd(m.playerBId,bData,'B',aData)
+    recomputePlayer(m.playerAId, aData),
+    recomputePlayer(m.playerBId, bData)
   ]);
 }
 
@@ -1785,81 +1801,115 @@ async function viewProfile(playerId){
   S.pageHistory.push('profile');showPage('profile');
   $('profileContent').innerHTML='<div class="loading-spinner"><div class="spinner"></div></div>';
   try{
+    // Fetch player + ALL matches (no limit) - stats computed 100% from history
     const [snap,mSnap]=await Promise.all([
       getDoc(doc(db,'players',playerId)),
-      getDocs(query(collection(db,'matches'),orderBy('createdAt','desc'),limit(500)))
+      getDocs(collection(db,'matches'))
     ]);
     if(!snap.exists()){$('profileContent').innerHTML='<div class="empty-state"><div class="empty-text">Player not found</div></div>';return;}
     const p={id:snap.id,...snap.data()};
     const allM=mSnap.docs.map(d=>({id:d.id,...d.data()}));
-    
-    // Compute stats strictly from match history
-    const myConfirmed=allM.filter(m=>(m.playerAId===playerId||m.playerBId===playerId)&&m.status==='confirmed');
-    const recent=myConfirmed.slice(0,10);
-    
-    // Build player category map for 2x calc
-    const playerCatMap={};
-    S.players.forEach(pp=>playerCatMap[pp.id]=pp.category||'Main');
-    
+
+    // ALL confirmed matches for this player, sorted oldest first
+    const myConfirmed=allM
+      .filter(m=>(m.playerAId===playerId||m.playerBId===playerId)&&m.status==='confirmed')
+      .sort((a,b)=>(a.createdAt?.seconds||0)-(b.createdAt?.seconds||0));
+
+    // Compute stats live from FULL history — no stored values used
     let w=0,d=0,l=0,gf=0,ga=0,cs=0,x2Count=0;
     myConfirmed.forEach(m=>{
       const side=m.playerAId===playerId?'A':'B';
       const result=getRC(m.scoreA,m.scoreB,side);
       const myG=side==='A'?m.scoreA:m.scoreB, opG=side==='A'?m.scoreB:m.scoreA;
-      const oppId=side==='A'?m.playerBId:m.playerAId;
-      const oppCat=playerCatMap[oppId]||(side==='A'?m.playerBCat:m.playerACat)||'Main';
+      const oppCat=(side==='A'?m.playerBCat:m.playerACat)||'Main';
       const mult=getRatingMultiplier(p.category||'Main',oppCat,result);
       if(mult>1)x2Count++;
       if(result==='W')w+=mult;
       else if(result==='D')d+=1;
       else l+=mult;
-      gf+=myG;ga+=opG;if(opG===0)cs++;
+      gf+=myG; ga+=opG; if(opG===0)cs++;
     });
-    const total=myConfirmed.length,wr=total>0?Math.round((w/(w+d+l||1))*100):0;
+    const total=myConfirmed.length;
+    const wr=total>0?Math.round((w/(w+d+l||1))*100):0;
     const gd=gf-ga;
-    // Display rating: ELO for div 3+, computed for div 4-9
+
+    // Recompute ELO live (replaying match history)
+    let computedElo=DEFAULT_DIV3_RATING;
+    if((p.division||9)<=3){
+      let tempDiv=p.division||3;
+      myConfirmed.forEach(m=>{
+        const side=m.playerAId===playerId?'A':'B';
+        const result=getRC(m.scoreA,m.scoreB,side);
+        const oppCat=(side==='A'?m.playerBCat:m.playerACat)||'Main';
+        const mult=getRatingMultiplier(p.category||'Main',oppCat,result);
+        let winGain=30,lossDeduct=-30;
+        if(tempDiv===1){winGain=20;lossDeduct=-40;}
+        let change=0;
+        if(result==='W')change=Math.round(winGain*mult);
+        else if(result==='L')change=Math.round(lossDeduct*mult);
+        const floor=tempDiv===3?DEFAULT_DIV3_RATING:0;
+        computedElo=Math.max(floor,computedElo+change);
+      });
+    }
+
+    // Rating for display
     const displayRating=(p.division||9)<=3
-      ? (p.eloRating||DEFAULT_DIV3_RATING)
+      ? computedElo
       : Math.max(0,Math.round(w*10+d*5+l*(-5)+gd+cs*2));
-    
+
     const div=p.division||9,rules=DIV_RULES[div]||DIV_RULES[9];
     const isEloDiv=rules.useRating;
-    const cmp=p.cycleMP||0,cpts=p.cyclePts||0;
-    const eloRating=p.eloRating||DEFAULT_DIV3_RATING;
-    
-    // Build promo tracker HTML
+
+    // Cycle stats from last 10 matches
+    const last10=myConfirmed.slice(-10);
+    let cw=0,cd2=0;
+    last10.forEach(m=>{
+      const side=m.playerAId===playerId?'A':'B';
+      const r=getRC(m.scoreA,m.scoreB,side);
+      if(r==='W')cw++;else if(r==='D')cd2++;
+    });
+    const cpts=cw*3+cd2, cmp=last10.length;
+
+    // Build promo tracker
     let promoHTML='';
     if(isEloDiv){
       const nextPromo=RATING_PROMO[div];
       const floor=DEFAULT_DIV3_RATING;
       if(nextPromo){
-        const pct=Math.min(100,Math.round(Math.max(0,eloRating-floor)/(nextPromo-floor)*100));
+        const pct=Math.min(100,Math.round(Math.max(0,computedElo-floor)/(nextPromo-floor)*100));
         promoHTML=`<div class="promo-tracker">
           <div class="promo-title">ELO Rating - Division ${div} (${rules.name})</div>
           <div class="promo-bar-wrap"><div class="promo-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,#F5C518,#FFD700)"></div></div>
-          <div class="promo-label"><span>${eloRating} ELO</span><span>Promote at ${nextPromo}</span></div>
+          <div class="promo-label"><span>${computedElo} ELO</span><span>Promote at ${nextPromo}</span></div>
           <div class="promo-cycle-info" style="color:#F5C518">${div===1?'Win: +20 | Loss: -40':'Win: +30 | Loss: -30'}</div>
         </div>`;
       } else {
         promoHTML=`<div class="promo-tracker">
           <div class="promo-title">ELO Rating - Division 1 Elite</div>
           <div class="promo-bar-wrap"><div class="promo-bar-fill" style="width:100%;background:linear-gradient(90deg,#FFD700,#FF8C00)"></div></div>
-          <div class="promo-label"><span>${eloRating} ELO</span><span>Top Division</span></div>
-          <div class="promo-cycle-info" style="color:#FFD700">Maintain rating above 1200 to stay in Division 1</div>
+          <div class="promo-label"><span>${computedElo} ELO</span><span>Top Division</span></div>
+          <div class="promo-cycle-info" style="color:#FFD700">Win: +20 | Loss: -40</div>
         </div>`;
       }
     } else {
       const pct=Math.min(100,Math.round(cpts/(rules.promo||1)*100));
       promoHTML=`<div class="promo-tracker">
-        <div class="promo-title">Division ${div} Cycle Progress</div>
+        <div class="promo-title">Division ${div} Cycle (Last 10 Matches)</div>
         <div class="promo-bar-wrap"><div class="promo-bar-fill" style="width:${pct}%"></div></div>
-        <div class="promo-label"><span>${cpts} pts / ${rules.promo} needed</span><span>${cmp}/10 matches</span></div>
-        ${cmp>=rules.cycle?'<div class="promo-cycle-info" style="color:#00E676">Cycle complete - awaiting review</div>':
+        <div class="promo-label"><span>${cpts} pts / ${rules.promo} needed</span><span>${cmp}/10 played</span></div>
+        ${cmp>=rules.cycle?`<div class="promo-cycle-info" style="color:#00E676">Cycle complete!</div>`:
         `<div class="promo-cycle-info">${Math.max(0,rules.cycle-cmp)} matches left this cycle</div>`}
       </div>`;
     }
-    const form=(p.form||[]).slice(-5);
+
+    // Form from last 5 confirmed
+    const form=myConfirmed.slice(-5).map(m=>{
+      const side=m.playerAId===playerId?'A':'B';
+      return getRC(m.scoreA,m.scoreB,side);
+    });
+
     const isMe=S.user&&S.user.id===playerId,isRival=S.user&&(S.user.rivals||[]).includes(playerId);
+    const highest=p.highestDivision||div;
 
     // ===== ACHIEVEMENT BADGES =====
     const badges=[];
@@ -1867,13 +1917,12 @@ async function viewProfile(playerId){
     if(div===1)badges.push({t:'Elite Division',c:'badge-star',icon:'★'});
     else if(div===2)badges.push({t:'Premier Division',c:'badge-silver',icon:'◆'});
     else if(div===3)badges.push({t:'Championship',c:'badge-gold',icon:'◈'});
-    const highest=p.highestDivision||div;
     if(highest<div)badges.push({t:'Peak: Div '+highest,c:'badge-blue',icon:'▲'});
     // Win ratio
     if(wr>=80&&total>=5)badges.push({t:'Win Machine 80%+',c:'badge-gold',icon:'⚡'});
     else if(wr>=70&&total>=5)badges.push({t:'Sharp 70%+',c:'badge-green',icon:'✦'});
-    // Streak
-    let streak=0;const fm=p.form||[];for(let i=fm.length-1;i>=0;i--){if(fm[i]==='W')streak++;else break;}
+    // Streak — from live computed form
+    let streak=0;for(let i=form.length-1;i>=0;i--){if(form[i]==='W')streak++;else break;}
     if(streak>=5)badges.push({t:'On Fire '+streak+'W',c:'badge-red',icon:'🔥'});
     else if(streak>=3)badges.push({t:streak+' Win Streak',c:'badge-green',icon:'↑'});
     // 2x upsets
@@ -1943,8 +1992,8 @@ async function viewProfile(playerId){
         <div class="p-stat"><div class="p-stat-val" style="color:#82B1FF">${cs}</div><div class="p-stat-lbl">Clean Sheets</div></div>
       </div>
       ${promoHTML}
-      <div class="section-title mt-16">Recent Matches</div>
-      ${recent.length?recent.map(m=>{
+      <div class="section-title mt-16">Full Match History (${total} matches)</div>
+      ${myConfirmed.length?[...myConfirmed].reverse().map(m=>{
         const side=m.playerAId===playerId?'A':'B';
         const res=getRC(m.scoreA,m.scoreB,side);
         const oppName=side==='A'?m.playerBName:m.playerAName;
